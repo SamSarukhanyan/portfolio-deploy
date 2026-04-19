@@ -38,6 +38,9 @@ export function ContactSection() {
 
   const hasEmail = site.email.trim().length > 0;
   const mailtoUrl = hasEmail ? `mailto:${site.email}` : "";
+  const gmailWebComposeUrl = hasEmail
+    ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}`
+    : "";
   const gmailAppComposeUrl = hasEmail
     ? `googlegmail:///co?to=${encodeURIComponent(site.email)}`
     : "";
@@ -45,7 +48,14 @@ export function ContactSection() {
   function openEmailClient(event: MouseEvent<HTMLAnchorElement>) {
     if (!hasEmail) return;
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (!isMobile) return;
+    if (!isMobile) {
+      event.preventDefault();
+      const opened = window.open(gmailWebComposeUrl, "_blank", "noopener,noreferrer");
+      if (!opened) {
+        window.location.href = mailtoUrl;
+      }
+      return;
+    }
 
     event.preventDefault();
 

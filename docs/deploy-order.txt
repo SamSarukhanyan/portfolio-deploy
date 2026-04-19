@@ -1,0 +1,63 @@
+Deploy portfolio (samsarukhanyan.com) on same EC2 as fullstack — order of work
+================================================================================
+
+0) Names / paths (fixed in this repo)
+   - Web root: /var/www/portfolio
+   - Nginx site file: /etc/nginx/sites-available/portfolio
+   - GitHub Actions: .github/workflows/deploy-portfolio.yml
+   - Runner labels: self-hosted + portfolio (must match runs-on in workflow)
+
+--- YOU (local PC) ---
+
+1) Create a NEW GitHub repository (portfolio only). Push this project: branch main.
+
+2) GitHub → repo → Settings → Actions → General → allow Actions (same as for other repos).
+
+--- YOU (server as user sam, SSH) --- second runner, one time ---
+
+3) mkdir -p /home/sam/actions-runner-portfolio && cd /home/sam/actions-runner-portfolio
+4) Download Linux x64 runner package from GitHub (New self-hosted runner UI shows curl | tar).
+5) ./config.sh --url https://github.com/OWNER/REPO --token RUNNER_TOKEN
+   When asked for labels, include: portfolio
+6) ./svc.sh install && sudo ./svc.sh start   (use exactly what GitHub shows for your OS)
+7) systemctl status …runner…portfolio… — must be active (running).
+
+--- YOU (registrar / DNS) ---
+
+8) At Name.am (or DNS host): point @ and www A records to the SAME Elastic IP as the EC2
+   (not parking NS only — site must resolve to your server IP).
+9) dig +short samsarukhanyan.com and dig +short www.samsarukhanyan.com → your Elastic IP.
+
+--- YOU (server, sudo) --- nginx HTTP first ---
+
+10) Create /etc/nginx/sites-available/portfolio on the server (sudo nano/vim):
+    paste the contents of docs/nginx-portfolio.conf.example from this repository.
+11) sudo ln -sf /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/portfolio
+12) sudo nginx -t && sudo systemctl reload nginx
+13) After first deploy of files to /var/www/portfolio, test locally on server:
+    curl -sS -H "Host: samsarukhanyan.com" http://127.0.0.1/ | head
+
+--- YOU (AWS console) ---
+
+14) Security group: inbound TCP 443 from 0.0.0.0/0 (HTTPS). Port 80 usually already open.
+
+--- YOU (server, sudo) --- TLS ---
+
+15) sudo apt update && sudo apt install -y certbot python3-certbot-nginx
+16) sudo certbot --nginx -d samsarukhanyan.com -d www.samsarukhanyan.com
+17) sudo certbot renew --dry-run
+
+--- YOU (local) --- go live ---
+
+18) git push origin main → Actions tab on portfolio repo → workflow must run on runner with label portfolio.
+19) Browser: https://samsarukhanyan.com
+
+DO NOT (fullstack safety)
+===========================
+- Do not edit /home/sam/app, fullstack PM2 processes, or the fullstack deploy workflow.
+- Do not register the portfolio workflow on the old runner (wrong labels / wrong repo).
+
+Optional: passwordless sudo for deploy user
+============================================
+Runner user needs sudo without prompt for: mkdir, rm, cp, chown, chmod, nginx.
+Configure visudo for that user with a minimal command allowlist.

@@ -1,0 +1,31 @@
+.footer {
+  padding: 2rem 0 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+@media (min-width: 640px) {
+  .inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.copy {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(232, 237, 247, 0.45);
+}

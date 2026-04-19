@@ -1,0 +1,52 @@
+# Production static deploy for the Vite app in client/ → /var/www/portfolio
+# Requires a SECOND self-hosted runner with label: portfolio (do not reuse the fullstack runner).
+# Runner user must have passwordless sudo for: mkdir/rm/cp/chown/chmod/nginx.
+
+name: Deploy portfolio (static)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: portfolio-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, portfolio]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install and build
+        working-directory: client
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify build output
+        run: test -f client/dist/index.html
+
+      - name: Publish to nginx web root
+        run: |
+          sudo mkdir -p /var/www/portfolio
+          sudo rm -rf /var/www/portfolio/*
+          sudo cp -a client/dist/. /var/www/portfolio/
+          sudo chown -R www-data:www-data /var/www/portfolio
+          sudo find /var/www/portfolio -type d -exec chmod 755 {} \;
+          sudo find /var/www/portfolio -type f -exec chmod 644 {} \;
+
+      - name: Reload nginx
+        run: sudo nginx -t && sudo systemctl reload nginx

@@ -1,0 +1,20 @@
+# Copy to /etc/nginx/sites-available/portfolio (adjust paths if needed).
+# After certbot, it will add ssl_certificate directives to this server block or split 80→443.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name samsarukhanyan.com www.samsarukhanyan.com;
+
+    root /var/www/portfolio;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|webp|avif)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}

@@ -1,0 +1,136 @@
+.section {
+  padding-top: 0;
+}
+
+.diagram {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+@media (min-width: 960px) {
+  .flow {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .flowItem {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  .connector {
+    width: 2.5rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .connectorLine {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(126, 224, 255, 0.35), transparent);
+  }
+}
+
+@media (max-width: 959px) {
+  .flowItem {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .connector {
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .connectorLine {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, rgba(196, 165, 255, 0.35), transparent);
+  }
+}
+
+.node {
+  flex: 1;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1.15rem 1.2rem;
+  min-height: 100%;
+}
+
+.nodeHead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.65rem;
+}
+
+.nodeLabel {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.nodeSub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nodeBody {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.rail {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .rail {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.railCard {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1rem 1.1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.railTitle {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 0.4rem;
+}
+
+.railCard p {
+  margin: 0;
+}

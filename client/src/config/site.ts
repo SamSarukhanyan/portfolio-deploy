@@ -2,8 +2,7 @@
 export const site = {
   displayName: "SamSarukhanyan",
   domain: "samsarukhanyan.com",
-  email: "",
-  githubUrl: "",
-  linkedinUrl: "",
-  telegramUrl: "",
+  email: "sarukhanyansam@gmail.com",
+  githubUrl: "https://github.com/SamSarukhanyan",
+  linkedinUrl: "https://www.linkedin.com/in/samvel-sarukhanyan-684327401",
 } as const;

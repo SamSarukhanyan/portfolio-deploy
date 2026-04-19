@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=7" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#d7dce4" />
+    <!-- Match page top so Safari does not paint an extra wide tinted band under the URL bar -->
+    <meta name="theme-color" content="#0e1628" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- default: standard status bar; avoids an extra “sheet” of color above the page in Safari tabs -->
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta
       name="description"
       content="Full-stack portfolio: React, React Native, Node.js, Express, MySQL — production-oriented engineering."

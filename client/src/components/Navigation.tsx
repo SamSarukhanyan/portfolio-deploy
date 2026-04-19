@@ -45,7 +45,6 @@ export function Navigation() {
 
   return (
     <header className={styles.header} data-scrolled={scrolled}>
-      <div className={styles.safeTopFill} aria-hidden />
       <div className={`shell ${styles.navShell} ${styles.inner}`} data-scrolled={scrolled}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />

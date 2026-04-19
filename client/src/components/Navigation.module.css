@@ -5,33 +5,8 @@
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding-top: 0;
+  padding-top: env(safe-area-inset-top, 0px);
   background: transparent;
-}
-
-@media (min-width: 768px) {
-  .header {
-    display: block;
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-}
-
-/* Opaque strip: covers Safari / notch tint so only our canvas shows above the nav row */
-.safeTopFill {
-  display: none;
-}
-
-@media (max-width: 767px) {
-  .safeTopFill {
-    display: block;
-    width: 100%;
-    flex-shrink: 0;
-    height: calc(env(safe-area-inset-top, 0px) + 10px);
-    background: var(--viewport-canvas);
-  }
 }
 
 .navShell {
@@ -42,7 +17,6 @@
   .header .navShell {
     max-width: none;
     margin-inline: 0;
-    margin-top: 0.7rem;
     /* Edge-to-edge bar; only notch / home-indicator insets */
     padding-inline: max(0.65rem, env(safe-area-inset-left, 0px)) max(0.65rem, env(safe-area-inset-right, 0px));
   }
@@ -225,8 +199,7 @@
 .drawer {
   position: fixed;
   inset: 0;
-  /* Below safe strip + nudged nav row (see .safeTopFill + .navShell margin-top) */
-  top: calc(env(safe-area-inset-top, 0px) + 4.95rem);
+  top: calc(env(safe-area-inset-top, 0px) + 3.65rem);
   left: 0;
   right: 0;
   width: 100%;

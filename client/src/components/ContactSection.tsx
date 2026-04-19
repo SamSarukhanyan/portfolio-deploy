@@ -1,6 +1,7 @@
 import styles from "./ContactSection.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
+import type { MouseEvent } from "react";
 
 type Social = { label: string; href: string; icon: "gh" | "in" | "tg" };
 
@@ -36,9 +37,33 @@ export function ContactSection() {
   ].filter(Boolean) as Social[];
 
   const hasEmail = site.email.trim().length > 0;
-  const gmailComposeUrl = hasEmail
-    ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}`
+  const mailtoUrl = hasEmail ? `mailto:${site.email}` : "";
+  const gmailAppComposeUrl = hasEmail
+    ? `googlegmail:///co?to=${encodeURIComponent(site.email)}`
     : "";
+
+  function openEmailClient(event: MouseEvent<HTMLAnchorElement>) {
+    if (!hasEmail) return;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) return;
+
+    event.preventDefault();
+
+    // Try Gmail app first on mobile, then fall back to a normal mail handler.
+    const fallback = window.setTimeout(() => {
+      window.location.href = mailtoUrl;
+    }, 900);
+
+    const cancelFallback = () => {
+      if (document.hidden) {
+        window.clearTimeout(fallback);
+        document.removeEventListener("visibilitychange", cancelFallback);
+      }
+    };
+
+    document.addEventListener("visibilitychange", cancelFallback);
+    window.location.href = gmailAppComposeUrl;
+  }
 
   return (
     <section id="contact" className={`section ${styles.section}`}>
@@ -58,9 +83,8 @@ export function ContactSection() {
               {hasEmail ? (
                 <a
                   className="btn-primary"
-                  href={gmailComposeUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
+                  href={mailtoUrl}
+                  onClick={openEmailClient}
                 >
                   {t("contact.emailCta")}
                 </a>

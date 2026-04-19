@@ -8,9 +8,7 @@ export function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={`shell ${styles.inner}`}>
-        <p className={styles.copy}>
-          © {new Date().getFullYear()} {site.displayName} · {site.domain}
-        </p>
+        <p className={styles.copy}>© {new Date().getFullYear()} · {site.domain}</p>
         <p className={styles.meta}>{t("footer.meta")}</p>
       </div>
     </footer>

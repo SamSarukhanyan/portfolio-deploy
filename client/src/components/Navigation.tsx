@@ -7,7 +7,9 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const menuId = useId();
+  const brandName = site.displayName.split(" ")[0] ?? site.displayName;
 
   const links = useMemo(
     () =>
@@ -27,12 +29,29 @@ export function Navigation() {
     };
   }, [open]);
 
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 10);
+        raf = 0;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
-    <header className={styles.header}>
-      <div className={`shell ${styles.inner}`}>
+    <header className={styles.header} data-scrolled={scrolled}>
+      <div className={`shell ${styles.inner}`} data-scrolled={scrolled}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />
-          <span className={styles.brandText}>{site.displayName}</span>
+          <span className={styles.brandText}>{brandName}</span>
         </a>
 
         <div className={styles.middle}>

@@ -318,6 +318,10 @@ button {
 }
 
 @media (max-width: 767px) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .page-bg::before,
   .page-bg::after {
     animation: none;

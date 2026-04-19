@@ -44,7 +44,7 @@ export function Navigation() {
   }, []);
 
   return (
-    <header className={styles.header} data-scrolled={scrolled}>
+    <header className={styles.header} data-scrolled={scrolled} data-menu-open={open}>
       <div className={`shell ${styles.navShell} ${styles.inner}`} data-scrolled={scrolled}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />

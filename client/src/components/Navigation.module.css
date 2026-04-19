@@ -7,6 +7,18 @@
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   background: transparent;
+  transition: padding-top 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/*
+ * Mobile: после небольшого скролла уменьшаем только НАШ отступ под вырез —
+ * секции визуально поднимаются (как у плотного лендинга). Панель URL Safari
+ * по-прежнему управляет только сам браузер; z-index страницы её не перекрывает.
+ */
+@media (max-width: 767px) {
+  .header[data-scrolled="true"]:not([data-menu-open="true"]) {
+    padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) - 2.5rem));
+  }
 }
 
 .navShell {

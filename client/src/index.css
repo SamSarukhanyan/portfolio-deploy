@@ -95,6 +95,12 @@ body {
   isolation: isolate;
 }
 
+/* Контент над декоративным .page-bg; под липкой шапкой (она z-index: 50, прозрачная) */
+.app-main {
+  position: relative;
+  z-index: 1;
+}
+
 a {
   color: inherit;
   text-decoration-thickness: 1px;

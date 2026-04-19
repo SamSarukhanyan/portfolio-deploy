@@ -11,7 +11,7 @@ export default function App() {
     <>
       <div className="page-bg" aria-hidden />
       <Navigation />
-      <main>
+      <main className="app-main">
         <Hero />
         <StackSection />
         <ArchitectureSection />

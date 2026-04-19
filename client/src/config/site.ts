@@ -5,4 +5,5 @@ export const site = {
   email: "sarukhanyansam@gmail.com",
   githubUrl: "https://github.com/SamSarukhanyan",
   linkedinUrl: "https://www.linkedin.com/in/samvel-sarukhanyan-684327401",
+  telegramUrl: "",
 } as const;

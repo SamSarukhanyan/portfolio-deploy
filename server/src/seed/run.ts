@@ -33,7 +33,8 @@ async function main() {
       "INSERT INTO site_copy (str_key, en, ru, hy) VALUES (?, ?, ?, ?) " +
       "ON DUPLICATE KEY UPDATE en = VALUES(en), ru = VALUES(ru), hy = VALUES(hy)";
     for (const key of keys) {
-      await conn.execute(sql, [key, bundles.en[key], bundles.ru[key], bundles.hy[key]]);
+      const text = bundles.en[key];
+      await conn.execute(sql, [key, text, "", ""]);
     }
     await conn.commit();
     console.log(`Seeded ${keys.length} keys into site_copy`);

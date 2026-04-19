@@ -1,4 +1,4 @@
-export type Locale = "en" | "ru" | "hy";
+export type Locale = "en";
 
 export type MessageMap = Record<string, string>;
 

@@ -7,11 +7,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Bundles, Locale, MessageMap } from "./types";
+import type { Bundles, MessageMap } from "./types";
 import { interpolate } from "./interpolate";
 import defaultJson from "./bundles.default.json";
-
-const STORAGE_KEY = "portfolio.locale";
 
 const defaultBundles = defaultJson as Bundles;
 
@@ -23,28 +21,14 @@ function mergeLocale(base: MessageMap, overlay: MessageMap | undefined): Message
 function mergeBundles(remote: Partial<Bundles> | null): Bundles {
   return {
     en: mergeLocale(defaultBundles.en, remote?.en),
-    ru: mergeLocale(defaultBundles.ru, remote?.ru),
-    hy: mergeLocale(defaultBundles.hy, remote?.hy),
   };
 }
 
 type I18nContextValue = {
-  locale: Locale;
-  setLocale: (next: Locale) => void;
   t: (key: string, vars?: Record<string, string>) => string;
 };
 
 const I18nContext = createContext<I18nContextValue | null>(null);
-
-function readInitialLocale(): Locale {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw === "en" || raw === "ru" || raw === "hy") return raw;
-  } catch {
-    /* private mode */
-  }
-  return "en";
-}
 
 function translationsUrl(): string {
   const skip = import.meta.env.VITE_SKIP_SERVER_I18N === "true";
@@ -64,12 +48,11 @@ async function fetchRemoteBundles(url: string): Promise<Partial<Bundles> | null>
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(readInitialLocale);
   const [bundles, setBundles] = useState<Bundles>(() => mergeBundles(null));
 
   useEffect(() => {
-    document.documentElement.lang = locale === "hy" ? "hy" : locale;
-  }, [locale]);
+    document.documentElement.lang = "en";
+  }, []);
 
   useEffect(() => {
     const url = translationsUrl();
@@ -91,31 +74,15 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
   const t = useCallback(
     (key: string, vars?: Record<string, string>) => {
-      const raw = bundles[locale][key] ?? bundles.en[key] ?? key;
+      const raw = bundles.en[key] ?? key;
       return vars ? interpolate(raw, vars) : raw;
     },
-    [bundles, locale],
+    [bundles],
   );
 
-  const value = useMemo(
-    () => ({
-      locale,
-      setLocale,
-      t,
-    }),
-    [locale, setLocale, t],
-  );
+  const value = useMemo(() => ({ t }), [t]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

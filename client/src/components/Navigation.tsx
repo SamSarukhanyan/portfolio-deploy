@@ -2,14 +2,11 @@ import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./Navigation.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
-import { LanguageSwitcher } from "./LanguageSwitcher";
-
 export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuId = useId();
-  const brandName = site.displayName.split(" ")[0] ?? site.displayName;
 
   const links = useMemo(
     () =>
@@ -51,7 +48,7 @@ export function Navigation() {
       <div className={`shell ${styles.inner}`} data-scrolled={scrolled}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />
-          <span className={styles.brandText}>{brandName}</span>
+          <span className={styles.brandText}>{site.displayName}</span>
         </a>
 
         <div className={styles.middle}>
@@ -69,7 +66,6 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
-          <LanguageSwitcher />
           <button
             type="button"
             className={styles.menuBtn}

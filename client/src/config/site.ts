@@ -1,6 +1,6 @@
 /** Fill in your public contact endpoints. Copy is served from i18n (and optional MySQL). */
 export const site = {
-  displayName: "Samvel S.",
+  displayName: "Samvel Sarukhanyan",
   domain: "samsarukhanyan.com",
   email: "sarukhanyansam@gmail.com",
   githubUrl: "https://github.com/SamSarukhanyan",

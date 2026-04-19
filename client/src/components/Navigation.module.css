@@ -2,9 +2,20 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  padding-top: 0;
-  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
   background: transparent;
+}
+
+.header::before {
+  content: "";
+  flex: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  width: 100%;
+  background: var(--page-gradient);
+  background-color: var(--bg-deep);
+  pointer-events: none;
 }
 
 .inner {
@@ -12,7 +23,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0.75rem;
-  margin-top: env(safe-area-inset-top, 0px);
+  margin-top: 0;
   padding: 0.35rem 0.2rem;
   border-radius: 0;
   background: transparent;
@@ -141,7 +152,7 @@
   background: var(--text);
   border-radius: 2px;
   position: relative;
-  transition: background var(--t-micro) var(--ease-out);
+  transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .burger::before,
@@ -154,8 +165,8 @@
   background: var(--text);
   border-radius: 2px;
   transition:
-    transform var(--t-fast) var(--ease-out),
-    top var(--t-fast) var(--ease-out);
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    top 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .burger::before {
@@ -183,17 +194,17 @@
 .drawer {
   position: fixed;
   inset: 0;
-  top: calc(env(safe-area-inset-top, 0px) + 4.15rem);
+  top: calc(env(safe-area-inset-top, 0px) + 3.85rem);
   padding: 1.5rem;
   background: rgba(13, 21, 36, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-8px);
+  transform: translateY(-10px);
   transition:
-    opacity var(--t-fast) var(--ease-out),
-    transform var(--t-fast) var(--ease-out);
+    opacity 0.36s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .drawer[data-open="true"] {

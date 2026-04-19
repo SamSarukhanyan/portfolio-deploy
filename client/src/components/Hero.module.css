@@ -26,11 +26,20 @@
 
 .title {
   font-family: var(--font-sans);
-  font-size: clamp(2.6rem, 6vw, 3.8rem);
-  font-weight: 700;
-  line-height: 1.05;
+  font-size: clamp(1.95rem, 4.2vw, 2.65rem);
+  font-weight: 650;
+  line-height: 1.12;
   margin: 0.5rem 0 0.25rem;
   letter-spacing: -0.02em;
+}
+
+.titleFirst {
+  color: #c5d6e8;
+}
+
+.titleLast {
+  color: #8fa3b8;
+  font-weight: 600;
 }
 
 .subtitle {

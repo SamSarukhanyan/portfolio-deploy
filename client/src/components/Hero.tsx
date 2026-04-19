@@ -23,6 +23,10 @@ export function Hero() {
 
   const highlightSet = useMemo(() => new Set(["hero.chip.2", "hero.chip.5", "hero.chip.6"]), []);
 
+  const nameParts = site.displayName.split(" ");
+  const firstName = nameParts[0] ?? site.displayName;
+  const lastName = nameParts.slice(1).join(" ");
+
   return (
     <section id="top" className={`section ${styles.hero}`}>
       <div className="shell">
@@ -31,7 +35,8 @@ export function Hero() {
             <div className={styles.copy}>
               <p className="tag">{t("hero.tag", { domain: site.domain })}</p>
               <h1 className={styles.title}>
-                <span className="gradient-text">{site.displayName}</span>
+                <span className={styles.titleFirst}>{firstName}</span>
+                {lastName ? <span className={styles.titleLast}> {lastName}</span> : null}
               </h1>
               <p className={styles.subtitle}>{t("hero.subtitle")}</p>
               <p className={styles.lead}>{t("hero.lead")}</p>

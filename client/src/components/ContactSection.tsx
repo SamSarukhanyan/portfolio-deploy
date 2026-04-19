@@ -59,7 +59,16 @@ export function ContactSection() {
 
     event.preventDefault();
 
-    // Try Gmail app first on mobile, then fall back to a normal mail handler.
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    // iOS: never schedule mailto after Gmail — Cancel on the system sheet still
+    // leaves the page visible, so a delayed mailto incorrectly opens Mail/Gmail.
+    if (isIOS) {
+      window.location.href = gmailAppComposeUrl;
+      return;
+    }
+
+    // Android: optional mailto fallback after a short delay if the app handoff fails.
     const fallback = window.setTimeout(() => {
       window.location.href = mailtoUrl;
     }, 900);

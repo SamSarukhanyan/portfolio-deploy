@@ -28,7 +28,7 @@ export function Hero() {
   const lastName = nameParts.slice(1).join(" ");
 
   return (
-    <section id="top" className={`section ${styles.hero}`}>
+    <section id="top" className="section">
       <div className="shell">
         <div className={`glass ${styles.card}`}>
           <div className={styles.grid}>

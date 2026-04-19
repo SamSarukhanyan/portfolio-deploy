@@ -76,6 +76,10 @@
     "contact.lead": "Open to product engineering roles, focused contract work, and meaningful open-source collaboration. Send a short note about the problem space — I respond quickly.",
     "contact.hint": "Add your email and social URLs in src/config/site.ts, or override copy via MySQL (see server/sql). Buttons appear automatically when links exist.",
     "contact.emailCta": "Email me",
-    "footer.meta": "Built with React + Vite · glassmorphism UI"
+    "footer.tagline": "Full-stack engineering for products that ship — APIs, web, and mobile, with clear ownership end to end.",
+    "footer.aria": "Footer",
+    "footer.linkGithub": "GitHub",
+    "footer.linkLinkedin": "LinkedIn",
+    "footer.linkContact": "Contact"
   }
 }

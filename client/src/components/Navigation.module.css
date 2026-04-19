@@ -6,8 +6,8 @@
   padding: env(safe-area-inset-top, 0px) 0 0;
   margin: 0;
   box-sizing: border-box;
-  background: var(--page-gradient);
-  background-color: var(--bg-deep);
+  /* No own background: one continuous page gradient from html/body/.page-bg */
+  background: transparent;
 }
 
 .navShell {

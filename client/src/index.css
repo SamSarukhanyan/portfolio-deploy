@@ -53,6 +53,7 @@ html {
   min-height: 100vh;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
+  border: 1.5px solid rgb(255, 196, 0);
 }
 
 @media (prefers-reduced-motion: reduce) {

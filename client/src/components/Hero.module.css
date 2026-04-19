@@ -43,7 +43,7 @@
 .lead {
   margin: 0.35rem 0 1.25rem;
   font-size: 0.95rem;
-  color: var(--accent);
+  color: var(--text-muted);
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -65,121 +65,49 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 260px;
+  min-height: 240px;
 }
 
-.orbit {
+.chipCloud {
   position: relative;
-  width: min(100%, 320px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle at 40% 35%, rgba(126, 224, 255, 0.12), transparent 55%);
+  width: min(100%, 360px);
+  padding: 1.25rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 16, 28, 0.35);
 }
 
-.core {
-  width: 88px;
-  height: 88px;
-  border-radius: 24px;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
-  color: #061018;
-  background: linear-gradient(145deg, var(--accent), #9aefff);
-  box-shadow:
-    0 20px 50px rgba(126, 224, 255, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  animation: pulseCore 4.8s ease-in-out infinite;
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
 }
 
-.satellite {
-  position: absolute;
-  padding: 0.45rem 0.75rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.38rem 0.65rem;
   border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.satellite[data-p="1"] {
-  top: 8%;
-  right: 12%;
-  animation: floatTag 5.2s ease-in-out infinite;
+.chipHighlight {
+  color: var(--text);
+  border-color: rgba(126, 184, 212, 0.28);
+  background: rgba(126, 184, 212, 0.08);
 }
 
-.satellite[data-p="2"] {
-  bottom: 18%;
-  right: 6%;
-  animation: floatTag 6.2s ease-in-out infinite 0.35s;
-}
-
-.satellite[data-p="3"] {
-  bottom: 10%;
-  left: 10%;
-  animation: floatTag 5.8s ease-in-out infinite 0.55s;
-}
-
-.satellite[data-p="4"] {
-  top: 22%;
-  left: 4%;
-  animation: floatTag 6.8s ease-in-out infinite 0.2s;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .orbit {
-    animation: drift 18s ease-in-out infinite alternate;
-  }
-}
-
-@keyframes drift {
-  from {
-    transform: rotate(-2deg) scale(1);
-  }
-  to {
-    transform: rotate(3deg) scale(1.02);
-  }
-}
-
-@keyframes floatTag {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes pulseCore {
-  0%,
-  100% {
-    box-shadow:
-      0 20px 50px rgba(126, 224, 255, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  }
-  50% {
-    box-shadow:
-      0 24px 60px rgba(126, 224, 255, 0.48),
-      inset 0 1px 0 rgba(255, 255, 255, 0.58);
-  }
-}
-
-@media (max-width: 767px) {
-  .orbit,
-  .core,
-  .satellite[data-p="1"],
-  .satellite[data-p="2"],
-  .satellite[data-p="3"],
-  .satellite[data-p="4"] {
-    animation: none !important;
-  }
+.chipNote {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-muted);
 }

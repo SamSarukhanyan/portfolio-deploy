@@ -2,7 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  padding-top: env(safe-area-inset-top, 0);
+  padding-top: 0;
   padding-bottom: 0;
   background: transparent;
 }
@@ -12,6 +12,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 0.75rem;
+  margin-top: env(safe-area-inset-top, 0px);
   padding: 0.35rem 0.2rem;
   border-radius: 0;
   background: transparent;
@@ -29,11 +30,11 @@
 .inner[data-scrolled="true"] {
   padding: 0.55rem 0.85rem;
   border-radius: var(--radius-lg);
-  background: rgba(11, 18, 34, 0.58);
+  background: rgba(18, 28, 48, 0.42);
   backdrop-filter: blur(10px) saturate(128%);
   -webkit-backdrop-filter: blur(10px) saturate(128%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 22px rgba(5, 9, 18, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 22px rgba(5, 9, 18, 0.12);
 }
 
 .brand {
@@ -55,7 +56,7 @@
   height: 10px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 18px rgba(126, 224, 255, 0.55);
+  box-shadow: 0 0 12px rgba(126, 184, 212, 0.35);
 }
 
 .brandText {
@@ -184,9 +185,9 @@
   inset: 0;
   top: calc(env(safe-area-inset-top, 0px) + 4.15rem);
   padding: 1.5rem;
-  background: rgba(6, 8, 15, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(13, 21, 36, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   opacity: 0;
   pointer-events: none;
   transform: translateY(-8px);

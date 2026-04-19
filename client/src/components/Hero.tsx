@@ -1,9 +1,27 @@
+import { useMemo } from "react";
 import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 
+const chipKeys = [
+  "hero.chip.0",
+  "hero.chip.1",
+  "hero.chip.2",
+  "hero.chip.3",
+  "hero.chip.4",
+  "hero.chip.5",
+  "hero.chip.6",
+  "hero.chip.7",
+  "hero.chip.8",
+  "hero.chip.9",
+  "hero.chip.10",
+  "hero.chip.11",
+] as const;
+
 export function Hero() {
   const { t } = useI18n();
+
+  const highlightSet = useMemo(() => new Set(["hero.chip.2", "hero.chip.5", "hero.chip.6"]), []);
 
   return (
     <section id="top" className={`section ${styles.hero}`}>
@@ -28,20 +46,18 @@ export function Hero() {
               </div>
             </div>
             <div className={styles.visual} aria-hidden>
-              <div className={styles.orbit}>
-                <span className={styles.core}>RN</span>
-                <span className={styles.satellite} data-p="1">
-                  React
-                </span>
-                <span className={styles.satellite} data-p="2">
-                  Node
-                </span>
-                <span className={styles.satellite} data-p="3">
-                  MySQL
-                </span>
-                <span className={styles.satellite} data-p="4">
-                  CI/CD
-                </span>
+              <div className={styles.chipCloud}>
+                <div className={styles.chipGrid}>
+                  {chipKeys.map((key) => (
+                    <span
+                      key={key}
+                      className={`${styles.chip} ${highlightSet.has(key) ? styles.chipHighlight : ""}`}
+                    >
+                      {t(key)}
+                    </span>
+                  ))}
+                </div>
+                <p className={styles.chipNote}>{t("hero.chipNote")}</p>
               </div>
             </div>
           </div>

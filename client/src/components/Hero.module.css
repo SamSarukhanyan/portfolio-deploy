@@ -172,3 +172,14 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.58);
   }
 }
+
+@media (max-width: 767px) {
+  .orbit,
+  .core,
+  .satellite[data-p="1"],
+  .satellite[data-p="2"],
+  .satellite[data-p="3"],
+  .satellite[data-p="4"] {
+    animation: none !important;
+  }
+}

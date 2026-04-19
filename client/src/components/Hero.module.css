@@ -1,15 +1,15 @@
 .hero {
-  padding-top: clamp(0.35rem, 2vw, 1rem);
+  padding-top: clamp(0.15rem, 1.2vw, 0.65rem);
 }
 
 .card {
-  padding: clamp(1.75rem, 4vw, 3rem);
+  padding: clamp(1.15rem, 2.8vw, 2.1rem);
   overflow: hidden;
 }
 
 .grid {
   display: grid;
-  gap: clamp(2rem, 5vw, 3.5rem);
+  gap: clamp(1.2rem, 3.2vw, 2.35rem);
   align-items: center;
 }
 
@@ -74,13 +74,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 240px;
+  min-height: 200px;
 }
 
 .chipCloud {
   position: relative;
   width: min(100%, 360px);
-  padding: 1.25rem 1rem;
+  padding: 1rem 0.85rem;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(10, 16, 28, 0.35);

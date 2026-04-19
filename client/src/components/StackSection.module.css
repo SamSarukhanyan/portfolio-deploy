@@ -4,7 +4,7 @@
 
 .grid {
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -14,7 +14,7 @@
 }
 
 .card {
-  padding: 1.5rem 1.35rem 1.65rem;
+  padding: 1.2rem 1.1rem 1.3rem;
   height: 100%;
   position: relative;
   overflow: hidden;
@@ -47,7 +47,7 @@
 }
 
 .cardTitle {
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.14em;

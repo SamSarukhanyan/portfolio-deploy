@@ -62,8 +62,18 @@
 
 .actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.actions > a {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: clamp(0.8rem, 2.6vw, 0.95rem);
+  padding-left: clamp(0.65rem, 2.5vw, 1.1rem);
+  padding-right: clamp(0.65rem, 2.5vw, 1.1rem);
 }
 
 .visual {

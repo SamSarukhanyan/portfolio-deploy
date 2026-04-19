@@ -1,23 +1,25 @@
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   width: 100%;
   margin: 0;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   background: transparent;
-  transition: padding-top 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+  z-index: 50;
 }
 
-/*
- * Mobile: после небольшого скролла уменьшаем только НАШ отступ под вырез —
- * секции визуально поднимаются (как у плотного лендинга). Панель URL Safari
- * по-прежнему управляет только сам браузер; z-index страницы её не перекрывает.
- */
+/* Mobile: шапка в потоке документа — уезжает вверх вместе со страницей (как mjs.am), не «капот» над Hero */
 @media (max-width: 767px) {
-  .header[data-scrolled="true"]:not([data-menu-open="true"]) {
-    padding-top: max(0.5rem, calc(env(safe-area-inset-top, 0px) - 2.5rem));
+  .header {
+    position: relative;
+    top: auto;
+  }
+}
+
+/* Desktop: липкая шапка */
+@media (min-width: 768px) {
+  .header {
+    position: sticky;
+    top: 0;
   }
 }
 
@@ -216,6 +218,7 @@
   right: 0;
   width: 100%;
   max-width: none;
+  z-index: 60;
   padding: 1.5rem max(1rem, env(safe-area-inset-left, 0px)) 1.5rem max(1rem, env(safe-area-inset-right, 0px));
   background: rgba(13, 21, 36, 0.94);
   backdrop-filter: blur(12px);

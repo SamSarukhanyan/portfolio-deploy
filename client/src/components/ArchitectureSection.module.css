@@ -71,6 +71,16 @@
   background: rgba(255, 255, 255, 0.03);
   padding: 1.15rem 1.2rem;
   min-height: 100%;
+  transition:
+    transform 0.3s var(--ease-out),
+    border-color 0.22s var(--ease-out),
+    background-color 0.22s var(--ease-out);
+}
+
+.node:hover {
+  transform: translateY(-4px);
+  border-color: rgba(126, 224, 255, 0.3);
+  background: rgba(126, 224, 255, 0.07);
 }
 
 .nodeHead {
@@ -119,6 +129,16 @@
   padding: 1rem 1.1rem;
   font-size: 0.9rem;
   color: var(--text-muted);
+  transition:
+    transform 0.28s var(--ease-out),
+    border-color 0.22s var(--ease-out),
+    background-color 0.22s var(--ease-out);
+}
+
+.railCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(196, 165, 255, 0.3);
+  background: rgba(196, 165, 255, 0.08);
 }
 
 .railTitle {

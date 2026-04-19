@@ -5,6 +5,8 @@
 
 .card {
   padding: clamp(1.5rem, 3vw, 2.25rem);
+  position: relative;
+  overflow: hidden;
 }
 
 .layout {
@@ -69,13 +71,22 @@
   text-decoration: none;
   color: var(--text);
   transition:
+    transform var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
     background-color var(--t-fast) var(--ease-out),
-    color var(--t-micro) var(--ease-out);
+    color var(--t-micro) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
 }
 
 .social:hover {
   border-color: rgba(126, 224, 255, 0.4);
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(126, 224, 255, 0.14);
+}
+
+.social:focus-visible {
+  outline: 2px solid rgba(126, 224, 255, 0.6);
+  outline-offset: 2px;
 }

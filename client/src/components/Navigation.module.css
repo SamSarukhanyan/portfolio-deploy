@@ -1,26 +1,10 @@
 .header {
+  position: relative;
   width: 100%;
   margin: 0;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   background: transparent;
-  z-index: 50;
-}
-
-/* Mobile: шапка в потоке документа — уезжает вверх вместе со страницей (как mjs.am), не «капот» над Hero */
-@media (max-width: 767px) {
-  .header {
-    position: relative;
-    top: auto;
-  }
-}
-
-/* Desktop: липкая шапка */
-@media (min-width: 768px) {
-  .header {
-    position: sticky;
-    top: 0;
-  }
 }
 
 .navShell {
@@ -49,21 +33,6 @@
   -webkit-backdrop-filter: none;
   border: none;
   box-shadow: none;
-  transition:
-    background-color 0.22s var(--ease-out),
-    border-color 0.22s var(--ease-out),
-    box-shadow 0.26s var(--ease-out),
-    backdrop-filter 0.26s var(--ease-out);
-}
-
-.inner[data-scrolled="true"] {
-  padding: 0.55rem 0.85rem;
-  border-radius: var(--radius-lg);
-  background: rgba(18, 28, 48, 0.42);
-  backdrop-filter: blur(10px) saturate(128%);
-  -webkit-backdrop-filter: blur(10px) saturate(128%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 22px rgba(5, 9, 18, 0.12);
 }
 
 .brand {
@@ -227,9 +196,8 @@
   pointer-events: none;
   transform: translateY(-6px);
   transition:
-    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform;
+    opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .drawer[data-open="true"] {

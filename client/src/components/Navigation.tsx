@@ -5,7 +5,6 @@ import { useI18n } from "../i18n/I18nProvider";
 export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const menuId = useId();
 
   const links = useMemo(
@@ -26,26 +25,9 @@ export function Navigation() {
     };
   }, [open]);
 
-  useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 10);
-        raf = 0;
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) window.cancelAnimationFrame(raf);
-    };
-  }, []);
-
   return (
-    <header className={styles.header} data-scrolled={scrolled}>
-      <div className={`shell ${styles.navShell} ${styles.inner}`} data-scrolled={scrolled}>
+    <header className={styles.header}>
+      <div className={`shell ${styles.navShell} ${styles.inner}`}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
           <span className={styles.brandMark} aria-hidden />
           <span className={styles.brandText}>{site.displayName}</span>

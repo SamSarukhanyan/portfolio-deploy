@@ -83,6 +83,7 @@ body {
   background-color: #0e1628;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  border: 1px solid rgb(33, 220, 39);
 }
 
 #root {
@@ -93,6 +94,7 @@ body {
   min-height: -webkit-fill-available;
   position: relative;
   isolation: isolate;
+  border: 1px solid rgb(206, 47, 167);
 }
 
 /* Контент над декоративным .page-bg; под липкой шапкой (она z-index: 50, прозрачная) */

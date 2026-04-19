@@ -18,7 +18,8 @@
   .header .navShell {
     max-width: none;
     margin-inline: 0;
-    padding-inline: max(1rem, env(safe-area-inset-left, 0px)) max(1rem, env(safe-area-inset-right, 0px));
+    /* Edge-to-edge bar; only notch / home-indicator insets */
+    padding-inline: max(0.65rem, env(safe-area-inset-left, 0px)) max(0.65rem, env(safe-area-inset-right, 0px));
   }
 }
 

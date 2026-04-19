@@ -21,6 +21,11 @@
   --font-display: "DM Sans", system-ui, sans-serif;
   --space-section: clamp(4rem, 10vw, 7rem);
   --max-width: 1120px;
+  --page-gradient:
+    radial-gradient(ellipse 120% 80% at 10% -10%, rgba(126, 224, 255, 0.16), transparent 50%),
+    radial-gradient(ellipse 90% 70% at 95% 10%, rgba(196, 165, 255, 0.12), transparent 45%),
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(126, 224, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 45%, #070a12 100%);
 }
 
 *,
@@ -31,6 +36,7 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--page-gradient);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -54,11 +60,7 @@ body {
   font-optical-sizing: auto;
   font-weight: 400;
   color: var(--text);
-  background:
-    radial-gradient(ellipse 120% 80% at 10% -10%, rgba(126, 224, 255, 0.16), transparent 50%),
-    radial-gradient(ellipse 90% 70% at 95% 10%, rgba(196, 165, 255, 0.12), transparent 45%),
-    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(126, 224, 255, 0.06), transparent 55%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 45%, #070a12 100%);
+  background: var(--page-gradient);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
@@ -97,11 +99,7 @@ button {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(ellipse 120% 80% at 10% -10%, rgba(126, 224, 255, 0.16), transparent 50%),
-    radial-gradient(ellipse 90% 70% at 95% 10%, rgba(196, 165, 255, 0.12), transparent 45%),
-    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(126, 224, 255, 0.06), transparent 55%),
-    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 45%, #070a12 100%);
+  background: var(--page-gradient);
   pointer-events: none;
   overflow: hidden;
 }

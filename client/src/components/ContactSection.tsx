@@ -36,6 +36,9 @@ export function ContactSection() {
   ].filter(Boolean) as Social[];
 
   const hasEmail = site.email.trim().length > 0;
+  const gmailComposeUrl = hasEmail
+    ? `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}`
+    : "";
 
   return (
     <section id="contact" className={`section ${styles.section}`}>
@@ -53,7 +56,12 @@ export function ContactSection() {
             </div>
             <div className={styles.actions}>
               {hasEmail ? (
-                <a className="btn-primary" href={`mailto:${site.email}`}>
+                <a
+                  className="btn-primary"
+                  href={gmailComposeUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
                   {t("contact.emailCta")}
                 </a>
               ) : null}

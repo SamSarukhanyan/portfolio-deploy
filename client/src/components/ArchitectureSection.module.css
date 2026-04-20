@@ -5,11 +5,13 @@
 .head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: clamp(0.55rem, 1.3vw, 0.95rem);
+  flex-wrap: wrap;
 }
 
 .route {
+  flex: 0 0 auto;
   width: 120px;
   height: 38px;
   border-radius: 999px;
@@ -17,6 +19,7 @@
   background: rgba(14, 20, 36, 0.72);
   position: relative;
   overflow: hidden;
+  transform: translateY(1px);
 }
 
 .route::before {

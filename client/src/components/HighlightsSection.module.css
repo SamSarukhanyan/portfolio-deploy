@@ -5,11 +5,13 @@
 .head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: clamp(0.55rem, 1.3vw, 0.95rem);
+  flex-wrap: wrap;
 }
 
 .signal {
+  flex: 0 0 auto;
   width: 112px;
   height: 52px;
   border-radius: 14px;
@@ -22,6 +24,7 @@
   padding: 0.55rem 0.55rem 0.5rem;
   position: relative;
   overflow: hidden;
+  transform: translateY(1px);
 }
 
 .signalBar {

@@ -5,14 +5,17 @@
 .head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: clamp(0.55rem, 1.3vw, 0.95rem);
+  flex-wrap: wrap;
 }
 
 .stackGlyph {
+  flex: 0 0 auto;
   width: 92px;
   height: 56px;
   position: relative;
+  transform: translateY(1px);
 }
 
 .stackLayer {

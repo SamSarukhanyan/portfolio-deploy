@@ -101,7 +101,7 @@ export function Hero() {
                 <a className="btn-ghost" href="#highlights">
                   {t("hero.ctaHighlights")}
                 </a>
-                <a className="btn-ghost" href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
+                <a className="btn-art" href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
                   {t("hero.ctaArt")}
                 </a>
               </Reveal>

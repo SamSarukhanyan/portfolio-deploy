@@ -361,6 +361,39 @@ section#top.section {
   outline-offset: 2px;
 }
 
+.btn-art {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.85rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(111, 162, 196, 0.46);
+  background: linear-gradient(140deg, rgba(68, 89, 116, 0.92), rgba(53, 72, 95, 0.92));
+  color: #d1dde9;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    transform var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
+}
+
+.btn-art:hover {
+  transform: translateY(-1px);
+  border-color: rgba(124, 173, 208, 0.65);
+  box-shadow: 0 12px 24px rgba(17, 28, 42, 0.45);
+  color: #dde8f4;
+}
+
+.btn-art:focus-visible {
+  outline: 2px solid rgba(124, 173, 208, 0.62);
+  outline-offset: 2px;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

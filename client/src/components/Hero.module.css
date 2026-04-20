@@ -34,33 +34,33 @@
 .domain {
   display: inline-flex;
   margin: 0;
-  padding: 0.34rem 0.72rem;
+  padding: 0.26rem 0.62rem;
   border-radius: 999px;
-  border: 1px solid rgba(85, 199, 255, 0.35);
-  background: rgba(85, 199, 255, 0.14);
-  color: #c9d8e8;
-  font-size: 0.76rem;
-  font-weight: 600;
+  border: 1px dashed rgba(135, 154, 177, 0.42);
+  background: rgba(117, 132, 152, 0.12);
+  color: #9caec4;
+  font-size: 0.7rem;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: none;
 }
 
 .portfolioTag {
   margin: 0;
-  padding: 0.34rem 0.66rem;
+  padding: 0.26rem 0.58rem;
   border-radius: 999px;
-  border: 1px solid rgba(113, 231, 193, 0.38);
-  background: rgba(113, 231, 193, 0.12);
-  color: #cdded7;
-  font-size: 0.72rem;
-  font-weight: 700;
+  border: 1px dashed rgba(132, 149, 174, 0.42);
+  background: rgba(107, 123, 145, 0.14);
+  color: #97abc1;
+  font-size: 0.68rem;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .title {
   font-family: var(--font-sans);
-  font-size: clamp(1.72rem, 4.3vw, 2.8rem);
+  font-size: clamp(1.56rem, 3.8vw, 2.5rem);
   font-weight: 700;
   line-height: 1.14;
   margin: 0;

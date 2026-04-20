@@ -39,6 +39,8 @@ export function ArtPage() {
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const pinchStartDistance = useRef<number | null>(null);
   const pinchStartScale = useRef(1);
+  const pinchStartCenter = useRef<{ x: number; y: number } | null>(null);
+  const pinchStartOffset = useRef({ x: 0, y: 0 });
   const panStart = useRef<{ x: number; y: number } | null>(null);
   const panOffsetStart = useRef({ x: 0, y: 0 });
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -103,6 +105,8 @@ export function ArtPage() {
       const [a, b] = Array.from(pointersRef.current.values());
       pinchStartDistance.current = Math.hypot(a.x - b.x, a.y - b.y);
       pinchStartScale.current = scale;
+      pinchStartCenter.current = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      pinchStartOffset.current = offset;
       panStart.current = null;
       setGestureActive(true);
     } else if (pointersRef.current.size === 1 && scale > 1.01) {
@@ -152,7 +156,12 @@ export function ArtPage() {
       const nextDistance = Math.hypot(a.x - b.x, a.y - b.y);
       const startDistance = pinchStartDistance.current ?? nextDistance;
       const nextScale = Math.max(0.82, Math.min(3.4, pinchStartScale.current * (nextDistance / startDistance)));
+      const center = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      const startCenter = pinchStartCenter.current ?? center;
+      const dx = center.x - startCenter.x;
+      const dy = center.y - startCenter.y;
       setScale(nextScale);
+      setOffset({ x: pinchStartOffset.current.x + dx, y: pinchStartOffset.current.y + dy });
       setGestureActive(true);
       return;
     }
@@ -160,7 +169,7 @@ export function ArtPage() {
     if (pointersRef.current.size === 1 && panStart.current && scale > 1.01) {
       const dx = event.clientX - panStart.current.x;
       const dy = event.clientY - panStart.current.y;
-      setOffset(clampOffset({ x: panOffsetStart.current.x + dx, y: panOffsetStart.current.y + dy }, scale));
+      setOffset({ x: panOffsetStart.current.x + dx, y: panOffsetStart.current.y + dy });
       setGestureActive(true);
     }
   }
@@ -172,6 +181,7 @@ export function ArtPage() {
       settleTransform(scale, offset);
       panStart.current = null;
       pinchStartDistance.current = null;
+      pinchStartCenter.current = null;
     } else if (pointersRef.current.size === 1 && scale > 1.01) {
       const [point] = Array.from(pointersRef.current.values());
       panStart.current = { x: point.x, y: point.y };
@@ -205,9 +215,16 @@ export function ArtPage() {
     <section className={`section ${styles.section}`}>
       <div className="shell">
         <div className={`glass ${styles.hero}`}>
-          <a href="/" className={styles.backLink} onClick={(event) => onSpaLinkClick(event, "/")}>
-            {t("art.backHome")}
-          </a>
+          <div className={styles.heroTop}>
+            <a href="/" className={styles.backLink} onClick={(event) => onSpaLinkClick(event, "/")}>
+              {t("art.backHome")}
+            </a>
+            <div className={styles.heroMonoMotion} aria-hidden>
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
           <h1 className={styles.title}>{t("art.title")}</h1>
           <p className={styles.lead}>{t("art.lead")}</p>
         </div>
@@ -248,6 +265,7 @@ export function ArtPage() {
           <div
             ref={stageRef}
             className={styles.modalStage}
+            data-zoomed={hideUi ? "true" : "false"}
             onClick={(event) => event.stopPropagation()}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}

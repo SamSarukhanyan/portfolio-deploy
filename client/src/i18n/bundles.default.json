@@ -10,7 +10,7 @@
     "nav.openMenu": "Open menu",
     "nav.closeMenu": "Close menu",
     "nav.menuDialog": "Menu",
-    "hero.title": "Reliable full-stack engineering for product delivery",
+    "hero.title": "Reliable full-stack engineering for modern product delivery",
     "hero.subtitle": "From feature planning to secure release, every layer is built to run in real production.",
     "hero.body": "This portfolio sits on the same real deployment path I use for product work: CI/CD automation, EC2 runtime, Nginx + PM2 process management, HTTPS certificates, domain routing, and operational checks after every push.",
     "hero.summary": "End-to-end product delivery with API architecture, secure deployment, and production operations in one consistent engineering workflow.",

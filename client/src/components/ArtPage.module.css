@@ -3,6 +3,7 @@
 }
 
 .hero {
+  position: relative;
   padding: clamp(1rem, 2.2vw, 1.4rem);
   margin-bottom: 1rem;
   border-radius: 20px;
@@ -11,15 +12,74 @@
     rgba(12, 18, 30, 0.74);
 }
 
+.heroTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
 .backLink {
   display: inline-flex;
-  margin-bottom: 0.7rem;
-  color: #a9b8ca;
+  align-items: center;
+  justify-content: center;
+  color: #cfdae8;
   text-decoration: none;
-  font-size: 0.86rem;
-  border: 1px solid rgba(120, 140, 170, 0.34);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid rgba(123, 154, 189, 0.5);
   border-radius: 999px;
-  padding: 0.35rem 0.72rem;
+  padding: 0.44rem 0.9rem;
+  background: linear-gradient(140deg, rgba(55, 75, 100, 0.9), rgba(42, 63, 82, 0.88));
+  box-shadow: 0 8px 18px rgba(11, 20, 31, 0.34);
+}
+
+.backLink:hover {
+  color: #dbe7f4;
+  border-color: rgba(141, 171, 204, 0.66);
+}
+
+.heroMonoMotion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  min-width: 92px;
+  align-items: flex-end;
+}
+
+.heroMonoMotion span {
+  display: block;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(190, 200, 214, 0.16), rgba(190, 200, 214, 0.82));
+  animation: monoSweep 2.6s ease-in-out infinite;
+}
+
+.heroMonoMotion span:nth-child(1) {
+  width: 92px;
+}
+
+.heroMonoMotion span:nth-child(2) {
+  width: 68px;
+  animation-delay: 0.25s;
+}
+
+.heroMonoMotion span:nth-child(3) {
+  width: 80px;
+  animation-delay: 0.5s;
+}
+
+@keyframes monoSweep {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateX(0) scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-8px) scaleX(0.92);
+  }
 }
 
 .title {
@@ -136,6 +196,14 @@
   touch-action: none;
 }
 
+.modalStage[data-zoomed="true"] .figure {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(5, 9, 16, 0.9);
+  padding: 0.3rem;
+}
+
 .figure {
   margin: 0;
   display: grid;
@@ -148,7 +216,7 @@
 
 .figure img {
   max-width: 100vw;
-  max-height: calc(100vh - 5.2rem);
+  max-height: calc(100vh - 4.4rem);
   width: auto;
   height: auto;
   object-fit: contain;
@@ -199,6 +267,26 @@
 }
 
 @media (max-width: 759px) {
+  .heroTop {
+    margin-bottom: 0.6rem;
+  }
+
+  .heroMonoMotion {
+    min-width: 72px;
+  }
+
+  .heroMonoMotion span:nth-child(1) {
+    width: 72px;
+  }
+
+  .heroMonoMotion span:nth-child(2) {
+    width: 56px;
+  }
+
+  .heroMonoMotion span:nth-child(3) {
+    width: 64px;
+  }
+
   .modalStage {
     width: 100%;
   }

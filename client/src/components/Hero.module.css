@@ -24,8 +24,10 @@
 }
 
 .domainRow {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0.45rem;
   margin: 0 0 1rem;
@@ -60,28 +62,28 @@
 
 .title {
   font-family: var(--font-sans);
-  font-size: clamp(1.5rem, 3.3vw, 2.2rem);
+  font-size: clamp(1.46rem, 3.2vw, 2.1rem);
   font-weight: 700;
-  line-height: 1.22;
+  line-height: 1.2;
   margin: 0;
-  letter-spacing: -0.02em;
-  color: #cdd8e7;
-  max-width: 28ch;
+  letter-spacing: -0.015em;
+  color: #b9c5d9;
+  max-width: 23ch;
   overflow-wrap: normal;
   word-break: keep-all;
   hyphens: none;
-  text-wrap: balance;
-  text-align: center;
-  margin-inline: auto;
+  text-wrap: pretty;
+  text-align: left;
+  margin-inline: 0;
 }
 
 .summary {
-  margin: 0.82rem auto 0;
+  margin: 0.82rem 0 0;
   max-width: 56ch;
   color: #a9bbcf;
   font-size: 0.94rem;
   line-height: 1.52;
-  text-align: center;
+  text-align: left;
   padding: 0.64rem 0.8rem;
   border-radius: 12px;
   border: 1px solid rgba(118, 142, 171, 0.28);
@@ -704,9 +706,10 @@
   }
 
   .title {
-    max-width: 24ch;
+    max-width: 22ch;
     font-size: clamp(1.36rem, 6vw, 1.72rem);
     line-height: 1.23;
+    text-align: left;
   }
 
   .summary {

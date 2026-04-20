@@ -1,5 +1,6 @@
 import styles from "./HighlightsSection.module.css";
 import { useI18n } from "../i18n/I18nProvider";
+import { Reveal } from "./Reveal";
 
 const cards = [
   { titleKey: "highlights.1.title" as const, bodyKey: "highlights.1.body" as const },
@@ -16,15 +17,25 @@ export function HighlightsSection() {
   return (
     <section id="highlights" className={`section ${styles.section}`}>
       <div className="shell">
-        <h2 className="section-title">{t("highlights.title")}</h2>
-        <p className="section-lead">{t("highlights.lead")}</p>
+        <Reveal as="h2" className="section-title" direction="left">
+          {t("highlights.title")}
+        </Reveal>
+        <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
+          {t("highlights.lead")}
+        </Reveal>
         <ul className={styles.grid}>
-          {cards.map((h) => (
-            <li key={h.titleKey} className={`glass ${styles.card}`}>
+          {cards.map((h, idx) => (
+            <Reveal
+              key={h.titleKey}
+              as="li"
+              className={`glass ${styles.card}`}
+              direction={idx % 3 === 0 ? "left" : idx % 3 === 1 ? "up" : "right"}
+              delayMs={80 + idx * 45}
+            >
               <p className={styles.cardKicker}>{t("highlights.kicker")}</p>
               <h3 className={styles.cardTitle}>{t(h.titleKey)}</h3>
               <p className={styles.cardText}>{t(h.bodyKey)}</p>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

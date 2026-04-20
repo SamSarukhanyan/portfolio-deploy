@@ -2,6 +2,7 @@ import styles from "./ContactSection.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import type { MouseEvent } from "react";
+import { Reveal } from "./Reveal";
 
 type Social = { label: string; href: string; icon: "gh" | "in" | "tg" };
 
@@ -87,18 +88,27 @@ export function ContactSection() {
   return (
     <section id="contact" className={`section ${styles.section}`}>
       <div className="shell">
-        <div className={`glass ${styles.card}`}>
+        <Reveal className={`glass ${styles.card}`} direction="up">
           <div className={styles.layout}>
             <div>
-              <h2 className="section-title" style={{ marginBottom: "0.5rem" }}>
+              <Reveal
+                as="h2"
+                className="section-title"
+                direction="left"
+                style={{ marginBottom: "0.5rem" }}
+              >
                 {t("contact.title")}
-              </h2>
-              <p className={styles.lead}>{t("contact.lead")}</p>
+              </Reveal>
+              <Reveal as="p" className={styles.lead} direction="up" delayMs={50}>
+                {t("contact.lead")}
+              </Reveal>
               {!hasEmail && socials.length === 0 ? (
-                <p className={styles.hint}>{t("contact.hint")}</p>
+                <Reveal as="p" className={styles.hint} direction="right" delayMs={90}>
+                  {t("contact.hint")}
+                </Reveal>
               ) : null}
             </div>
-            <div className={styles.actions}>
+            <Reveal className={styles.actions} direction="right" delayMs={90}>
               {hasEmail ? (
                 <a
                   className="btn-primary"
@@ -109,22 +119,25 @@ export function ContactSection() {
                 </a>
               ) : null}
               <div className={styles.socialRow}>
-                {socials.map((s) => (
-                  <a
+                {socials.map((s, idx) => (
+                  <Reveal
                     key={s.label}
+                    as="a"
                     className={styles.social}
                     href={s.href}
                     target="_blank"
                     rel="noreferrer noopener"
+                    direction={idx % 2 === 0 ? "left" : "right"}
+                    delayMs={120 + idx * 40}
                   >
                     <Icon kind={s.icon} />
                     <span>{s.label}</span>
-                  </a>
+                  </Reveal>
                 ))}
               </div>
-            </div>
+            </Reveal>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

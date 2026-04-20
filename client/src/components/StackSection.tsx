@@ -1,5 +1,6 @@
 import styles from "./StackSection.module.css";
 import { useI18n } from "../i18n/I18nProvider";
+import { Reveal } from "./Reveal";
 
 const layers = [
   {
@@ -51,19 +52,38 @@ export function StackSection() {
   return (
     <section id="stack" className={`section ${styles.section}`}>
       <div className="shell">
-        <h2 className="section-title">{t("stack.title")}</h2>
-        <p className="section-lead">{t("stack.lead")}</p>
+        <Reveal as="h2" className="section-title" direction="left">
+          {t("stack.title")}
+        </Reveal>
+        <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
+          {t("stack.lead")}
+        </Reveal>
         <div className={styles.grid}>
-          {layers.map((layer) => (
-            <article key={layer.titleKey} className={`glass ${styles.card}`}>
-              <p className={styles.cardTitle} style={{ color: layer.accent }}>{t(layer.titleKey)}</p>
+          {layers.map((layer, layerIdx) => (
+            <Reveal
+              key={layer.titleKey}
+              as="article"
+              className={`glass ${styles.card}`}
+              direction={layerIdx % 2 === 0 ? "left" : "right"}
+              delayMs={80 + layerIdx * 70}
+            >
+              <p className={styles.cardTitle} style={{ color: layer.accent }}>
+                {t(layer.titleKey)}
+              </p>
               <p className={styles.summary}>{t(layer.summaryKey)}</p>
               <ul className={styles.list}>
-                {layer.itemKeys.map((key) => (
-                  <li key={key}>{t(key)}</li>
+                {layer.itemKeys.map((key, idx) => (
+                  <Reveal
+                    key={key}
+                    as="li"
+                    direction={idx % 2 === 0 ? "up" : "right"}
+                    delayMs={120 + idx * 24}
+                  >
+                    {t(key)}
+                  </Reveal>
                 ))}
               </ul>
-            </article>
+            </Reveal>
           ))}
         </div>
       </div>

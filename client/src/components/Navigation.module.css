@@ -1,5 +1,6 @@
 .header {
   position: relative;
+  z-index: 90;
   width: 100%;
   margin: 0;
   box-sizing: border-box;
@@ -128,6 +129,8 @@
   width: 44px;
   height: 44px;
   margin-top: 0.1rem;
+  position: relative;
+  z-index: 95;
   border-radius: 14px;
   border: 1px solid rgba(85, 199, 255, 0.34);
   background:
@@ -160,7 +163,7 @@
   background: #ebf7ff;
   border-radius: 2px;
   position: relative;
-  transition: background 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .burger::before,
@@ -173,8 +176,8 @@
   background: #ebf7ff;
   border-radius: 2px;
   transition:
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .burger::before {
@@ -202,7 +205,7 @@
 .drawer {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 70;
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
@@ -218,8 +221,8 @@
   pointer-events: none;
   visibility: hidden;
   transition:
-    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.3s;
+    opacity 0.46s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.46s;
 }
 
 .drawer[data-open="true"] {
@@ -227,7 +230,7 @@
   pointer-events: auto;
   visibility: visible;
   transition:
-    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.46s cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0s;
 }
 
@@ -243,8 +246,8 @@
   transform: translateX(22px) scale(0.98);
   opacity: 0;
   transition:
-    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.44s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
 }
 

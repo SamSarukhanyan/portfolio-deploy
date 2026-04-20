@@ -344,6 +344,31 @@ section#top.section {
   border: 0;
 }
 
+/* Scroll reveal */
+.reveal-item {
+  --reveal-delay: 0ms;
+  --reveal-distance: 26px;
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0) scale(0.985);
+  transition:
+    opacity 0.62s var(--ease-out) var(--reveal-delay),
+    transform 0.62s var(--ease-out) var(--reveal-delay);
+  will-change: opacity, transform;
+}
+
+.reveal-item[data-reveal-dir="left"] {
+  transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0) scale(0.985);
+}
+
+.reveal-item[data-reveal-dir="right"] {
+  transform: translate3d(var(--reveal-distance), 0, 0) scale(0.985);
+}
+
+.reveal-item[data-reveal-in="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
 @keyframes ambientShift {
   from {
     transform: translate3d(-2%, -1%, 0) scale(1.02);
@@ -377,5 +402,16 @@ section#top.section {
       inset 0 1px 0 var(--glass-highlight),
       0 24px 48px rgba(0, 0, 0, 0.35),
       var(--shadow-glow);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item,
+  .reveal-item[data-reveal-dir="left"],
+  .reveal-item[data-reveal-dir="right"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
   }
 }

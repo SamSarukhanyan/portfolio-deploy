@@ -1,5 +1,6 @@
 import styles from "./ArchitectureSection.module.css";
 import { useI18n } from "../i18n/I18nProvider";
+import { Reveal } from "./Reveal";
 
 const nodes = [
   {
@@ -28,40 +29,49 @@ export function ArchitectureSection() {
   return (
     <section id="architecture" className={`section ${styles.section}`}>
       <div className="shell">
-        <h2 className="section-title">{t("arch.title")}</h2>
-        <p className="section-lead">{t("arch.lead")}</p>
+        <Reveal as="h2" className="section-title" direction="right">
+          {t("arch.title")}
+        </Reveal>
+        <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
+          {t("arch.lead")}
+        </Reveal>
 
-        <div className={`glass ${styles.diagram}`}>
+        <Reveal className={`glass ${styles.diagram}`} direction="up" delayMs={90}>
           <div className={styles.flow}>
             {nodes.map((n, i) => (
-              <div key={n.id} className={styles.flowItem}>
-                <article className={styles.node}>
+              <Reveal
+                key={n.id}
+                className={styles.flowItem}
+                direction={i % 2 === 0 ? "left" : "right"}
+                delayMs={110 + i * 80}
+              >
+                <Reveal as="article" className={styles.node} direction="up" delayMs={40}>
                   <header className={styles.nodeHead}>
                     <span className={styles.nodeLabel}>{n.label}</span>
                     <span className={styles.nodeSub}>{n.sub}</span>
                   </header>
                   <p className={styles.nodeBody}>{t(n.bodyKey)}</p>
-                </article>
+                </Reveal>
                 {i < nodes.length - 1 ? (
                   <div className={styles.connector} aria-hidden>
                     <span className={styles.connectorLine} />
                   </div>
                 ) : null}
-              </div>
+              </Reveal>
             ))}
           </div>
 
           <div className={styles.rail}>
-            <div className={styles.railCard}>
+            <Reveal className={styles.railCard} direction="left" delayMs={180}>
               <span className={styles.railTitle}>{t("arch.data.title")}</span>
               <p>{t("arch.data.body")}</p>
-            </div>
-            <div className={styles.railCard}>
+            </Reveal>
+            <Reveal className={styles.railCard} direction="right" delayMs={220}>
               <span className={styles.railTitle}>{t("arch.ship.title")}</span>
               <p>{t("arch.ship.body")}</p>
-            </div>
+            </Reveal>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

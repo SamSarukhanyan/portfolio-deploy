@@ -5,15 +5,15 @@ import { Reveal } from "./Reveal";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
-const stackBadgeItems = [
-  { label: "Node.js", icon: "N" },
-  { label: "CI/CD", icon: "CI" },
-  { label: "AWS EC2", icon: "AWS" },
-  { label: "Deploy", icon: "DEP" },
-  { label: "HTTPS", icon: "TLS" },
-  { label: "Security", icon: "SEC" },
-  { label: "Nginx + PM2", icon: "OPS" },
-  { label: "MySQL API", icon: "DB" },
+const stackLogoItems = [
+  { key: "aws", label: "AWS EC2" },
+  { key: "node", label: "Node.js" },
+  { key: "https", label: "HTTPS" },
+  { key: "cicd", label: "CI/CD" },
+  { key: "nginx", label: "Nginx + PM2" },
+  { key: "security", label: "Security" },
+  { key: "deploy", label: "Deploy" },
+  { key: "mysql", label: "MySQL API" },
 ] as const;
 
 export function Hero() {
@@ -64,17 +64,18 @@ export function Hero() {
                 </div>
               </Reveal>
               <Reveal className={`${styles.stackMini} ${styles.stackMiniMobile}`} direction="up" delayMs={120}>
-                <p className={styles.stackMiniTitle}>Stack Matrix</p>
                 <ul className={styles.stackMiniList}>
-                  {stackBadgeItems.map((item, idx) => (
+                  {stackLogoItems.map((item, idx) => (
                     <Reveal
-                      key={item.label}
+                      key={item.key}
                       as="li"
+                      className={styles.stackLogo}
                       direction={idx % 2 === 0 ? "left" : "right"}
                       delayMs={150 + idx * 24}
+                      aria-label={item.label}
                     >
-                      <span className={styles.stackBadgeIcon}>{item.icon}</span>
-                      <span>{item.label}</span>
+                      <span className={styles.stackLogoHalo} />
+                      <span className={styles.stackLogoCore} data-stack={item.key} />
                     </Reveal>
                   ))}
                 </ul>
@@ -144,17 +145,18 @@ export function Hero() {
                 </div>
               </Reveal>
               <Reveal className={`${styles.stackMini} ${styles.stackMiniDesktop}`} direction="up" delayMs={120}>
-                <p className={styles.stackMiniTitle}>Stack Matrix</p>
                 <ul className={styles.stackMiniList}>
-                  {stackBadgeItems.map((item, idx) => (
+                  {stackLogoItems.map((item, idx) => (
                     <Reveal
-                      key={item.label}
+                      key={item.key}
                       as="li"
+                      className={styles.stackLogo}
                       direction={idx % 2 === 0 ? "left" : "right"}
                       delayMs={150 + idx * 24}
+                      aria-label={item.label}
                     >
-                      <span className={styles.stackBadgeIcon}>{item.icon}</span>
-                      <span>{item.label}</span>
+                      <span className={styles.stackLogoHalo} />
+                      <span className={styles.stackLogoCore} data-stack={item.key} />
                     </Reveal>
                   ))}
                 </ul>

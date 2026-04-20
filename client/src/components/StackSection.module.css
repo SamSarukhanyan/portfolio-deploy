@@ -14,44 +14,26 @@
 }
 
 .card {
-  padding: 1.2rem 1.1rem 1.3rem;
+  padding: 1.2rem;
   height: 100%;
   position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transition:
-    transform 0.32s var(--ease-out),
-    border-color var(--t-fast) var(--ease-out),
-    box-shadow 0.32s var(--ease-out);
-}
-
-.card::after {
-  content: "";
-  position: absolute;
-  inset: -35% 40% auto -35%;
-  height: 170%;
-  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-  transform: translateX(-120%) rotate(8deg);
-  transition: transform 0.7s var(--ease-out);
-  pointer-events: none;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(126, 224, 255, 0.28);
-  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.26);
-}
-
-.card:hover::after {
-  transform: translateX(180%) rotate(8deg);
+  display: grid;
+  align-content: start;
+  gap: 0.85rem;
 }
 
 .cardTitle {
-  margin: 0 0 0.75rem;
+  margin: 0;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.summary {
+  margin: 0;
+  color: #9cb0c8;
+  font-size: 0.92rem;
 }
 
 .list {
@@ -68,6 +50,7 @@
 .list li {
   position: relative;
   padding-left: 1.1rem;
+  line-height: 1.45;
 }
 
 .list li::before {

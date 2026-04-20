@@ -3,7 +3,8 @@ import { useI18n } from "../i18n/I18nProvider";
 
 const layers = [
   {
-    titleKey: "stack.clients" as const,
+    titleKey: "stack.clients.title" as const,
+    summaryKey: "stack.clients.summary" as const,
     itemKeys: [
       "stack.clients.0",
       "stack.clients.1",
@@ -15,7 +16,8 @@ const layers = [
     accent: "var(--accent)",
   },
   {
-    titleKey: "stack.server" as const,
+    titleKey: "stack.server.title" as const,
+    summaryKey: "stack.server.summary" as const,
     itemKeys: [
       "stack.server.0",
       "stack.server.1",
@@ -27,7 +29,8 @@ const layers = [
     accent: "var(--accent-2)",
   },
   {
-    titleKey: "stack.infra" as const,
+    titleKey: "stack.infra.title" as const,
+    summaryKey: "stack.infra.summary" as const,
     itemKeys: [
       "stack.infra.0",
       "stack.infra.1",
@@ -53,9 +56,8 @@ export function StackSection() {
         <div className={styles.grid}>
           {layers.map((layer) => (
             <article key={layer.titleKey} className={`glass ${styles.card}`}>
-              <h3 className={styles.cardTitle} style={{ color: layer.accent }}>
-                {t(layer.titleKey)}
-              </h3>
+              <p className={styles.cardTitle} style={{ color: layer.accent }}>{t(layer.titleKey)}</p>
+              <p className={styles.summary}>{t(layer.summaryKey)}</p>
               <ul className={styles.list}>
                 {layer.itemKeys.map((key) => (
                   <li key={key}>{t(key)}</li>

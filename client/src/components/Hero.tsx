@@ -1,31 +1,12 @@
-import { useMemo } from "react";
 import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 
-const chipKeys = [
-  "hero.chip.0",
-  "hero.chip.1",
-  "hero.chip.2",
-  "hero.chip.3",
-  "hero.chip.4",
-  "hero.chip.5",
-  "hero.chip.6",
-  "hero.chip.7",
-  "hero.chip.8",
-  "hero.chip.9",
-  "hero.chip.10",
-  "hero.chip.11",
-] as const;
+const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
+const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 
 export function Hero() {
   const { t } = useI18n();
-
-  const highlightSet = useMemo(() => new Set(["hero.chip.2", "hero.chip.5", "hero.chip.6"]), []);
-
-  const nameParts = site.displayName.split(" ");
-  const firstName = nameParts[0] ?? site.displayName;
-  const lastName = nameParts.slice(1).join(" ");
 
   return (
     <section id="top" className="section">
@@ -33,36 +14,33 @@ export function Hero() {
         <div className={`glass ${styles.card}`}>
           <div className={styles.grid}>
             <div className={styles.copy}>
-              <p className="tag">{t("hero.tag", { domain: site.domain })}</p>
-              <h1 className={styles.title}>
-                <span className={styles.titleFirst}>{firstName}</span>
-                {lastName ? <span className={styles.titleLast}> {lastName}</span> : null}
-              </h1>
+              <p className={styles.domain}>{site.domain}</p>
+              <h1 className={styles.title}>{t("hero.title")}</h1>
               <p className={styles.subtitle}>{t("hero.subtitle")}</p>
-              <p className={styles.lead}>{t("hero.lead")}</p>
               <p className={styles.body}>{t("hero.body")}</p>
+              <ul className={styles.focusList}>
+                {focusKeys.map((key) => (
+                  <li key={key}>{t(key)}</li>
+                ))}
+              </ul>
               <div className={styles.actions}>
                 <a className="btn-primary" href="#contact">
                   {t("hero.ctaContact")}
                 </a>
-                <a className="btn-ghost" href="#stack">
-                  {t("hero.ctaStack")}
+                <a className="btn-ghost" href="#highlights">
+                  {t("hero.ctaHighlights")}
                 </a>
               </div>
             </div>
             <div className={styles.visual} aria-hidden>
-              <div className={styles.chipCloud}>
-                <div className={styles.chipGrid}>
-                  {chipKeys.map((key) => (
-                    <span
-                      key={key}
-                      className={`${styles.chip} ${highlightSet.has(key) ? styles.chipHighlight : ""}`}
-                    >
-                      {t(key)}
-                    </span>
+              <div className={styles.signalPanel}>
+                <p className={styles.signalTitle}>{t("hero.signalTitle")}</p>
+                <ul className={styles.signalList}>
+                  {signalKeys.map((key) => (
+                    <li key={key}>{t(key)}</li>
                   ))}
-                </div>
-                <p className={styles.chipNote}>{t("hero.chipNote")}</p>
+                </ul>
+                <p className={styles.signalNote}>{t("hero.signalNote")}</p>
               </div>
             </div>
           </div>

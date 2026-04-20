@@ -6,6 +6,8 @@ const cards = [
   { titleKey: "highlights.2.title" as const, bodyKey: "highlights.2.body" as const },
   { titleKey: "highlights.3.title" as const, bodyKey: "highlights.3.body" as const },
   { titleKey: "highlights.4.title" as const, bodyKey: "highlights.4.body" as const },
+  { titleKey: "highlights.5.title" as const, bodyKey: "highlights.5.body" as const },
+  { titleKey: "highlights.6.title" as const, bodyKey: "highlights.6.body" as const },
 ];
 
 export function HighlightsSection() {
@@ -19,6 +21,7 @@ export function HighlightsSection() {
         <ul className={styles.grid}>
           {cards.map((h) => (
             <li key={h.titleKey} className={`glass ${styles.card}`}>
+              <p className={styles.cardKicker}>{t("highlights.kicker")}</p>
               <h3 className={styles.cardTitle}>{t(h.titleKey)}</h3>
               <p className={styles.cardText}>{t(h.bodyKey)}</p>
             </li>

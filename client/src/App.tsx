@@ -13,9 +13,9 @@ export default function App() {
       <Navigation />
       <main className="app-main">
         <Hero />
+        <HighlightsSection />
         <StackSection />
         <ArchitectureSection />
-        <HighlightsSection />
         <ContactSection />
       </main>
       <Footer />

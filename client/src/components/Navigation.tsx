@@ -10,9 +10,9 @@ export function Navigation() {
   const links = useMemo(
     () =>
       [
+        { href: "#highlights", labelKey: "nav.product" as const },
         { href: "#stack", labelKey: "nav.stack" as const },
         { href: "#architecture", labelKey: "nav.architecture" as const },
-        { href: "#highlights", labelKey: "nav.product" as const },
         { href: "#contact", labelKey: "nav.contact" as const },
       ] as const,
     [],

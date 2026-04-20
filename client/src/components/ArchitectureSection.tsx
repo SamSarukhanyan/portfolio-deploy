@@ -3,22 +3,22 @@ import { useI18n } from "../i18n/I18nProvider";
 
 const nodes = [
   {
-    id: "client",
-    label: "client/",
-    sub: "React 19 · Vite",
-    bodyKey: "arch.client.body" as const,
+    id: "planning",
+    label: "Design & Product Surface",
+    sub: "React 19 · Vite · UX system",
+    bodyKey: "arch.planning.body" as const,
   },
   {
-    id: "mobile",
-    label: "mobile/",
-    sub: "Expo",
-    bodyKey: "arch.mobile.body" as const,
+    id: "backend",
+    label: "API & Data Layer",
+    sub: "Express 5 · Sequelize · MySQL",
+    bodyKey: "arch.backend.body" as const,
   },
   {
-    id: "server",
-    label: "server/",
-    sub: "Express API",
-    bodyKey: "arch.server.body" as const,
+    id: "delivery",
+    label: "Delivery & Runtime",
+    sub: "GitHub Actions · EC2 · Nginx · PM2",
+    bodyKey: "arch.delivery.body" as const,
   },
 ];
 

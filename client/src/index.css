@@ -382,8 +382,8 @@ section#top.section {
   transition:
     opacity 0.62s var(--ease-out) var(--reveal-delay),
     transform 0.62s var(--ease-out) var(--reveal-delay);
-  will-change: opacity, transform;
   backface-visibility: hidden;
+  will-change: opacity, transform;
 }
 
 .reveal-item[data-reveal-dir="left"] {
@@ -397,6 +397,7 @@ section#top.section {
 .reveal-item[data-reveal-in="true"] {
   opacity: 1;
   transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 
 @keyframes ambientShift {

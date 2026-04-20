@@ -30,6 +30,7 @@ export function Reveal<T extends ElementType = "div">({
 }: RevealProps<T>) {
   const Component = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement | null>(null);
+  const inViewRef = useRef(false);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -37,14 +38,26 @@ export function Reveal<T extends ElementType = "div">({
     if (!target) return;
     if (typeof window === "undefined") return;
 
+    const enterRatio = 0.2;
+    const exitRatio = 0.03;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting);
+        const ratio = entry.intersectionRatio;
+        const isIntersecting = entry.isIntersecting;
+        const shouldBeInView = inViewRef.current
+          ? isIntersecting && ratio > exitRatio
+          : isIntersecting && ratio >= enterRatio;
+
+        if (inViewRef.current !== shouldBeInView) {
+          inViewRef.current = shouldBeInView;
+          setInView(shouldBeInView);
+        }
       },
       {
         root: null,
-        threshold: 0.16,
-        rootMargin: "0px 0px -8% 0px",
+        threshold: [0, exitRatio, enterRatio, 0.35],
+        rootMargin: "0px 0px -10% 0px",
       },
     );
 

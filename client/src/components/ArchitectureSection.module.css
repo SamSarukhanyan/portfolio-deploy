@@ -191,6 +191,18 @@
 
 @media (max-width: 560px) {
   .route {
-    display: none;
+    width: 90px;
+    height: 32px;
+  }
+
+  .route::before {
+    left: 9px;
+    right: 9px;
+  }
+
+  .routeDot {
+    left: 9px;
+    width: 7px;
+    height: 7px;
   }
 }

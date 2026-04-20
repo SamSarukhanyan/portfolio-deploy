@@ -142,6 +142,18 @@
 
 @media (max-width: 560px) {
   .signal {
-    display: none;
+    width: 88px;
+    height: 44px;
+    padding: 0.4rem 0.4rem 0.36rem;
+    gap: 0.28rem;
+  }
+
+  .signalBar {
+    width: 7px;
+  }
+
+  .signalDot {
+    top: 10px;
+    right: 10px;
   }
 }

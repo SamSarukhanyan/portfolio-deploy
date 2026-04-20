@@ -36,8 +36,8 @@
     -apple-system,
     sans-serif;
   /* нижний ритм секций; верх отдельно меньше — без «воздушной подушки» над заголовками */
-  --space-section-bottom: clamp(2.25rem, 4.8vw, 4rem);
-  --space-section-top: clamp(1rem, 2.6vw, 1.65rem);
+  --space-section-bottom: clamp(1.8rem, 3.9vw, 3rem);
+  --space-section-top: clamp(0.8rem, 2.1vw, 1.3rem);
   --max-width: 1220px;
   /* Foremost layers first: extra top wash so safe-area + first px match the gray-blue body */
   --page-gradient:
@@ -214,7 +214,7 @@ section#top.section {
 }
 
 .section-lead {
-  margin: 0 0 1.2rem;
+  margin: 0 0 0.95rem;
   max-width: 54ch;
   color: var(--text-muted);
   font-size: 1rem;

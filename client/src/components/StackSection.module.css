@@ -153,6 +153,25 @@
 
 @media (max-width: 560px) {
   .stackGlyph {
-    display: none;
+    width: 78px;
+    height: 48px;
+  }
+
+  .stackLayer {
+    height: 14px;
+  }
+
+  .stackLayer:nth-child(1) {
+    width: 50px;
+  }
+
+  .stackLayer:nth-child(2) {
+    top: 17px;
+    width: 44px;
+  }
+
+  .stackLayer:nth-child(3) {
+    top: 32px;
+    width: 38px;
   }
 }

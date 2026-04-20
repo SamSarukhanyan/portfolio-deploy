@@ -165,6 +165,18 @@
 
 @media (max-width: 560px) {
   .mailPulse {
-    display: none;
+    width: 84px;
+    height: 38px;
+    margin-bottom: 0.4rem;
+  }
+
+  .mailIcon {
+    width: 32px;
+    height: 25px;
+  }
+
+  .mailIcon svg {
+    width: 16px;
+    height: 16px;
   }
 }

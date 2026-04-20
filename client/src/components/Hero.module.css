@@ -140,50 +140,108 @@
 }
 
 .sunHalo {
-  fill: rgba(255, 184, 106, 0.13);
+  filter: blur(1.6px);
 }
 
 .sunCore {
-  filter: drop-shadow(0 0 7px rgba(255, 203, 132, 0.45));
+  filter: drop-shadow(0 0 10px rgba(255, 203, 132, 0.42));
 }
 
 .orbitLine {
   fill: none;
-  stroke-width: 1.25;
-  stroke-dasharray: 4 10;
+  stroke-width: 1.12;
+  stroke-dasharray: none;
   stroke-linecap: round;
 }
 
 .orbitMercury {
-  stroke: rgba(255, 220, 173, 0.42);
+  stroke: rgba(255, 220, 173, 0.24);
 }
 
 .orbitVenus {
-  stroke: rgba(255, 206, 153, 0.34);
+  stroke: rgba(255, 206, 153, 0.2);
 }
 
 .orbitEarth {
-  stroke: rgba(144, 223, 255, 0.38);
+  stroke: rgba(144, 223, 255, 0.22);
 }
 
 .orbitMars {
-  stroke: rgba(255, 164, 133, 0.35);
+  stroke: rgba(255, 164, 133, 0.2);
 }
 
 .orbitJupiter {
-  stroke: rgba(211, 181, 145, 0.35);
+  stroke: rgba(211, 181, 145, 0.2);
 }
 
 .orbitSaturn {
-  stroke: rgba(232, 217, 165, 0.32);
+  stroke: rgba(232, 217, 165, 0.2);
 }
 
 .orbitUranus {
-  stroke: rgba(129, 233, 194, 0.33);
+  stroke: rgba(129, 233, 194, 0.2);
 }
 
 .orbitNeptune {
-  stroke: rgba(188, 164, 255, 0.33);
+  stroke: rgba(188, 164, 255, 0.2);
+}
+
+.orbitTrail {
+  fill: none;
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-dasharray: 36 420;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 4px rgba(132, 220, 255, 0.26));
+  animation: orbitTrailSweep 12s linear infinite;
+}
+
+.orbitTrailMercury {
+  stroke: rgba(255, 225, 181, 0.95);
+  stroke-dasharray: 22 220;
+  animation-duration: 4.4s;
+}
+
+.orbitTrailVenus {
+  stroke: rgba(255, 209, 149, 0.92);
+  stroke-dasharray: 26 250;
+  animation-duration: 7.6s;
+}
+
+.orbitTrailEarth {
+  stroke: rgba(139, 225, 255, 0.92);
+  stroke-dasharray: 30 290;
+  animation-duration: 10.8s;
+}
+
+.orbitTrailMars {
+  stroke: rgba(241, 159, 125, 0.9);
+  stroke-dasharray: 32 320;
+  animation-duration: 14.8s;
+}
+
+.orbitTrailJupiter {
+  stroke: rgba(227, 192, 159, 0.88);
+  stroke-dasharray: 36 380;
+  animation-duration: 22.8s;
+}
+
+.orbitTrailSaturn {
+  stroke: rgba(235, 221, 171, 0.88);
+  stroke-dasharray: 42 460;
+  animation-duration: 30s;
+}
+
+.orbitTrailUranus {
+  stroke: rgba(149, 233, 214, 0.88);
+  stroke-dasharray: 50 540;
+  animation-duration: 36.5s;
+}
+
+.orbitTrailNeptune {
+  stroke: rgba(168, 184, 255, 0.88);
+  stroke-dasharray: 58 640;
+  animation-duration: 42.5s;
 }
 
 .planetSprite {
@@ -204,6 +262,20 @@
   fill: none;
   stroke: rgba(247, 231, 193, 0.72);
   stroke-width: 1.15;
+}
+
+@keyframes orbitTrailSweep {
+  from {
+    stroke-dashoffset: 0;
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.46;
+  }
+  to {
+    stroke-dashoffset: -980;
+    opacity: 0.12;
+  }
 }
 
 .signalPanel {

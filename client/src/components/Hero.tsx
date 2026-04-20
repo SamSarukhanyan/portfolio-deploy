@@ -21,6 +21,12 @@ export function Hero() {
               <Reveal className={styles.orbit} direction="right" delayMs={90} aria-hidden>
                 <svg viewBox="0 0 360 240" className={styles.orbitSvg}>
                   <defs>
+                    <radialGradient id="solarHalo" cx="50%" cy="50%" r="78%">
+                      <stop offset="0%" stopColor="rgba(255, 200, 120, 0.55)" />
+                      <stop offset="45%" stopColor="rgba(255, 176, 96, 0.22)" />
+                      <stop offset="75%" stopColor="rgba(255, 155, 82, 0.08)" />
+                      <stop offset="100%" stopColor="rgba(255, 140, 74, 0)" />
+                    </radialGradient>
                     <radialGradient id="solarSun" cx="50%" cy="50%" r="65%">
                       <stop offset="0%" stopColor="#fff8cf" />
                       <stop offset="50%" stopColor="#ffd48e" />
@@ -97,17 +103,25 @@ export function Hero() {
                     />
                   </defs>
 
-                  <circle cx="180" cy="120" r="34" className={styles.sunHalo} />
+                  <circle cx="180" cy="120" r="46" fill="url(#solarHalo)" className={styles.sunHalo} />
                   <circle cx="180" cy="120" r="16" fill="url(#solarSun)" className={styles.sunCore} />
 
                   <use href="#orbit-mercury" className={`${styles.orbitLine} ${styles.orbitMercury}`} />
+                  <use href="#orbit-mercury" className={`${styles.orbitTrail} ${styles.orbitTrailMercury}`} />
                   <use href="#orbit-venus" className={`${styles.orbitLine} ${styles.orbitVenus}`} />
+                  <use href="#orbit-venus" className={`${styles.orbitTrail} ${styles.orbitTrailVenus}`} />
                   <use href="#orbit-earth" className={`${styles.orbitLine} ${styles.orbitEarth}`} />
+                  <use href="#orbit-earth" className={`${styles.orbitTrail} ${styles.orbitTrailEarth}`} />
                   <use href="#orbit-mars" className={`${styles.orbitLine} ${styles.orbitMars}`} />
+                  <use href="#orbit-mars" className={`${styles.orbitTrail} ${styles.orbitTrailMars}`} />
                   <use href="#orbit-jupiter" className={`${styles.orbitLine} ${styles.orbitJupiter}`} />
+                  <use href="#orbit-jupiter" className={`${styles.orbitTrail} ${styles.orbitTrailJupiter}`} />
                   <use href="#orbit-saturn" className={`${styles.orbitLine} ${styles.orbitSaturn}`} />
+                  <use href="#orbit-saturn" className={`${styles.orbitTrail} ${styles.orbitTrailSaturn}`} />
                   <use href="#orbit-uranus" className={`${styles.orbitLine} ${styles.orbitUranus}`} />
+                  <use href="#orbit-uranus" className={`${styles.orbitTrail} ${styles.orbitTrailUranus}`} />
                   <use href="#orbit-neptune" className={`${styles.orbitLine} ${styles.orbitNeptune}`} />
+                  <use href="#orbit-neptune" className={`${styles.orbitTrail} ${styles.orbitTrailNeptune}`} />
 
                   <g className={styles.planetSprite}>
                     <circle r="3.1" fill="url(#planetMercuryGrad)" className={styles.planetStroke} />

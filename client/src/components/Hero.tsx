@@ -1,3 +1,4 @@
+import { type CSSProperties } from "react";
 import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
@@ -6,6 +7,26 @@ import { onSpaLinkClick } from "../utils/spaRouter";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
+
+const SNAKE_SEGMENTS = 12;
+
+function MotionDockSnake() {
+  return (
+    <div className={styles.heroSnakeCell}>
+      <span className={styles.heroSnake} aria-hidden>
+        {Array.from({ length: SNAKE_SEGMENTS }, (_, i) => (
+          <span
+            key={i}
+            className={styles.snakeSegRing}
+            style={{ ["--i" as string]: String(i) } as CSSProperties}
+          >
+            <span className={styles.snakeSegDot} />
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+}
 
 export function Hero() {
   const { t } = useI18n();
@@ -23,15 +44,7 @@ export function Hero() {
               </Reveal>
               <Reveal className={`${styles.orbit} ${styles.orbitMobile}`} direction="right" delayMs={90} aria-hidden>
                 <div className={styles.motionDock}>
-                  <div className={styles.miniSolar}>
-                    <span className={styles.miniSun} />
-                    <span className={styles.miniOrbitOuter}>
-                      <span className={styles.miniPlanetOuter} />
-                    </span>
-                    <span className={styles.miniOrbitInner}>
-                      <span className={styles.miniPlanetInner} />
-                    </span>
-                  </div>
+                  <MotionDockSnake />
                   <div className={styles.devCore}>
                     <span className={styles.codeTag}>&lt;/&gt;</span>
                     <span className={styles.devRing}>
@@ -106,15 +119,7 @@ export function Hero() {
             <div className={styles.visual} aria-hidden>
               <Reveal className={`${styles.orbit} ${styles.orbitDesktop}`} direction="right" delayMs={90}>
                 <div className={styles.motionDock}>
-                  <div className={styles.miniSolar}>
-                    <span className={styles.miniSun} />
-                    <span className={styles.miniOrbitOuter}>
-                      <span className={styles.miniPlanetOuter} />
-                    </span>
-                    <span className={styles.miniOrbitInner}>
-                      <span className={styles.miniPlanetInner} />
-                    </span>
-                  </div>
+                  <MotionDockSnake />
                   <div className={styles.devCore}>
                     <span className={styles.codeTag}>&lt;/&gt;</span>
                     <span className={styles.devRing}>

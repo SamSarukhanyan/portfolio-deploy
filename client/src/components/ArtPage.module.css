@@ -406,7 +406,7 @@
   .heroMonoMotion {
     min-width: 138px;
     gap: 0.4rem;
-    transform: translateX(-8px);
+    transform: translate(calc(-8px - 5px), 10px);
   }
 
   .shapeCircle,

@@ -190,7 +190,7 @@
   padding: clamp(0.48rem, 1.5vw, 0.65rem);
 }
 
-.miniSolar,
+.heroSnakeCell,
 .devCore,
 .sectionGlyphs {
   border-radius: 14px;
@@ -198,7 +198,7 @@
   background: rgba(6, 13, 24, 0.62);
 }
 
-.miniSolar {
+.heroSnakeCell {
   position: relative;
   min-height: 76px;
   display: flex;
@@ -206,54 +206,50 @@
   justify-content: center;
 }
 
-.miniSun {
-  width: 19px;
-  height: 19px;
+/* Копия змеи со страницы Art, чуть крупнее базовой 44px */
+.heroSnake {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  box-sizing: border-box;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff6c7, #ffb467 70%, #ff8a51);
-  box-shadow: 0 0 18px rgba(255, 184, 107, 0.5);
-  animation: pulseSun 2.5s ease-in-out infinite;
+  background: radial-gradient(circle at 50% 50%, rgba(40, 56, 78, 0.35), transparent 62%);
+  box-shadow: inset 0 0 0 1px rgba(100, 124, 154, 0.12);
 }
 
-.miniOrbitOuter,
-.miniOrbitInner {
+.heroSnake::before {
+  content: "";
   position: absolute;
-  border: 1px solid rgba(146, 211, 255, 0.25);
-  border-radius: 999px;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px dashed rgba(140, 162, 188, 0.28);
+  opacity: 0.85;
+  animation: heroSnakeRingDrift 14s linear infinite;
 }
 
-.miniOrbitOuter {
-  width: 82px;
-  height: 46px;
-  animation: spinOrbit 7s linear infinite;
-}
-
-.miniOrbitInner {
-  width: 56px;
-  height: 31px;
-  animation: spinOrbitReverse 4.6s linear infinite;
-}
-
-.miniPlanetOuter,
-.miniPlanetInner {
+.snakeSegRing {
   position: absolute;
+  left: 50%;
   top: 50%;
-  border-radius: 50%;
-  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  transform: rotate(calc(var(--i) * 30deg));
+  transform-origin: center;
 }
 
-.miniPlanetOuter {
-  right: -5px;
-  width: 10px;
-  height: 10px;
-  background: #9ce4ff;
-}
-
-.miniPlanetInner {
-  left: -4px;
-  width: 8px;
-  height: 8px;
-  background: #9ef4d7;
+.snakeSegDot {
+  position: absolute;
+  left: -3.5px;
+  top: -20px;
+  width: 7px;
+  height: 7px;
+  margin: 0;
+  border-radius: 2px;
+  background: linear-gradient(155deg, rgba(232, 240, 250, 0.95), rgba(118, 138, 164, 0.55));
+  box-shadow: 0 0 8px rgba(160, 188, 220, 0.38);
+  animation: heroSnakeBitTrail 2.2s linear infinite;
+  animation-delay: calc(var(--i) * -183.333ms);
 }
 
 .devCore {
@@ -429,16 +425,6 @@
   animation-delay: 1.1s;
 }
 
-@keyframes pulseSun {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
 @keyframes spinOrbit {
   from {
     transform: rotate(0deg);
@@ -448,12 +434,51 @@
   }
 }
 
-@keyframes spinOrbitReverse {
+@keyframes heroSnakeBitTrail {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: translateY(0) scale(0.52);
+    filter: brightness(0.92);
+  }
+  14% {
+    opacity: 1;
+    transform: translateY(0) scale(1.12);
+    filter: brightness(1.15);
+    box-shadow: 0 0 10px rgba(175, 204, 236, 0.55);
+  }
+  32% {
+    opacity: 0.72;
+    transform: translateY(0) scale(0.94);
+    filter: brightness(1);
+    box-shadow: 0 0 4px rgba(175, 204, 236, 0.2);
+  }
+  46% {
+    opacity: 0.32;
+    transform: translateY(9px) scale(0.52);
+    filter: brightness(0.88);
+    box-shadow: none;
+  }
+  56% {
+    opacity: 0;
+    transform: translateY(17px) scale(0.22);
+  }
+  58% {
+    opacity: 0;
+    transform: translateY(0) scale(0.08);
+  }
+  68% {
+    opacity: 0.16;
+    transform: translateY(0) scale(0.46);
+  }
+}
+
+@keyframes heroSnakeRingDrift {
   from {
-    transform: rotate(360deg);
+    transform: rotate(0deg);
   }
   to {
-    transform: rotate(0deg);
+    transform: rotate(-360deg);
   }
 }
 
@@ -767,6 +792,18 @@
     padding: 0.38rem;
   }
 
+  .heroSnake {
+    width: 48px;
+    height: 48px;
+  }
+
+  .snakeSegDot {
+    left: -3px;
+    top: -18px;
+    width: 6px;
+    height: 6px;
+  }
+
   .sectionGlyphs {
     gap: 0.4rem;
     padding: 0.38rem;
@@ -816,9 +853,18 @@
     min-height: 116px;
   }
 
-  .miniSolar,
+  .heroSnakeCell,
   .devCore {
     min-height: 66px;
+  }
+
+  .heroSnake {
+    width: 46px;
+    height: 46px;
+  }
+
+  .snakeSegDot {
+    top: -17px;
   }
 
   .devRing {

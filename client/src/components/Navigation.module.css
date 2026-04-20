@@ -1,15 +1,12 @@
 .header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 90;
   width: 100%;
   padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
-  pointer-events: none;
 }
 
 .navShell {
   width: 100%;
-  pointer-events: auto;
 }
 
 @media (max-width: 767px) {
@@ -214,11 +211,11 @@
 }
 
 .menuBtn {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
   position: relative;
   z-index: 95;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid rgba(85, 199, 255, 0.28);
   background:
     linear-gradient(160deg, rgba(85, 199, 255, 0.16), rgba(113, 231, 193, 0.1)),
@@ -245,7 +242,7 @@
 }
 
 .burger {
-  width: 18px;
+  width: 16px;
   height: 2px;
   background: #ebf7ff;
   border-radius: 2px;
@@ -258,7 +255,7 @@
   content: "";
   position: absolute;
   left: 0;
-  width: 18px;
+  width: 16px;
   height: 2px;
   background: #ebf7ff;
   border-radius: 2px;
@@ -268,11 +265,11 @@
 }
 
 .burger::before {
-  top: -5px;
+  top: -4px;
 }
 
 .burger::after {
-  top: 5px;
+  top: 4px;
 }
 
 .burger[data-open="true"] {

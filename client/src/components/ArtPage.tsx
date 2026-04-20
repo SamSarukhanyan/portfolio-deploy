@@ -220,9 +220,9 @@ export function ArtPage() {
               {t("art.backHome")}
             </a>
             <div className={styles.heroMonoMotion} aria-hidden>
-              <span />
-              <span />
-              <span />
+              <span className={styles.shapeCircle} />
+              <span className={styles.shapeDiamond} />
+              <span className={styles.shapeArc} />
             </div>
           </div>
           <h1 className={styles.title}>{t("art.title")}</h1>

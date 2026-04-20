@@ -2,7 +2,6 @@ import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
-import { useEffect, useState } from "react";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
@@ -10,19 +9,6 @@ const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 export function Hero() {
   const { t } = useI18n();
   const heroTitle = t("hero.title").replace("Production full-stack", "Production\u00A0full-stack");
-  const [showScrollHint, setShowScrollHint] = useState(true);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const onScroll = () => {
-      setShowScrollHint(window.scrollY <= 18);
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <section id="top" className="section">
@@ -114,6 +100,9 @@ export function Hero() {
                 <a className="btn-ghost" href="#highlights">
                   {t("hero.ctaHighlights")}
                 </a>
+                <a className="btn-ghost" href="/art">
+                  {t("hero.ctaArt")}
+                </a>
               </Reveal>
             </div>
             <div className={styles.visual} aria-hidden>
@@ -192,26 +181,6 @@ export function Hero() {
             </div>
           </div>
         </Reveal>
-      </div>
-      <div className={styles.scrollHint} data-show={showScrollHint ? "true" : "false"} aria-hidden>
-        <span className={styles.scrollHintTrack}>
-          <span className={styles.scrollHintHand}>
-            <svg className={styles.scrollHintHandSvg} viewBox="0 0 64 64">
-              <path
-                className={styles.scrollHintHandFill}
-                d="M26 10c2.4 0 4.4 1.9 4.4 4.3v13.2h2V9.7c0-2.4 2-4.4 4.4-4.4s4.3 2 4.3 4.4v19.8h2.2V14.8c0-2.4 2-4.4 4.4-4.4s4.4 2 4.4 4.4v19.8h1.4c4.8 0 8.8 3.9 8.8 8.8v1.2c0 11.2-9.1 20.3-20.3 20.3h-7.8c-6.2 0-11.5-4.3-12.7-10.4l-3.3-16.6c-.5-2.3 1-4.6 3.3-5.1 2.4-.5 4.6 1 5.1 3.3l2.1 10.5h1.5V14.3c0-2.4 2-4.3 4.4-4.3Z"
-              />
-              <path
-                className={styles.scrollHintHandStroke}
-                d="M26 10c2.4 0 4.4 1.9 4.4 4.3v13.2h2V9.7c0-2.4 2-4.4 4.4-4.4s4.3 2 4.3 4.4v19.8h2.2V14.8c0-2.4 2-4.4 4.4-4.4s4.4 2 4.4 4.4v19.8h1.4c4.8 0 8.8 3.9 8.8 8.8v1.2c0 11.2-9.1 20.3-20.3 20.3h-7.8c-6.2 0-11.5-4.3-12.7-10.4l-3.3-16.6c-.5-2.3 1-4.6 3.3-5.1 2.4-.5 4.6 1 5.1 3.3l2.1 10.5h1.5V14.3c0-2.4 2-4.3 4.4-4.3Z"
-              />
-              <circle className={styles.scrollHintFingerTip} cx="26" cy="10" r="3.2" />
-            </svg>
-          </span>
-          <span className={styles.scrollHintTap} />
-          <span className={styles.scrollHintRipple} />
-          <span className={`${styles.scrollHintRipple} ${styles.scrollHintRippleAlt}`} />
-        </span>
       </div>
     </section>
   );

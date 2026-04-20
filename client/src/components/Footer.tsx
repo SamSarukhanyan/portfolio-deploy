@@ -5,6 +5,7 @@ import { useI18n } from "../i18n/I18nProvider";
 export function Footer() {
   const { t } = useI18n();
   const year = new Date().getFullYear();
+  const isArtPage = typeof window !== "undefined" && window.location.pathname.startsWith("/art");
 
   return (
     <footer className={styles.footer} role="contentinfo">
@@ -26,7 +27,10 @@ export function Footer() {
               {t("footer.linkLinkedin")}
             </a>
           ) : null}
-          <a className={styles.link} href="#contact">
+          <a className={styles.link} href="/art">
+            {t("footer.linkArt")}
+          </a>
+          <a className={styles.link} href={isArtPage ? "/#contact" : "#contact"}>
             {t("footer.linkContact")}
           </a>
         </nav>

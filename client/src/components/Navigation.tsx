@@ -7,16 +7,18 @@ export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const isArtPage = typeof window !== "undefined" && window.location.pathname.startsWith("/art");
 
   const links = useMemo(
     () =>
       [
-        { href: "#highlights", labelKey: "nav.product" as const },
-        { href: "#stack", labelKey: "nav.stack" as const },
-        { href: "#architecture", labelKey: "nav.architecture" as const },
-        { href: "#contact", labelKey: "nav.contact" as const },
+        { href: isArtPage ? "/#highlights" : "#highlights", labelKey: "nav.product" as const },
+        { href: isArtPage ? "/#stack" : "#stack", labelKey: "nav.stack" as const },
+        { href: isArtPage ? "/#architecture" : "#architecture", labelKey: "nav.architecture" as const },
+        { href: isArtPage ? "/#contact" : "#contact", labelKey: "nav.contact" as const },
+        { href: "/art", labelKey: "nav.art" as const },
       ] as const,
-    [],
+    [isArtPage],
   );
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export function Navigation() {
   return (
     <header className={styles.header}>
       <div className={`shell ${styles.navShell} ${styles.inner}`}>
-        <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
+        <a className={styles.brand} href={isArtPage ? "/" : "#top"} onClick={() => setOpen(false)}>
           <span className={styles.brandGlyph} aria-hidden>
             <svg viewBox="0 0 48 48">
               <defs>
@@ -68,8 +70,8 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
-          <a className={styles.quickCta} href="#contact">
-            {t("hero.ctaContact")}
+          <a className={styles.quickCta} href={isArtPage ? "/" : "/art"}>
+            {isArtPage ? t("art.backHome") : t("hero.ctaArt")}
           </a>
           <button
             type="button"

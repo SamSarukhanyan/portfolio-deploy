@@ -4,6 +4,7 @@
     "nav.architecture": "Architecture",
     "nav.product": "Impact",
     "nav.contact": "Contact",
+    "nav.art": "My Art",
     "nav.ariaPrimary": "Primary navigation",
     "nav.ariaMobile": "Mobile navigation",
     "nav.openMenu": "Open menu",
@@ -18,6 +19,7 @@
     "hero.focus.3": "Balances clean UI with practical engineering decisions and measurable reliability.",
     "hero.ctaContact": "Get in touch",
     "hero.ctaHighlights": "View project impact",
+    "hero.ctaArt": "My Art",
     "hero.signalTitle": "Production Signals",
     "hero.signal.0": "Automated deploy pipeline from GitHub Actions to AWS EC2.",
     "hero.signal.1": "HTTPS + domain setup with certificate renewal and secure routing.",
@@ -83,6 +85,15 @@
     "footer.aria": "Footer",
     "footer.linkGithub": "GitHub",
     "footer.linkLinkedin": "LinkedIn",
-    "footer.linkContact": "Contact"
+    "footer.linkContact": "Contact",
+    "footer.linkArt": "My Art",
+    "art.title": "My Art Works",
+    "art.lead": "Oil paintings on canvas. A calm space for selected works, with focus on composition, color rhythm, and atmosphere.",
+    "art.backHome": "Back to main page",
+    "art.close": "Close",
+    "art.prev": "Previous artwork",
+    "art.next": "Next artwork",
+    "art.zoomIn": "Zoom +",
+    "art.zoomOut": "Zoom -"
   }
 }

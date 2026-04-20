@@ -1,14 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="14" fill="#0e192e" />
+  <defs>
+    <linearGradient id="bg" x1="7" y1="6" x2="57" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102440" />
+      <stop offset="1" stop-color="#0B1628" />
+    </linearGradient>
+    <linearGradient id="glyph" x1="18" y1="14" x2="50" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#94E3FF" />
+      <stop offset="1" stop-color="#CFF4FF" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#bg)" />
   <text
     x="32"
-    y="36"
+    y="35"
     text-anchor="middle"
     dominant-baseline="middle"
     font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
-    font-size="38"
-    font-weight="800"
-    fill="#c8e8f4"
-    letter-spacing="-0.02em"
+    font-size="52"
+    font-weight="900"
+    fill="url(#glyph)"
+    letter-spacing="-0.025em"
   >S</text>
 </svg>

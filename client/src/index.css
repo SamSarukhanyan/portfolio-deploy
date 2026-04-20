@@ -409,6 +409,29 @@ section#top.section {
 }
 
 @media (max-width: 767px) {
+  :root {
+    --space-section-bottom: 1.55rem;
+    --space-section-top: 0.62rem;
+  }
+
+  .shell {
+    padding: 0 0.62rem;
+  }
+
+  .section-title {
+    margin-bottom: 0.16em;
+    line-height: 1.12;
+  }
+
+  .section {
+    padding-top: var(--space-section-top);
+    padding-bottom: var(--space-section-bottom);
+  }
+
+  section#top.section {
+    padding-top: 0.1rem;
+  }
+
   html {
     scroll-behavior: auto;
   }
@@ -436,7 +459,8 @@ section#top.section {
 
   .section-lead {
     font-size: 1rem;
-    line-height: 1.65;
+    line-height: 1.55;
+    margin-bottom: 0.78rem;
   }
 }
 

@@ -503,32 +503,104 @@
 }
 
 @media (max-width: 767px) {
+  .card {
+    padding: 1rem;
+    border-radius: 22px;
+  }
+
+  .grid {
+    gap: 0.9rem;
+  }
+
+  .copy {
+    padding-right: 0;
+  }
+
+  .domain {
+    margin-bottom: 0.7rem;
+  }
+
+  .subtitle {
+    margin-top: 0.5rem;
+  }
+
   .focusList li,
   .signalList li,
   .body {
     font-size: 1rem;
   }
 
+  .focusList {
+    margin-top: 1rem;
+    gap: 0.5rem;
+  }
+
+  .actions {
+    width: 100%;
+    margin-top: 1.1rem;
+    gap: 0.55rem;
+  }
+
+  .visual {
+    gap: 0.55rem;
+  }
+
   .orbit {
     width: 100%;
+    margin-bottom: 0.15rem;
   }
 
   .motionDock {
-    min-height: 170px;
+    min-height: 152px;
     gap: 0.55rem;
-    padding: 0.5rem;
+    padding: 0.45rem;
   }
 
   .sectionGlyphs {
     gap: 0.4rem;
-    padding: 0.45rem;
+    padding: 0.38rem;
   }
 
   .glyphBars,
   .glyphStack,
   .glyphRoute,
   .glyphMail {
-    min-height: 40px;
+    min-height: 36px;
+  }
+
+  .signalPanel {
+    width: 100%;
+    padding: 0.85rem;
+    gap: 0.55rem;
+  }
+
+  .signalList {
+    gap: 0.45rem;
+  }
+
+  .signalList li {
+    padding: 0.6rem;
+  }
+
+  .signalNote {
+    margin-top: 0;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 420px) {
+  .motionDock {
+    min-height: 138px;
+  }
+
+  .miniSolar,
+  .devCore {
+    min-height: 78px;
+  }
+
+  .devRing {
+    width: 92px;
+    height: 92px;
   }
 }
 

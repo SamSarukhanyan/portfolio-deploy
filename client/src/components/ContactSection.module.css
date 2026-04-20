@@ -164,6 +164,27 @@
 }
 
 @media (max-width: 560px) {
+  .section {
+    padding-bottom: 1.9rem;
+  }
+
+  .card {
+    padding: 0.95rem;
+    border-radius: 20px;
+  }
+
+  .layout {
+    gap: 0.95rem;
+  }
+
+  .actions {
+    gap: 0.75rem;
+  }
+
+  .socialRow {
+    gap: 0.5rem;
+  }
+
   .mailPulse {
     width: 84px;
     height: 38px;

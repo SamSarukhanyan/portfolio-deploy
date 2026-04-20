@@ -196,10 +196,27 @@ export function Hero() {
       <div className={styles.scrollHint} data-show={showScrollHint ? "true" : "false"} aria-hidden>
         <span className={styles.scrollHintTrack}>
           <span className={styles.scrollHintHand}>
-            <span className={styles.scrollHintPalm} />
-            <span className={styles.scrollHintFinger} />
+            <svg className={styles.scrollHintHandSvg} viewBox="0 0 64 64">
+              <defs>
+                <linearGradient id="handFillGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(188, 198, 210, 0.86)" />
+                  <stop offset="100%" stopColor="rgba(125, 138, 156, 0.74)" />
+                </linearGradient>
+              </defs>
+              <path
+                className={styles.scrollHintHandFill}
+                d="M26 10c2.4 0 4.4 1.9 4.4 4.3v13.2h2V9.7c0-2.4 2-4.4 4.4-4.4s4.3 2 4.3 4.4v19.8h2.2V14.8c0-2.4 2-4.4 4.4-4.4s4.4 2 4.4 4.4v19.8h1.4c4.8 0 8.8 3.9 8.8 8.8v1.2c0 11.2-9.1 20.3-20.3 20.3h-7.8c-6.2 0-11.5-4.3-12.7-10.4l-3.3-16.6c-.5-2.3 1-4.6 3.3-5.1 2.4-.5 4.6 1 5.1 3.3l2.1 10.5h1.5V14.3c0-2.4 2-4.3 4.4-4.3Z"
+              />
+              <path
+                className={styles.scrollHintHandStroke}
+                d="M26 10c2.4 0 4.4 1.9 4.4 4.3v13.2h2V9.7c0-2.4 2-4.4 4.4-4.4s4.3 2 4.3 4.4v19.8h2.2V14.8c0-2.4 2-4.4 4.4-4.4s4.4 2 4.4 4.4v19.8h1.4c4.8 0 8.8 3.9 8.8 8.8v1.2c0 11.2-9.1 20.3-20.3 20.3h-7.8c-6.2 0-11.5-4.3-12.7-10.4l-3.3-16.6c-.5-2.3 1-4.6 3.3-5.1 2.4-.5 4.6 1 5.1 3.3l2.1 10.5h1.5V14.3c0-2.4 2-4.3 4.4-4.3Z"
+              />
+              <circle className={styles.scrollHintFingerTip} cx="26" cy="10" r="3.2" />
+            </svg>
           </span>
           <span className={styles.scrollHintTap} />
+          <span className={styles.scrollHintRipple} />
+          <span className={`${styles.scrollHintRipple} ${styles.scrollHintRippleAlt}`} />
         </span>
       </div>
     </section>

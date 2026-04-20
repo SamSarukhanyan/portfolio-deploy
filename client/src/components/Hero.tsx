@@ -72,7 +72,7 @@ export function Hero() {
                   <span className={styles.codeDot} />
                   <span className={styles.codeDot} />
                   <span className={styles.codeDot} />
-                  <span className={styles.codeLabel}>developer mode</span>
+                  <span className={styles.codeLabel}>Release pipeline</span>
                 </div>
                 <div className={styles.codeViewport}>
                   <span className={`${styles.codeLine} ${styles.codeLineOne}`}>
@@ -147,7 +147,7 @@ export function Hero() {
                   <span className={styles.codeDot} />
                   <span className={styles.codeDot} />
                   <span className={styles.codeDot} />
-                  <span className={styles.codeLabel}>developer mode</span>
+                  <span className={styles.codeLabel}>Release pipeline</span>
                 </div>
                 <div className={styles.codeViewport}>
                   <span className={`${styles.codeLine} ${styles.codeLineOne}`}>

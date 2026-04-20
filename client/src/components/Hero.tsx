@@ -28,6 +28,39 @@ export function Hero() {
                 <p className={styles.domain}>{site.domain}</p>
                 <p className={styles.portfolioTag}>Portfolio</p>
               </Reveal>
+              <Reveal className={`${styles.orbit} ${styles.orbitMobile}`} direction="right" delayMs={90} aria-hidden>
+                <div className={styles.motionDock}>
+                  <div className={styles.miniSolar}>
+                    <span className={styles.miniSun} />
+                    <span className={styles.miniOrbitOuter}>
+                      <span className={styles.miniPlanetOuter} />
+                    </span>
+                    <span className={styles.miniOrbitInner}>
+                      <span className={styles.miniPlanetInner} />
+                    </span>
+                  </div>
+                  <div className={styles.devCore}>
+                    <span className={styles.codeTag}>&lt;/&gt;</span>
+                    <span className={styles.devRing}>
+                      <span className={styles.devDot} />
+                    </span>
+                  </div>
+                  <div className={styles.sectionGlyphs}>
+                    <span className={styles.glyphBars}>
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                    <span className={styles.glyphStack}>
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                    <span className={styles.glyphRoute} />
+                    <span className={styles.glyphMail} />
+                  </div>
+                </div>
+              </Reveal>
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
               </Reveal>
@@ -59,7 +92,7 @@ export function Hero() {
               </Reveal>
             </div>
             <div className={styles.visual} aria-hidden>
-              <Reveal className={styles.orbit} direction="right" delayMs={90}>
+              <Reveal className={`${styles.orbit} ${styles.orbitDesktop}`} direction="right" delayMs={90}>
                 <div className={styles.motionDock}>
                   <div className={styles.miniSolar}>
                     <span className={styles.miniSun} />

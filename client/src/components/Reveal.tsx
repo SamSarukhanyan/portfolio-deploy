@@ -38,8 +38,18 @@ export function Reveal<T extends ElementType = "div">({
     if (!target) return;
     if (typeof window === "undefined") return;
 
-    const enterRatio = 0.2;
+    const enterRatio = 0.1;
     const exitRatio = 0.03;
+
+    const initialRect = target.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || 0;
+    const shouldStartVisible =
+      initialRect.top < viewportHeight * 0.98 && initialRect.bottom > viewportHeight * 0.02;
+
+    if (shouldStartVisible) {
+      inViewRef.current = true;
+      setInView(true);
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -57,7 +67,7 @@ export function Reveal<T extends ElementType = "div">({
       {
         root: null,
         threshold: [0, exitRatio, enterRatio, 0.35],
-        rootMargin: "0px 0px -10% 0px",
+        rootMargin: "0px 0px -2% 0px",
       },
     );
 

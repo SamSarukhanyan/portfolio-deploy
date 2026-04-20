@@ -161,6 +161,14 @@
   display: block;
 }
 
+.codeStreamMobile {
+  display: none;
+}
+
+.codeStreamDesktop {
+  display: block;
+}
+
 .orbit::after {
   content: "";
   position: absolute;
@@ -173,8 +181,8 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
-  min-height: clamp(180px, 32vw, 220px);
-  padding: clamp(0.6rem, 2vw, 0.9rem);
+  min-height: clamp(150px, 26vw, 186px);
+  padding: clamp(0.48rem, 1.5vw, 0.65rem);
 }
 
 .miniSolar,
@@ -187,7 +195,7 @@
 
 .miniSolar {
   position: relative;
-  min-height: 90px;
+  min-height: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,14 +218,14 @@
 }
 
 .miniOrbitOuter {
-  width: 96px;
-  height: 54px;
+  width: 82px;
+  height: 46px;
   animation: spinOrbit 7s linear infinite;
 }
 
 .miniOrbitInner {
-  width: 66px;
-  height: 36px;
+  width: 56px;
+  height: 31px;
   animation: spinOrbitReverse 4.6s linear infinite;
 }
 
@@ -244,7 +252,7 @@
 }
 
 .devCore {
-  min-height: 90px;
+  min-height: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,8 +276,8 @@
 
 .devRing {
   position: absolute;
-  width: 108px;
-  height: 108px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: 1px dashed rgba(113, 231, 193, 0.35);
   animation: spinOrbit 9s linear infinite;
@@ -730,10 +738,19 @@
     display: none;
   }
 
+  .codeStreamMobile {
+    display: block;
+    margin-bottom: 0.58rem;
+  }
+
+  .codeStreamDesktop {
+    display: none;
+  }
+
   .motionDock {
-    min-height: 152px;
-    gap: 0.55rem;
-    padding: 0.45rem;
+    min-height: 128px;
+    gap: 0.45rem;
+    padding: 0.38rem;
   }
 
   .sectionGlyphs {
@@ -768,7 +785,7 @@
   }
 
   .codeStream {
-    padding: 0.48rem 0.55rem 0.54rem;
+    padding: 0.44rem 0.5rem 0.5rem;
   }
 
   .codeLabel {
@@ -782,17 +799,17 @@
 
 @media (max-width: 420px) {
   .motionDock {
-    min-height: 138px;
+    min-height: 116px;
   }
 
   .miniSolar,
   .devCore {
-    min-height: 78px;
+    min-height: 66px;
   }
 
   .devRing {
-    width: 92px;
-    height: 92px;
+    width: 74px;
+    height: 74px;
   }
 }
 
@@ -803,7 +820,7 @@
     align-content: stretch;
   }
 
-  .codeStream {
+  .codeStreamDesktop {
     min-height: 0;
   }
 }

@@ -115,6 +115,8 @@
 
 .orbit {
   position: relative;
+  max-width: min(100%, 480px);
+  margin-bottom: 0.35rem;
   border-radius: 20px;
   border: 1px solid rgba(85, 199, 255, 0.3);
   background:

@@ -38,7 +38,7 @@
   /* нижний ритм секций; верх отдельно меньше — без «воздушной подушки» над заголовками */
   --space-section-bottom: clamp(2.25rem, 4.8vw, 4rem);
   --space-section-top: clamp(1rem, 2.6vw, 1.65rem);
-  --max-width: 1120px;
+  --max-width: 1220px;
   /* Foremost layers first: extra top wash so safe-area + first px match the gray-blue body */
   --page-gradient:
     radial-gradient(ellipse 120% 78% at 50% -10%, rgba(85, 199, 255, 0.22), transparent 54%),
@@ -189,7 +189,7 @@ button {
 .shell {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 clamp(1rem, 3.2vw, 1.65rem);
+  padding: 0 clamp(0.7rem, 2.2vw, 1.2rem);
 }
 
 .section {

@@ -127,9 +127,30 @@
   gap: 0.55rem;
 }
 
+.mobileArt {
+  display: none;
+}
+
 @media (max-width: 767px) {
   .end {
     margin-left: auto;
+  }
+
+  .mobileArt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid rgba(111, 162, 196, 0.42);
+    background: rgba(111, 162, 196, 0.12);
+    color: #cbd7e5;
+    text-decoration: none;
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 }
 

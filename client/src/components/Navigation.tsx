@@ -2,12 +2,14 @@ import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./Navigation.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
+import { onSpaLinkClick, usePathname } from "../utils/spaRouter";
 
 export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const menuId = useId();
-  const isArtPage = typeof window !== "undefined" && window.location.pathname.startsWith("/art");
+  const pathname = usePathname();
+  const isArtPage = pathname.startsWith("/art");
 
   const links = useMemo(
     () =>
@@ -31,7 +33,14 @@ export function Navigation() {
   return (
     <header className={styles.header}>
       <div className={`shell ${styles.navShell} ${styles.inner}`}>
-        <a className={styles.brand} href={isArtPage ? "/" : "#top"} onClick={() => setOpen(false)}>
+        <a
+          className={styles.brand}
+          href={isArtPage ? "/" : "#top"}
+          onClick={(event) => {
+            onSpaLinkClick(event, isArtPage ? "/" : "#top");
+            setOpen(false);
+          }}
+        >
           <span className={styles.brandGlyph} aria-hidden>
             <svg viewBox="0 0 48 48">
               <defs>
@@ -60,7 +69,7 @@ export function Navigation() {
             <ul className={styles.list}>
               {links.map((l) => (
                 <li key={l.href}>
-                  <a className={styles.navLink} href={l.href}>
+                  <a className={styles.navLink} href={l.href} onClick={(event) => onSpaLinkClick(event, l.href)}>
                     {t(l.labelKey)}
                   </a>
                 </li>
@@ -70,7 +79,18 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
-          <a className={styles.quickCta} href={isArtPage ? "/" : "/art"}>
+          <a
+            className={styles.mobileArt}
+            href={isArtPage ? "/" : "/art"}
+            onClick={(event) => onSpaLinkClick(event, isArtPage ? "/" : "/art")}
+          >
+            {isArtPage ? t("art.backHome") : t("nav.art")}
+          </a>
+          <a
+            className={styles.quickCta}
+            href={isArtPage ? "/" : "/art"}
+            onClick={(event) => onSpaLinkClick(event, isArtPage ? "/" : "/art")}
+          >
             {isArtPage ? t("art.backHome") : t("hero.ctaArt")}
           </a>
           <button
@@ -104,7 +124,10 @@ export function Navigation() {
                   <a
                     className={styles.drawerLink}
                     href={l.href}
-                    onClick={() => setOpen(false)}
+                    onClick={(event) => {
+                      onSpaLinkClick(event, l.href);
+                      setOpen(false);
+                    }}
                   >
                     {t(l.labelKey)}
                   </a>

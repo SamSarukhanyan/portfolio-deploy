@@ -2,6 +2,7 @@ import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
+import { onSpaLinkClick } from "../utils/spaRouter";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
@@ -100,7 +101,7 @@ export function Hero() {
                 <a className="btn-ghost" href="#highlights">
                   {t("hero.ctaHighlights")}
                 </a>
-                <a className="btn-ghost" href="/art">
+                <a className="btn-ghost" href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
                   {t("hero.ctaArt")}
                 </a>
               </Reveal>

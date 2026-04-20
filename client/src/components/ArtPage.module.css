@@ -105,9 +105,9 @@
   z-index: 120;
   background: rgba(5, 9, 16, 0.92);
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 0.6rem;
-  padding: 0.85rem;
+  grid-template-rows: auto 1fr;
+  gap: 0.25rem;
+  padding: 0.6rem;
 }
 
 .modalTop {
@@ -116,7 +116,6 @@
 }
 
 .modalTop button,
-.modalControls button,
 .navBtn {
   border: 1px solid rgba(128, 152, 186, 0.42);
   background: rgba(25, 34, 50, 0.85);
@@ -126,28 +125,36 @@
 }
 
 .modalStage {
+  position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.35rem;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
 }
 
 .figure {
   margin: 0;
   display: grid;
   justify-items: center;
-  gap: 0.62rem;
+  gap: 0.42rem;
+  width: 100%;
+  height: 100%;
+  align-content: center;
 }
 
 .figure img {
-  max-width: min(100%, 1280px);
-  max-height: min(78vh, 920px);
+  max-width: 100vw;
+  max-height: calc(100vh - 5.2rem);
   width: auto;
   height: auto;
   object-fit: contain;
   transition: transform 0.2s ease-out;
   transform-origin: center center;
-  touch-action: pan-y;
+  touch-action: none;
 }
 
 .figure figcaption {
@@ -157,38 +164,46 @@
 }
 
 .navBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 1.45rem;
   line-height: 1;
-  min-width: 42px;
-  min-height: 42px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+  background: rgba(18, 27, 40, 0.74);
 }
 
-.modalControls {
-  display: inline-flex;
-  justify-self: center;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.4rem 0.62rem;
-  border-radius: 12px;
-  border: 1px solid rgba(128, 152, 186, 0.32);
-  background: rgba(14, 22, 36, 0.82);
-  color: #afc1d5;
+.navPrev {
+  left: 0.7rem;
+}
+
+.navNext {
+  right: 0.7rem;
 }
 
 @media (max-width: 759px) {
   .modalStage {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 0.55rem;
+    width: 100%;
   }
 
   .navBtn {
-    min-width: 46px;
-    min-height: 36px;
+    min-width: 38px;
+    min-height: 38px;
     font-size: 1.2rem;
   }
 
+  .navPrev {
+    left: 0.3rem;
+  }
+
+  .navNext {
+    right: 0.3rem;
+  }
+
   .figure img {
-    max-height: 68vh;
+    max-height: calc(100vh - 6rem);
   }
 }

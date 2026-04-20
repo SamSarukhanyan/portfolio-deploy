@@ -1,7 +1,15 @@
-import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import styles from "./ArtPage.module.css";
 import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
+import { onSpaLinkClick } from "../utils/spaRouter";
 
 const fallbackImage =
   "data:image/svg+xml;charset=UTF-8," +
@@ -22,9 +30,17 @@ const fallbackImage =
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [zoom, setZoom] = useState(1);
+  const [scale, setScale] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [settling, setSettling] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+  const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
+  const pinchStartDistance = useRef<number | null>(null);
+  const pinchStartScale = useRef(1);
+  const panStart = useRef<{ x: number; y: number } | null>(null);
+  const panOffsetStart = useRef({ x: 0, y: 0 });
+  const stageRef = useRef<HTMLDivElement | null>(null);
 
   const activeArtwork = useMemo(
     () => (activeIndex === null ? null : artworks[activeIndex] ?? null),
@@ -37,8 +53,6 @@ export function ArtPage() {
       if (event.key === "Escape") setActiveIndex(null);
       if (event.key === "ArrowRight") setActiveIndex((v) => (v === null ? null : (v + 1) % artworks.length));
       if (event.key === "ArrowLeft") setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
-      if (event.key === "+") setZoom((v) => Math.min(3, Number((v + 0.2).toFixed(2))));
-      if (event.key === "-") setZoom((v) => Math.max(1, Number((v - 0.2).toFixed(2))));
     };
 
     document.body.style.overflow = "hidden";
@@ -51,46 +65,125 @@ export function ArtPage() {
 
   function closeModal() {
     setActiveIndex(null);
-    setZoom(1);
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
+    pointersRef.current.clear();
   }
 
   function openAt(index: number) {
     setActiveIndex(index);
-    setZoom(1);
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
   }
 
   function showNext() {
     setActiveIndex((v) => (v === null ? null : (v + 1) % artworks.length));
-    setZoom(1);
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
   }
 
   function showPrev() {
     setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
-    setZoom(1);
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
   }
 
   function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "touch") {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointersRef.current.size === 2) {
+      const [a, b] = Array.from(pointersRef.current.values());
+      pinchStartDistance.current = Math.hypot(a.x - b.x, a.y - b.y);
+      pinchStartScale.current = scale;
+      panStart.current = null;
+    } else if (pointersRef.current.size === 1 && scale > 1.01) {
+      panStart.current = { x: event.clientX, y: event.clientY };
+      panOffsetStart.current = offset;
+    }
+
     touchStartX.current = event.clientX;
     touchStartY.current = event.clientY;
   }
 
+  function clampOffset(rawOffset: { x: number; y: number }, nextScale: number) {
+    const stage = stageRef.current;
+    if (!stage || nextScale <= 1) return { x: 0, y: 0 };
+
+    const maxX = (stage.clientWidth * (nextScale - 1)) / 2;
+    const maxY = (stage.clientHeight * (nextScale - 1)) / 2;
+    return {
+      x: Math.max(-maxX, Math.min(maxX, rawOffset.x)),
+      y: Math.max(-maxY, Math.min(maxY, rawOffset.y)),
+    };
+  }
+
+  function settleTransform(rawScale: number, rawOffset: { x: number; y: number }) {
+    setSettling(true);
+    const targetScale = Math.max(1, Math.min(3, rawScale));
+    const targetOffset = clampOffset(rawOffset, targetScale);
+    setScale(targetScale);
+    setOffset(targetOffset);
+    window.setTimeout(() => setSettling(false), 180);
+  }
+
+  function onPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!pointersRef.current.has(event.pointerId)) return;
+    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointersRef.current.size === 2) {
+      const [a, b] = Array.from(pointersRef.current.values());
+      const nextDistance = Math.hypot(a.x - b.x, a.y - b.y);
+      const startDistance = pinchStartDistance.current ?? nextDistance;
+      const nextScale = Math.max(0.82, Math.min(3.4, pinchStartScale.current * (nextDistance / startDistance)));
+      setScale(nextScale);
+      return;
+    }
+
+    if (pointersRef.current.size === 1 && panStart.current && scale > 1.01) {
+      const dx = event.clientX - panStart.current.x;
+      const dy = event.clientY - panStart.current.y;
+      setOffset(clampOffset({ x: panOffsetStart.current.x + dx, y: panOffsetStart.current.y + dy }, scale));
+    }
+  }
+
   function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    pointersRef.current.delete(event.pointerId);
+
+    if (pointersRef.current.size === 0) {
+      settleTransform(scale, offset);
+      panStart.current = null;
+      pinchStartDistance.current = null;
+    }
+
     if (touchStartX.current === null || touchStartY.current === null) return;
     const dx = event.clientX - touchStartX.current;
     const dy = event.clientY - touchStartY.current;
     touchStartX.current = null;
     touchStartY.current = null;
 
+    if (scale > 1.01) return;
     if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) showNext();
     else showPrev();
   }
 
+  const imageStyle = useMemo(
+    () =>
+      ({
+        transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${scale})`,
+        transition: settling ? "transform 0.18s cubic-bezier(0.2, 0.9, 0.35, 1)" : "none",
+      }) as CSSProperties,
+    [offset.x, offset.y, scale, settling],
+  );
+
   return (
     <section className={`section ${styles.section}`}>
       <div className="shell">
         <div className={`glass ${styles.hero}`}>
-          <a href="/" className={styles.backLink}>
+          <a href="/" className={styles.backLink} onClick={(event) => onSpaLinkClick(event, "/")}>
             {t("art.backHome")}
           </a>
           <h1 className={styles.title}>{t("art.title")}</h1>
@@ -131,19 +224,19 @@ export function ArtPage() {
             </button>
           </div>
           <div
+            ref={stageRef}
             className={styles.modalStage}
             onClick={(event) => event.stopPropagation()}
             onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
           >
-            <button type="button" className={styles.navBtn} onClick={showPrev} aria-label={t("art.prev")}>
-              ‹
-            </button>
             <figure className={styles.figure}>
               <img
                 src={getArtworkSrc(activeArtwork.filename)}
                 alt={activeArtwork.title}
-                style={{ transform: `scale(${zoom})` }}
+                style={imageStyle}
                 onError={(event) => {
                   event.currentTarget.src = fallbackImage;
                 }}
@@ -152,17 +245,21 @@ export function ArtPage() {
                 {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium} · {activeArtwork.year}
               </figcaption>
             </figure>
-            <button type="button" className={styles.navBtn} onClick={showNext} aria-label={t("art.next")}>
+            <button
+              type="button"
+              className={`${styles.navBtn} ${styles.navPrev}`}
+              onClick={showPrev}
+              aria-label={t("art.prev")}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className={`${styles.navBtn} ${styles.navNext}`}
+              onClick={showNext}
+              aria-label={t("art.next")}
+            >
               ›
-            </button>
-          </div>
-          <div className={styles.modalControls} onClick={(event) => event.stopPropagation()}>
-            <button type="button" onClick={() => setZoom((v) => Math.max(1, Number((v - 0.2).toFixed(2))))}>
-              {t("art.zoomOut")}
-            </button>
-            <span>{Math.round(zoom * 100)}%</span>
-            <button type="button" onClick={() => setZoom((v) => Math.min(3, Number((v + 0.2).toFixed(2))))}>
-              {t("art.zoomIn")}
             </button>
           </div>
         </div>

@@ -1,8 +1,9 @@
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy } from "react";
 import { Navigation } from "./components/Navigation";
 import { Hero } from "./components/Hero";
 import { Footer } from "./components/Footer";
 import { ArtPage } from "./components/ArtPage";
+import { usePathname } from "./utils/spaRouter";
 
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
@@ -18,14 +19,7 @@ const ContactSection = lazy(() =>
 );
 
 export default function App() {
-  const [pathname, setPathname] = useState(() => window.location.pathname);
-
-  useEffect(() => {
-    const onPopState = () => setPathname(window.location.pathname);
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, []);
-
+  const pathname = usePathname();
   const isArtPage = pathname.startsWith("/art");
 
   return (

@@ -937,7 +937,38 @@
 
 @media (max-width: 899px) {
   .scrollHint {
-    display: none;
+    right: 0.5rem;
+    top: auto;
+    bottom: 5.2rem;
+    z-index: 45;
+  }
+
+  .scrollHintTrack {
+    width: 24px;
+    height: 56px;
+    border-radius: 14px;
+  }
+
+  .scrollHintPalm {
+    width: 10px;
+    height: 8px;
+  }
+
+  .scrollHintFinger {
+    width: 4px;
+    height: 11px;
+  }
+}
+
+@media (max-width: 420px) {
+  .scrollHint {
+    right: 0.4rem;
+    bottom: 4.7rem;
+  }
+
+  .scrollHintTrack {
+    width: 22px;
+    height: 52px;
   }
 }
 

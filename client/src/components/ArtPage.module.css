@@ -45,59 +45,111 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.62rem;
-  min-width: 118px;
+  gap: 0.52rem;
+  min-width: 152px;
   transform: translateX(-12px);
 }
 
+/* Одна визуальная «клетка» для всех трёх фигур */
 .shapeCircle,
 .shapeDiamond,
-.shapeArc {
-  display: block;
+.shapeSnake {
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
-/* Круг — «точка холста» */
+/* Круг — диск того же масштаба, что и кольцо змеи */
 .shapeCircle {
-  width: 18px;
-  height: 18px;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
-  border: 1px solid rgba(198, 208, 222, 0.55);
-  background: radial-gradient(circle at 32% 32%, rgba(220, 228, 238, 0.55), rgba(120, 136, 158, 0.35));
-  box-shadow: inset 0 0 0 2px rgba(18, 26, 40, 0.35);
-  animation: shapePulse 2.4s ease-in-out infinite;
+  border: 1px solid rgba(150, 168, 192, 0.28);
+  background: radial-gradient(circle at 30% 28%, rgba(228, 236, 246, 0.22), transparent 52%),
+    radial-gradient(circle at 50% 50%, rgba(88, 108, 134, 0.45), rgba(22, 32, 48, 0.55));
+  box-shadow: inset 0 0 0 1px rgba(12, 18, 30, 0.4), 0 0 0 1px rgba(18, 26, 40, 0.35);
+  animation: shapePulse 2.5s ease-in-out infinite;
 }
 
-/* Ромб — «угол мазка» */
+.shapeCircle::after {
+  content: "";
+  width: 62%;
+  height: 62%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, rgba(236, 242, 250, 0.75), rgba(130, 148, 172, 0.35));
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12);
+}
+
+/* Ромб — тот же внешний размер */
 .shapeDiamond {
-  width: 16px;
-  height: 16px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.shapeDiamond::before {
+  content: "";
+  width: 46%;
+  height: 46%;
   transform: rotate(45deg);
-  border-radius: 2px;
-  border: 1px solid rgba(188, 200, 216, 0.65);
-  background: linear-gradient(135deg, rgba(200, 210, 224, 0.45), rgba(90, 108, 132, 0.35));
+  border-radius: 3px;
+  border: 1px solid rgba(188, 202, 218, 0.55);
+  background: linear-gradient(140deg, rgba(210, 220, 234, 0.38), rgba(72, 92, 118, 0.42));
+  box-shadow: 0 0 12px rgba(120, 150, 188, 0.18);
   animation: shapeTilt 3s ease-in-out infinite;
 }
 
-/* Дуга — «обводка круга кисти» */
-.shapeArc {
-  width: 40px;
-  height: 40px;
+/* Змея: сегменты по кругу, волна «голова — осыпающийся хвост» */
+.shapeSnake {
+  position: relative;
   border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: rgba(200, 212, 226, 0.88);
-  border-right-color: rgba(200, 212, 226, 0.22);
-  animation: shapeSpin 5.5s linear infinite;
+  background: radial-gradient(circle at 50% 50%, rgba(40, 56, 78, 0.35), transparent 62%);
+  box-shadow: inset 0 0 0 1px rgba(100, 124, 154, 0.12);
+}
+
+.shapeSnake::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  border: 1px dashed rgba(140, 162, 188, 0.28);
+  opacity: 0.85;
+  animation: snakeRingDrift 14s linear infinite;
+}
+
+.snakeSegRing {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(calc(var(--i) * 30deg));
+  transform-origin: center;
+}
+
+.snakeSegDot {
+  position: absolute;
+  left: -3px;
+  top: -17px;
+  width: 6px;
+  height: 6px;
+  margin: 0;
+  border-radius: 2px;
+  background: linear-gradient(155deg, rgba(232, 240, 250, 0.95), rgba(118, 138, 164, 0.55));
+  box-shadow: 0 0 7px rgba(160, 188, 220, 0.35);
+  animation: snakeBitTrail 2.2s linear infinite;
+  animation-delay: calc(var(--i) * -183.333ms);
 }
 
 @keyframes shapePulse {
   0%,
   100% {
     transform: scale(1);
-    opacity: 0.65;
+    opacity: 0.82;
   }
   50% {
-    transform: scale(1.12);
+    transform: scale(1.06);
     opacity: 1;
   }
 }
@@ -106,20 +158,59 @@
   0%,
   100% {
     transform: rotate(45deg) scale(1);
-    opacity: 0.7;
+    opacity: 0.78;
   }
   50% {
-    transform: rotate(52deg) scale(1.08);
+    transform: rotate(52deg) scale(1.07);
     opacity: 1;
   }
 }
 
-@keyframes shapeSpin {
+@keyframes snakeBitTrail {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: translateY(0) scale(0.52);
+    filter: brightness(0.92);
+  }
+  14% {
+    opacity: 1;
+    transform: translateY(0) scale(1.12);
+    filter: brightness(1.15);
+    box-shadow: 0 0 10px rgba(175, 204, 236, 0.55);
+  }
+  32% {
+    opacity: 0.72;
+    transform: translateY(0) scale(0.94);
+    filter: brightness(1);
+    box-shadow: 0 0 4px rgba(175, 204, 236, 0.2);
+  }
+  46% {
+    opacity: 0.32;
+    transform: translateY(9px) scale(0.52);
+    filter: brightness(0.88);
+    box-shadow: none;
+  }
+  56% {
+    opacity: 0;
+    transform: translateY(17px) scale(0.22);
+  }
+  58% {
+    opacity: 0;
+    transform: translateY(0) scale(0.08);
+  }
+  68% {
+    opacity: 0.16;
+    transform: translateY(0) scale(0.46);
+  }
+}
+
+@keyframes snakeRingDrift {
   from {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(-360deg);
   }
 }
 
@@ -313,24 +404,23 @@
   }
 
   .heroMonoMotion {
-    min-width: 102px;
-    gap: 0.48rem;
+    min-width: 138px;
+    gap: 0.4rem;
     transform: translateX(-8px);
   }
 
-  .shapeCircle {
-    width: 15px;
-    height: 15px;
+  .shapeCircle,
+  .shapeDiamond,
+  .shapeSnake {
+    width: 40px;
+    height: 40px;
   }
 
-  .shapeDiamond {
-    width: 14px;
-    height: 14px;
-  }
-
-  .shapeArc {
-    width: 34px;
-    height: 34px;
+  .snakeSegDot {
+    left: -2.5px;
+    top: -15px;
+    width: 5px;
+    height: 5px;
   }
 
   .modalStage {

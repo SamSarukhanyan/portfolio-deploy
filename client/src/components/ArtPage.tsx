@@ -27,6 +27,8 @@ const fallbackImage =
     </svg>`,
   );
 
+const SNAKE_SEGMENTS = 12;
+
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -222,7 +224,17 @@ export function ArtPage() {
             <div className={styles.heroMonoMotion} aria-hidden>
               <span className={styles.shapeCircle} />
               <span className={styles.shapeDiamond} />
-              <span className={styles.shapeArc} />
+              <span className={styles.shapeSnake}>
+                {Array.from({ length: SNAKE_SEGMENTS }, (_, i) => (
+                  <span
+                    key={i}
+                    className={styles.snakeSegRing}
+                    style={{ ["--i" as string]: String(i) } as CSSProperties}
+                  >
+                    <span className={styles.snakeSegDot} />
+                  </span>
+                ))}
+              </span>
             </div>
           </div>
           <h1 className={styles.title}>{t("art.title")}</h1>

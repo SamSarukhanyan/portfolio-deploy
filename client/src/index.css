@@ -48,6 +48,7 @@ html {
   padding: 0;
   scroll-behavior: smooth;
   scroll-padding-top: 0;
+  overflow-x: hidden;
   background: var(--page-gradient);
   background-color: #0e1628;
   /* iOS Safari: 100vh can exclude the visible area; 100dvh tracks the dynamic visual viewport */
@@ -73,6 +74,7 @@ html {
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
   min-height: 100vh;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
@@ -89,6 +91,8 @@ body {
 #root {
   margin: 0;
   padding: 0;
+  width: 100%;
+  overflow-x: hidden;
   min-height: 100vh;
   min-height: 100dvh;
   min-height: -webkit-fill-available;
@@ -347,26 +351,27 @@ section#top.section {
 /* Scroll reveal */
 .reveal-item {
   --reveal-delay: 0ms;
-  --reveal-distance: 26px;
+  --reveal-distance: 16px;
   opacity: 0;
-  transform: translate3d(0, var(--reveal-distance), 0) scale(0.985);
+  transform: translate3d(0, var(--reveal-distance), 0);
   transition:
     opacity 0.62s var(--ease-out) var(--reveal-delay),
     transform 0.62s var(--ease-out) var(--reveal-delay);
   will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 
 .reveal-item[data-reveal-dir="left"] {
-  transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0) scale(0.985);
+  transform: translate3d(calc(var(--reveal-distance) * -1), 0, 0);
 }
 
 .reveal-item[data-reveal-dir="right"] {
-  transform: translate3d(var(--reveal-distance), 0, 0) scale(0.985);
+  transform: translate3d(var(--reveal-distance), 0, 0);
 }
 
 .reveal-item[data-reveal-in="true"] {
   opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0);
 }
 
 @keyframes ambientShift {

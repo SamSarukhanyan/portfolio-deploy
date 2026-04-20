@@ -136,7 +136,7 @@
 
 .orbitSvg {
   width: 100%;
-  height: 170px;
+  height: 188px;
 }
 
 .sunHalo {
@@ -147,14 +147,7 @@
   filter: drop-shadow(0 0 7px rgba(255, 203, 132, 0.45));
 }
 
-.orbitMercury,
-.orbitVenus,
-.orbitEarth,
-.orbitMars,
-.orbitJupiter,
-.orbitSaturn,
-.orbitUranus,
-.orbitNeptune {
+.orbitLine {
   fill: none;
   stroke-width: 1.15;
   stroke-dasharray: 4 8;
@@ -193,49 +186,8 @@
   stroke: rgba(188, 164, 255, 0.33);
 }
 
-.planetMercury,
-.planetVenus,
-.planetEarth,
-.planetMars,
-.planetJupiter,
-.planetSaturn,
-.planetUranus,
-.planetNeptune {
-  transform-origin: 180px 120px;
-  transform-box: fill-box;
+.planetSprite {
   will-change: transform;
-}
-
-.planetMercury {
-  animation: orbitMercurySpin 3.8s linear infinite;
-}
-
-.planetVenus {
-  animation: orbitVenusSpin 6.5s linear infinite;
-}
-
-.planetEarth {
-  animation: orbitEarthSpin 8.8s linear infinite;
-}
-
-.planetMars {
-  animation: orbitMarsSpin 11.4s linear infinite;
-}
-
-.planetJupiter {
-  animation: orbitJupiterSpin 17.8s linear infinite;
-}
-
-.planetSaturn {
-  animation: orbitSaturnSpin 23s linear infinite;
-}
-
-.planetUranus {
-  animation: orbitUranusSpin 29s linear infinite;
-}
-
-.planetNeptune {
-  animation: orbitNeptuneSpin 34s linear infinite;
 }
 
 .saturnRing {
@@ -299,87 +251,3 @@
   }
 }
 
-@keyframes orbitMercurySpin {
-  from {
-    transform: rotate(0deg) translateX(24px);
-  }
-  to {
-    transform: rotate(360deg) translateX(24px);
-  }
-}
-
-@keyframes orbitVenusSpin {
-  from {
-    transform: rotate(40deg) translateX(34px);
-  }
-  to {
-    transform: rotate(400deg) translateX(34px);
-  }
-}
-
-@keyframes orbitEarthSpin {
-  from {
-    transform: rotate(120deg) translateX(46px);
-  }
-  to {
-    transform: rotate(480deg) translateX(46px);
-  }
-}
-
-@keyframes orbitMarsSpin {
-  from {
-    transform: rotate(210deg) translateX(58px);
-  }
-  to {
-    transform: rotate(570deg) translateX(58px);
-  }
-}
-
-@keyframes orbitJupiterSpin {
-  from {
-    transform: rotate(320deg) translateX(76px);
-  }
-  to {
-    transform: rotate(680deg) translateX(76px);
-  }
-}
-
-@keyframes orbitSaturnSpin {
-  from {
-    transform: rotate(90deg) translateX(96px);
-  }
-  to {
-    transform: rotate(450deg) translateX(96px);
-  }
-}
-
-@keyframes orbitUranusSpin {
-  from {
-    transform: rotate(170deg) translateX(116px);
-  }
-  to {
-    transform: rotate(530deg) translateX(116px);
-  }
-}
-
-@keyframes orbitNeptuneSpin {
-  from {
-    transform: rotate(250deg) translateX(134px);
-  }
-  to {
-    transform: rotate(610deg) translateX(134px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .planetMercury,
-  .planetVenus,
-  .planetEarth,
-  .planetMars,
-  .planetJupiter,
-  .planetSaturn,
-  .planetUranus,
-  .planetNeptune {
-    animation: none;
-  }
-}

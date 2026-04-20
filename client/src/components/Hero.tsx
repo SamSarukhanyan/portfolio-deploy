@@ -38,43 +38,101 @@ export function Hero() {
                       <stop offset="0%" stopColor="#f5ecff" />
                       <stop offset="100%" stopColor="#b996ff" />
                     </radialGradient>
+
+                    <path
+                      id="orbit-mercury"
+                      d="M 204 120 A 24 14 0 1 1 156 120 A 24 14 0 1 1 204 120"
+                    />
+                    <path
+                      id="orbit-venus"
+                      d="M 216 120 A 36 21 0 1 1 144 120 A 36 21 0 1 1 216 120"
+                    />
+                    <path
+                      id="orbit-earth"
+                      d="M 230 120 A 50 29 0 1 1 130 120 A 50 29 0 1 1 230 120"
+                    />
+                    <path
+                      id="orbit-mars"
+                      d="M 244 120 A 64 37 0 1 1 116 120 A 64 37 0 1 1 244 120"
+                    />
+                    <path
+                      id="orbit-jupiter"
+                      d="M 262 120 A 82 47 0 1 1 98 120 A 82 47 0 1 1 262 120"
+                    />
+                    <path
+                      id="orbit-saturn"
+                      d="M 282 120 A 102 59 0 1 1 78 120 A 102 59 0 1 1 282 120"
+                    />
+                    <path
+                      id="orbit-uranus"
+                      d="M 300 120 A 120 69 0 1 1 60 120 A 120 69 0 1 1 300 120"
+                    />
+                    <path
+                      id="orbit-neptune"
+                      d="M 316 120 A 136 78 0 1 1 44 120 A 136 78 0 1 1 316 120"
+                    />
                   </defs>
+
                   <circle cx="180" cy="120" r="26" className={styles.sunHalo} />
                   <circle cx="180" cy="120" r="13" fill="url(#solarSun)" className={styles.sunCore} />
 
-                  <ellipse cx="180" cy="120" rx="24" ry="14" className={styles.orbitMercury} />
-                  <ellipse cx="180" cy="120" rx="34" ry="20" className={styles.orbitVenus} />
-                  <ellipse cx="180" cy="120" rx="46" ry="27" className={styles.orbitEarth} />
-                  <ellipse cx="180" cy="120" rx="58" ry="34" className={styles.orbitMars} />
-                  <ellipse cx="180" cy="120" rx="76" ry="44" className={styles.orbitJupiter} />
-                  <ellipse cx="180" cy="120" rx="96" ry="56" className={styles.orbitSaturn} />
-                  <ellipse cx="180" cy="120" rx="116" ry="66" className={styles.orbitUranus} />
-                  <ellipse cx="180" cy="120" rx="134" ry="76" className={styles.orbitNeptune} />
+                  <use href="#orbit-mercury" className={`${styles.orbitLine} ${styles.orbitMercury}`} />
+                  <use href="#orbit-venus" className={`${styles.orbitLine} ${styles.orbitVenus}`} />
+                  <use href="#orbit-earth" className={`${styles.orbitLine} ${styles.orbitEarth}`} />
+                  <use href="#orbit-mars" className={`${styles.orbitLine} ${styles.orbitMars}`} />
+                  <use href="#orbit-jupiter" className={`${styles.orbitLine} ${styles.orbitJupiter}`} />
+                  <use href="#orbit-saturn" className={`${styles.orbitLine} ${styles.orbitSaturn}`} />
+                  <use href="#orbit-uranus" className={`${styles.orbitLine} ${styles.orbitUranus}`} />
+                  <use href="#orbit-neptune" className={`${styles.orbitLine} ${styles.orbitNeptune}`} />
 
-                  <g className={styles.planetMercury}>
-                    <circle cx="180" cy="120" r="2.3" fill="#f8dcc2" />
+                  <g className={styles.planetSprite}>
+                    <circle r="2.2" fill="#f8dcc2" />
+                    <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-mercury" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetVenus}>
-                    <circle cx="180" cy="120" r="3.4" fill="#f5d3b0" />
+                  <g className={styles.planetSprite}>
+                    <circle r="3.3" fill="#f5d3b0" />
+                    <animateMotion dur="7s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-venus" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetEarth}>
-                    <circle cx="180" cy="120" r="3.8" fill="url(#planetBlue)" />
+                  <g className={styles.planetSprite}>
+                    <circle r="3.7" fill="url(#planetBlue)" />
+                    <animateMotion dur="10s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-earth" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetMars}>
-                    <circle cx="180" cy="120" r="3" fill="#e79872" />
+                  <g className={styles.planetSprite}>
+                    <circle r="2.9" fill="#e79872" />
+                    <animateMotion dur="14.5s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-mars" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetJupiter}>
-                    <circle cx="180" cy="120" r="6.5" fill="#d8b08c" />
+                  <g className={styles.planetSprite}>
+                    <circle r="6.3" fill="#d8b08c" />
+                    <animateMotion dur="22s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-jupiter" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetSaturn}>
-                    <ellipse cx="180" cy="120" rx="8.2" ry="2.2" className={styles.saturnRing} />
-                    <circle cx="180" cy="120" r="5.7" fill="#d8c29d" />
+                  <g className={styles.planetSprite}>
+                    <ellipse rx="8.2" ry="2.2" className={styles.saturnRing} />
+                    <circle r="5.7" fill="#d8c29d" />
+                    <animateMotion dur="29s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-saturn" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetUranus}>
-                    <circle cx="180" cy="120" r="4.8" fill="url(#planetGreen)" />
+                  <g className={styles.planetSprite}>
+                    <circle r="4.7" fill="url(#planetGreen)" />
+                    <animateMotion dur="35s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-uranus" />
+                    </animateMotion>
                   </g>
-                  <g className={styles.planetNeptune}>
-                    <circle cx="180" cy="120" r="4.6" fill="url(#planetLavender)" />
+                  <g className={styles.planetSprite}>
+                    <circle r="4.5" fill="url(#planetLavender)" />
+                    <animateMotion dur="41s" repeatCount="indefinite" rotate="auto">
+                      <mpath href="#orbit-neptune" />
+                    </animateMotion>
                   </g>
                 </svg>
               </Reveal>

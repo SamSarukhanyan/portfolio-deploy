@@ -16,6 +16,18 @@ export function Footer() {
           <p className={styles.tagline}>{t("footer.tagline")}</p>
         </div>
         <nav className={styles.links} aria-label={t("footer.aria")}>
+          <a className={styles.link} href="#top">
+            Home
+          </a>
+          <a className={styles.link} href="#highlights">
+            Impact
+          </a>
+          <a className={styles.link} href="#stack">
+            Stack
+          </a>
+          <a className={styles.link} href="#architecture">
+            Architecture
+          </a>
           {site.githubUrl ? (
             <a className={styles.link} href={site.githubUrl} target="_blank" rel="noreferrer noopener">
               {t("footer.linkGithub")}
@@ -28,6 +40,26 @@ export function Footer() {
           ) : null}
           <a className={styles.link} href="#contact">
             {t("footer.linkContact")}
+          </a>
+          {site.email ? (
+            <a className={styles.link} href={`mailto:${site.email}`}>
+              Email
+            </a>
+          ) : null}
+          <a className={styles.link} href="#privacy-policy">
+            Privacy
+          </a>
+          <a className={styles.link} href="#cookie-policy">
+            Cookies
+          </a>
+          <a className={styles.link} href="#gdpr-rights">
+            GDPR
+          </a>
+          <a className={styles.link} href="#terms-of-service">
+            Terms
+          </a>
+          <a className={styles.link} href="#accessibility-statement">
+            Accessibility
           </a>
         </nav>
       </div>

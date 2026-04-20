@@ -1,0 +1,64 @@
+.section {
+  padding-top: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  padding: 1rem;
+  border-radius: 18px;
+}
+
+.card h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1.12rem;
+  color: #eff6ff;
+}
+
+.card p {
+  margin: 0;
+  color: #cde0f7;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.card p + p {
+  margin-top: 0.7rem;
+}
+
+.linkList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.linkList a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  color: #95ddff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.references {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 18px;
+}
+
+.references h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.1rem;
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Samvel Sarukhanyan Portfolio</title>
+  <desc id="desc">Full-stack and mobile developer portfolio preview image.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1528" />
+      <stop offset="50%" stop-color="#132947" />
+      <stop offset="100%" stop-color="#0e1f35" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#55c7ff" />
+      <stop offset="100%" stop-color="#71e7c1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <circle cx="1020" cy="120" r="180" fill="#55c7ff" opacity="0.12" />
+  <circle cx="180" cy="560" r="220" fill="#71e7c1" opacity="0.1" />
+  <rect x="88" y="86" width="1024" height="458" rx="28" fill="#09111f" opacity="0.72" />
+  <rect x="88" y="86" width="1024" height="458" rx="28" fill="none" stroke="#6dcfee" stroke-opacity="0.28" />
+  <text x="142" y="224" fill="#cde9ff" font-size="34" font-family="Inter, Segoe UI, Arial, sans-serif" letter-spacing="2">
+    samsarukhanyan.com
+  </text>
+  <text x="142" y="306" fill="#f3f8ff" font-size="64" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">
+    Samvel Sarukhanyan
+  </text>
+  <text x="142" y="376" fill="#a6d5f6" font-size="38" font-family="Inter, Segoe UI, Arial, sans-serif">
+    Full-Stack and Mobile Developer
+  </text>
+  <rect x="142" y="424" width="570" height="8" rx="4" fill="url(#accent)" />
+</svg>

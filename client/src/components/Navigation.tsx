@@ -14,6 +14,7 @@ export function Navigation() {
         { href: "#stack", labelKey: "nav.stack" as const },
         { href: "#architecture", labelKey: "nav.architecture" as const },
         { href: "#contact", labelKey: "nav.contact" as const },
+        { href: "#legal", labelKey: "nav.legal" as const },
       ] as const,
     [],
   );

@@ -30,7 +30,7 @@
   border: 1px solid rgba(85, 199, 255, 0.35);
   background: rgba(85, 199, 255, 0.14);
   color: #d8f4ff;
-  font-size: 0.76rem;
+  font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: none;
@@ -128,7 +128,7 @@
 .signalTitle {
   margin: 0;
   color: #defdf2;
-  font-size: 0.83rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -153,7 +153,15 @@
 
 .signalNote {
   margin: 0.1rem 0 0;
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   line-height: 1.45;
   color: #9fceb9;
+}
+
+@media (max-width: 767px) {
+  .focusList li,
+  .signalList li,
+  .body {
+    font-size: 1rem;
+  }
 }

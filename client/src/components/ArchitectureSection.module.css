@@ -88,15 +88,15 @@
 }
 
 .nodeSub {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   color: #b9d3f7;
   text-transform: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
 }
 
 .nodeBody {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 1rem;
   color: #d8e7fb;
   line-height: 1.5;
 }
@@ -117,15 +117,15 @@
   border: 1px solid rgba(113, 231, 193, 0.3);
   background: rgba(113, 231, 193, 0.08);
   padding: 0.85rem 0.95rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #d9fff2;
 }
 
 .railTitle {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #a4f1d5;
   margin-bottom: 0.4rem;

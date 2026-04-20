@@ -52,9 +52,16 @@ export function StackSection() {
   return (
     <section id="stack" className={`section ${styles.section}`}>
       <div className="shell">
-        <Reveal as="h2" className="section-title" direction="left">
-          {t("stack.title")}
-        </Reveal>
+        <div className={styles.head}>
+          <Reveal as="h2" className="section-title" direction="left">
+            {t("stack.title")}
+          </Reveal>
+          <Reveal className={styles.stackGlyph} direction="right" delayMs={65} aria-hidden>
+            <span className={styles.stackLayer} />
+            <span className={styles.stackLayer} />
+            <span className={styles.stackLayer} />
+          </Reveal>
+        </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
           {t("stack.lead")}
         </Reveal>

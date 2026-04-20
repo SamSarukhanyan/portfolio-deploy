@@ -157,6 +157,24 @@
   animation: orbitSpinReverse 10s linear infinite;
 }
 
+.orbitTrackFar {
+  fill: none;
+  stroke: rgba(187, 176, 255, 0.32);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 7;
+  transform-origin: 50% 50%;
+  animation: orbitSpin 16s linear infinite;
+}
+
+.orbitTrackCore {
+  fill: none;
+  stroke: rgba(142, 255, 220, 0.28);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 5;
+  transform-origin: 50% 50%;
+  animation: orbitSpinReverse 7.5s linear infinite;
+}
+
 .orbitCore {
   fill: rgba(8, 20, 37, 0.92);
   stroke: rgba(174, 227, 255, 0.75);
@@ -164,16 +182,36 @@
 }
 
 .orbitDotA,
-.orbitDotB {
+.orbitDotB,
+.orbitDotC,
+.orbitDotD,
+.orbitDotE,
+.orbitDotF {
   transform-origin: 160px 110px;
 }
 
 .orbitDotA {
-  animation: orbitDotA 5.8s linear infinite;
+  animation: orbitDotA 6.4s linear infinite;
 }
 
 .orbitDotB {
-  animation: orbitDotB 4.4s linear infinite;
+  animation: orbitDotB 5.1s linear infinite;
+}
+
+.orbitDotC {
+  animation: orbitDotC 7.8s linear infinite;
+}
+
+.orbitDotD {
+  animation: orbitDotD 4.9s linear infinite;
+}
+
+.orbitDotE {
+  animation: orbitDotE 8.8s linear infinite;
+}
+
+.orbitDotF {
+  animation: orbitDotF 5.7s linear infinite;
 }
 
 .signalPanel {
@@ -251,27 +289,69 @@
 
 @keyframes orbitDotA {
   from {
-    transform: rotate(0deg) translateX(0);
+    transform: rotate(0deg) translateX(126px);
   }
   to {
-    transform: rotate(360deg) translateX(0);
+    transform: rotate(360deg) translateX(126px);
   }
 }
 
 @keyframes orbitDotB {
   from {
-    transform: rotate(360deg) translateX(0);
+    transform: rotate(360deg) translateX(86px);
   }
   to {
-    transform: rotate(0deg) translateX(0);
+    transform: rotate(0deg) translateX(86px);
+  }
+}
+
+@keyframes orbitDotC {
+  from {
+    transform: rotate(90deg) translateX(148px);
+  }
+  to {
+    transform: rotate(450deg) translateX(148px);
+  }
+}
+
+@keyframes orbitDotD {
+  from {
+    transform: rotate(300deg) translateX(62px);
+  }
+  to {
+    transform: rotate(-60deg) translateX(62px);
+  }
+}
+
+@keyframes orbitDotE {
+  from {
+    transform: rotate(210deg) translateX(112px);
+  }
+  to {
+    transform: rotate(570deg) translateX(112px);
+  }
+}
+
+@keyframes orbitDotF {
+  from {
+    transform: rotate(-30deg) translateX(92px);
+  }
+  to {
+    transform: rotate(330deg) translateX(92px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .orbitTrack,
   .orbitTrackInner,
+  .orbitTrackFar,
+  .orbitTrackCore,
   .orbitDotA,
-  .orbitDotB {
+  .orbitDotB,
+  .orbitDotC,
+  .orbitDotD,
+  .orbitDotE,
+  .orbitDotF {
     animation: none;
   }
 }

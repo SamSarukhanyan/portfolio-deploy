@@ -29,9 +29,14 @@ export function ArchitectureSection() {
   return (
     <section id="architecture" className={`section ${styles.section}`}>
       <div className="shell">
-        <Reveal as="h2" className="section-title" direction="right">
-          {t("arch.title")}
-        </Reveal>
+        <div className={styles.head}>
+          <Reveal as="h2" className="section-title" direction="right">
+            {t("arch.title")}
+          </Reveal>
+          <Reveal className={styles.route} direction="left" delayMs={70} aria-hidden>
+            <span className={styles.routeDot} />
+          </Reveal>
+        </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
           {t("arch.lead")}
         </Reveal>

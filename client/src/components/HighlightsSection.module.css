@@ -2,6 +2,63 @@
   padding-top: 0;
 }
 
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.signal {
+  width: 112px;
+  height: 52px;
+  border-radius: 14px;
+  border: 1px solid rgba(85, 199, 255, 0.34);
+  background: rgba(9, 18, 30, 0.62);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.42rem;
+  padding: 0.55rem 0.55rem 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.signalBar {
+  width: 9px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #8ff6d9, #55c7ff);
+  transform-origin: bottom;
+  animation: highlightBarPulse 1.8s ease-in-out infinite;
+}
+
+.signalBar:nth-child(1) {
+  height: 18px;
+  animation-delay: 0ms;
+}
+
+.signalBar:nth-child(2) {
+  height: 26px;
+  animation-delay: 180ms;
+}
+
+.signalBar:nth-child(3) {
+  height: 14px;
+  animation-delay: 340ms;
+}
+
+.signalDot {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c9f8ff;
+  box-shadow: 0 0 0 0 rgba(116, 235, 255, 0.55);
+  animation: highlightPing 2.1s ease-out infinite;
+}
+
 .grid {
   list-style: none;
   margin: 0;
@@ -57,4 +114,34 @@
   font-size: 1rem;
   color: #c7d9ef;
   line-height: 1.55;
+}
+
+@keyframes highlightBarPulse {
+  0%,
+  100% {
+    transform: scaleY(0.65);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes highlightPing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(116, 235, 255, 0.55);
+  }
+  75% {
+    box-shadow: 0 0 0 14px rgba(116, 235, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(116, 235, 255, 0);
+  }
+}
+
+@media (max-width: 560px) {
+  .signal {
+    display: none;
+  }
 }

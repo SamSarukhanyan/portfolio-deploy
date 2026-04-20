@@ -17,9 +17,17 @@ export function HighlightsSection() {
   return (
     <section id="highlights" className={`section ${styles.section}`}>
       <div className="shell">
-        <Reveal as="h2" className="section-title" direction="left">
-          {t("highlights.title")}
-        </Reveal>
+        <div className={styles.head}>
+          <Reveal as="h2" className="section-title" direction="left">
+            {t("highlights.title")}
+          </Reveal>
+          <Reveal className={styles.signal} direction="right" delayMs={70} aria-hidden>
+            <span className={styles.signalBar} />
+            <span className={styles.signalBar} />
+            <span className={styles.signalBar} />
+            <span className={styles.signalDot} />
+          </Reveal>
+        </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
           {t("highlights.lead")}
         </Reveal>

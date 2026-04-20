@@ -13,7 +13,7 @@ The project has two runtime parts:
 
 If the API or database is unavailable, the frontend continues to work using local bundled translations. This keeps the portfolio stable in static-hosting or degraded backend scenarios.
 
-## Tech Stack
+##ё Tech Stack
 
 ### Frontend
 

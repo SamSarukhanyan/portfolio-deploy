@@ -874,21 +874,25 @@
 .scrollHintHandSvg {
   width: 30px;
   height: 68px;
+  display: block;
+  overflow: visible;
   filter: drop-shadow(0 5px 9px rgba(8, 14, 24, 0.45));
 }
 
 .scrollHintHandFill {
-  fill: url(#handFillGradient);
+  fill: rgba(186, 196, 208, 0.92);
 }
 
 .scrollHintHandStroke {
   fill: none;
-  stroke: rgba(186, 196, 208, 0.82);
-  stroke-width: 1.4;
+  stroke: rgba(88, 103, 122, 0.92);
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .scrollHintFingerTip {
-  fill: rgba(206, 214, 224, 0.92);
+  fill: rgba(223, 229, 236, 0.96);
 }
 
 .scrollHintTap {

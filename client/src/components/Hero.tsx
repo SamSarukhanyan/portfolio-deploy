@@ -2,6 +2,7 @@ import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
+import { useEffect, useState } from "react";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
@@ -9,6 +10,19 @@ const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 export function Hero() {
   const { t } = useI18n();
   const heroTitle = t("hero.title").replace("Production full-stack", "Production\u00A0full-stack");
+  const [showScrollHint, setShowScrollHint] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const onScroll = () => {
+      setShowScrollHint(window.scrollY <= 18);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <section id="top" className="section">
@@ -178,6 +192,15 @@ export function Hero() {
             </div>
           </div>
         </Reveal>
+      </div>
+      <div className={styles.scrollHint} data-show={showScrollHint ? "true" : "false"} aria-hidden>
+        <span className={styles.scrollHintTrack}>
+          <span className={styles.scrollHintHand}>
+            <span className={styles.scrollHintPalm} />
+            <span className={styles.scrollHintFinger} />
+          </span>
+          <span className={styles.scrollHintTap} />
+        </span>
       </div>
     </section>
   );

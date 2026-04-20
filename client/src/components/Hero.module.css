@@ -825,3 +825,119 @@
   }
 }
 
+.scrollHint {
+  position: fixed;
+  right: clamp(0.7rem, 2.4vw, 1.9rem);
+  top: clamp(52%, 56vh, 66%);
+  z-index: 35;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.24s ease-out,
+    transform 0.24s ease-out;
+  pointer-events: none;
+}
+
+.scrollHint[data-show="true"] {
+  opacity: 0.88;
+  transform: translateY(0);
+}
+
+.scrollHintTrack {
+  position: relative;
+  width: 28px;
+  height: 66px;
+  border-radius: 16px;
+  border: 1px solid rgba(150, 177, 208, 0.46);
+  background: rgba(11, 18, 30, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 20px rgba(6, 12, 22, 0.4);
+}
+
+.scrollHintHand {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  display: grid;
+  justify-items: center;
+  transform: translateX(-50%);
+  animation: scrollHintSwipe 1.9s ease-in-out infinite;
+}
+
+.scrollHintPalm {
+  width: 12px;
+  height: 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(164, 188, 214, 0.56);
+  background: rgba(147, 174, 203, 0.24);
+}
+
+.scrollHintFinger {
+  width: 5px;
+  height: 13px;
+  margin-top: -1px;
+  border-radius: 4px;
+  border: 1px solid rgba(164, 188, 214, 0.56);
+  background: rgba(147, 174, 203, 0.26);
+}
+
+.scrollHintTap {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(166, 191, 218, 0.75);
+  transform: translateX(-50%);
+  animation: scrollHintTapPulse 1.9s ease-in-out infinite;
+}
+
+@keyframes scrollHintSwipe {
+  0% {
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+  }
+  56% {
+    transform: translate(-50%, 20px);
+    opacity: 0.96;
+  }
+  72% {
+    transform: translate(-50%, 22px);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes scrollHintTapPulse {
+  0%,
+  44% {
+    box-shadow: 0 0 0 0 rgba(166, 191, 218, 0);
+    opacity: 0;
+  }
+  56% {
+    box-shadow: 0 0 0 0 rgba(166, 191, 218, 0.48);
+    opacity: 0.9;
+  }
+  84% {
+    box-shadow: 0 0 0 12px rgba(166, 191, 218, 0);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 899px) {
+  .scrollHint {
+    display: none;
+  }
+}
+

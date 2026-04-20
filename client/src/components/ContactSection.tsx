@@ -1,7 +1,7 @@
 import styles from "./ContactSection.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
-import type { FormEvent, MouseEvent } from "react";
+import type { MouseEvent } from "react";
 import { Reveal } from "./Reveal";
 
 type Social = { label: string; href: string; icon: "gh" | "in" | "tg" };
@@ -85,19 +85,6 @@ export function ContactSection() {
     window.location.href = gmailAppComposeUrl;
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!hasEmail) return;
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") ?? "").trim();
-    const senderEmail = String(form.get("email") ?? "").trim();
-    const subject = String(form.get("subject") ?? "").trim();
-    const message = String(form.get("message") ?? "").trim();
-    const subjectLine = `${subject || "Portfolio inquiry"}${name ? ` - ${name}` : ""}`;
-    const body = `Name: ${name || "N/A"}\nEmail: ${senderEmail || "N/A"}\n\n${message || "No message provided."}`;
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subjectLine)}&body=${encodeURIComponent(body)}`;
-  }
-
   return (
     <section id="contact" className={`section ${styles.section}`}>
       <div className="shell">
@@ -123,19 +110,9 @@ export function ContactSection() {
             </div>
             <Reveal className={styles.actions} direction="right" delayMs={90}>
               {hasEmail ? (
-                <a
-                  className="btn-primary"
-                  href={mailtoUrl}
-                  onClick={openEmailClient}
-                >
+                <a className="btn-primary" href={mailtoUrl} onClick={openEmailClient}>
                   {t("contact.emailCta")}
                 </a>
-              ) : null}
-              {hasEmail ? (
-                <div id="contact-methods" className={styles.contactMeta}>
-                  <a href={`mailto:${site.email}`}>{site.email}</a>
-                  <p>Response window: Mon-Fri, 09:00-19:00 (UTC+4)</p>
-                </div>
               ) : null}
               <div className={styles.socialRow}>
                 {socials.map((s, idx) => (
@@ -156,32 +133,6 @@ export function ContactSection() {
               </div>
             </Reveal>
           </div>
-          {hasEmail ? (
-            <form id="contact-form" className={styles.form} onSubmit={handleSubmit}>
-              <h3>Send a direct inquiry</h3>
-              <div className={styles.formGrid}>
-                <label>
-                  Name
-                  <input type="text" name="name" autoComplete="name" required />
-                </label>
-                <label>
-                  Email
-                  <input type="email" name="email" autoComplete="email" required />
-                </label>
-              </div>
-              <label>
-                Subject
-                <input type="text" name="subject" required />
-              </label>
-              <label>
-                Message
-                <textarea name="message" rows={5} required />
-              </label>
-              <button type="submit" className="btn-primary">
-                Submit by email
-              </button>
-            </form>
-          ) : null}
         </Reveal>
       </div>
     </section>

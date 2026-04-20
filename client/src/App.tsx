@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { Navigation } from "./components/Navigation";
 import { Hero } from "./components/Hero";
 import { Footer } from "./components/Footer";
-import { CookieConsentBanner } from "./components/CookieConsentBanner";
 
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
@@ -15,9 +14,6 @@ const ArchitectureSection = lazy(() =>
 );
 const ContactSection = lazy(() =>
   import("./components/ContactSection").then((module) => ({ default: module.ContactSection })),
-);
-const LegalSection = lazy(() =>
-  import("./components/LegalSection").then((module) => ({ default: module.LegalSection })),
 );
 
 export default function App() {
@@ -32,11 +28,9 @@ export default function App() {
           <StackSection />
           <ArchitectureSection />
           <ContactSection />
-          <LegalSection />
         </Suspense>
       </main>
       <Footer />
-      <CookieConsentBanner />
     </>
   );
 }

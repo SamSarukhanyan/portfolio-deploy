@@ -57,25 +57,6 @@
   align-items: flex-start;
 }
 
-.contactMeta {
-  display: grid;
-  gap: 0.35rem;
-}
-
-.contactMeta a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  color: #9de4ff;
-  font-weight: 600;
-}
-
-.contactMeta p {
-  margin: 0;
-  color: #b7d3ef;
-  font-size: 0.96rem;
-}
-
 .socialRow {
   display: flex;
   flex-wrap: wrap;
@@ -114,52 +95,4 @@
 .social:focus-visible {
   outline: 2px solid rgba(126, 224, 255, 0.6);
   outline-offset: 2px;
-}
-
-.form {
-  margin-top: 1.25rem;
-  display: grid;
-  gap: 0.75rem;
-  border-top: 1px solid rgba(159, 203, 243, 0.2);
-  padding-top: 1rem;
-}
-
-.form h3 {
-  margin: 0;
-  font-size: 1.15rem;
-}
-
-.formGrid {
-  display: grid;
-  gap: 0.75rem;
-}
-
-@media (min-width: 760px) {
-  .formGrid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.form label {
-  display: grid;
-  gap: 0.35rem;
-  font-size: 0.96rem;
-  color: #d9e9fb;
-}
-
-.form input,
-.form textarea {
-  width: 100%;
-  min-height: 48px;
-  border-radius: 10px;
-  border: 1px solid rgba(126, 183, 235, 0.34);
-  background: rgba(6, 12, 21, 0.5);
-  color: #eef5ff;
-  padding: 0.7rem 0.8rem;
-  font: inherit;
-}
-
-.form textarea {
-  min-height: 132px;
-  resize: vertical;
 }

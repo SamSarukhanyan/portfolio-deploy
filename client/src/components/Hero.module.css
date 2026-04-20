@@ -136,82 +136,112 @@
 
 .orbitSvg {
   width: 100%;
-  height: 140px;
+  height: 170px;
 }
 
-.orbitTrack,
-.orbitTrackInner {
+.sunHalo {
+  fill: rgba(255, 184, 106, 0.13);
+}
+
+.sunCore {
+  filter: drop-shadow(0 0 7px rgba(255, 203, 132, 0.45));
+}
+
+.orbitMercury,
+.orbitVenus,
+.orbitEarth,
+.orbitMars,
+.orbitJupiter,
+.orbitSaturn,
+.orbitUranus,
+.orbitNeptune {
   fill: none;
-  stroke: rgba(147, 216, 255, 0.38);
-  stroke-width: 2;
-  stroke-dasharray: 9 9;
-  transform-origin: 50% 50%;
+  stroke-width: 1.15;
+  stroke-dasharray: 4 8;
+  stroke-linecap: round;
 }
 
-.orbitTrack {
-  animation: orbitSpin 14s linear infinite;
+.orbitMercury {
+  stroke: rgba(255, 220, 173, 0.42);
 }
 
-.orbitTrackInner {
-  stroke: rgba(170, 245, 218, 0.36);
-  animation: orbitSpinReverse 10s linear infinite;
+.orbitVenus {
+  stroke: rgba(255, 206, 153, 0.34);
 }
 
-.orbitTrackFar {
+.orbitEarth {
+  stroke: rgba(144, 223, 255, 0.38);
+}
+
+.orbitMars {
+  stroke: rgba(255, 164, 133, 0.35);
+}
+
+.orbitJupiter {
+  stroke: rgba(211, 181, 145, 0.35);
+}
+
+.orbitSaturn {
+  stroke: rgba(232, 217, 165, 0.32);
+}
+
+.orbitUranus {
+  stroke: rgba(129, 233, 194, 0.33);
+}
+
+.orbitNeptune {
+  stroke: rgba(188, 164, 255, 0.33);
+}
+
+.planetMercury,
+.planetVenus,
+.planetEarth,
+.planetMars,
+.planetJupiter,
+.planetSaturn,
+.planetUranus,
+.planetNeptune {
+  transform-origin: 180px 120px;
+  transform-box: fill-box;
+  will-change: transform;
+}
+
+.planetMercury {
+  animation: orbitMercurySpin 3.8s linear infinite;
+}
+
+.planetVenus {
+  animation: orbitVenusSpin 6.5s linear infinite;
+}
+
+.planetEarth {
+  animation: orbitEarthSpin 8.8s linear infinite;
+}
+
+.planetMars {
+  animation: orbitMarsSpin 11.4s linear infinite;
+}
+
+.planetJupiter {
+  animation: orbitJupiterSpin 17.8s linear infinite;
+}
+
+.planetSaturn {
+  animation: orbitSaturnSpin 23s linear infinite;
+}
+
+.planetUranus {
+  animation: orbitUranusSpin 29s linear infinite;
+}
+
+.planetNeptune {
+  animation: orbitNeptuneSpin 34s linear infinite;
+}
+
+.saturnRing {
   fill: none;
-  stroke: rgba(187, 176, 255, 0.32);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 7;
-  transform-origin: 50% 50%;
-  animation: orbitSpin 16s linear infinite;
-}
-
-.orbitTrackCore {
-  fill: none;
-  stroke: rgba(142, 255, 220, 0.28);
-  stroke-width: 1.6;
-  stroke-dasharray: 4 5;
-  transform-origin: 50% 50%;
-  animation: orbitSpinReverse 7.5s linear infinite;
-}
-
-.orbitCore {
-  fill: rgba(8, 20, 37, 0.92);
-  stroke: rgba(174, 227, 255, 0.75);
-  stroke-width: 2;
-}
-
-.orbitDotA,
-.orbitDotB,
-.orbitDotC,
-.orbitDotD,
-.orbitDotE,
-.orbitDotF {
-  transform-origin: 160px 110px;
-}
-
-.orbitDotA {
-  animation: orbitDotA 6.4s linear infinite;
-}
-
-.orbitDotB {
-  animation: orbitDotB 5.1s linear infinite;
-}
-
-.orbitDotC {
-  animation: orbitDotC 7.8s linear infinite;
-}
-
-.orbitDotD {
-  animation: orbitDotD 4.9s linear infinite;
-}
-
-.orbitDotE {
-  animation: orbitDotE 8.8s linear infinite;
-}
-
-.orbitDotF {
-  animation: orbitDotF 5.7s linear infinite;
+  stroke: rgba(247, 231, 193, 0.64);
+  stroke-width: 1;
 }
 
 .signalPanel {
@@ -269,89 +299,87 @@
   }
 }
 
-@keyframes orbitSpin {
+@keyframes orbitMercurySpin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateX(24px);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) translateX(24px);
   }
 }
 
-@keyframes orbitSpinReverse {
+@keyframes orbitVenusSpin {
   from {
-    transform: rotate(360deg);
+    transform: rotate(40deg) translateX(34px);
   }
   to {
-    transform: rotate(0deg);
+    transform: rotate(400deg) translateX(34px);
   }
 }
 
-@keyframes orbitDotA {
+@keyframes orbitEarthSpin {
   from {
-    transform: rotate(0deg) translateX(126px);
+    transform: rotate(120deg) translateX(46px);
   }
   to {
-    transform: rotate(360deg) translateX(126px);
+    transform: rotate(480deg) translateX(46px);
   }
 }
 
-@keyframes orbitDotB {
+@keyframes orbitMarsSpin {
   from {
-    transform: rotate(360deg) translateX(86px);
+    transform: rotate(210deg) translateX(58px);
   }
   to {
-    transform: rotate(0deg) translateX(86px);
+    transform: rotate(570deg) translateX(58px);
   }
 }
 
-@keyframes orbitDotC {
+@keyframes orbitJupiterSpin {
   from {
-    transform: rotate(90deg) translateX(148px);
+    transform: rotate(320deg) translateX(76px);
   }
   to {
-    transform: rotate(450deg) translateX(148px);
+    transform: rotate(680deg) translateX(76px);
   }
 }
 
-@keyframes orbitDotD {
+@keyframes orbitSaturnSpin {
   from {
-    transform: rotate(300deg) translateX(62px);
+    transform: rotate(90deg) translateX(96px);
   }
   to {
-    transform: rotate(-60deg) translateX(62px);
+    transform: rotate(450deg) translateX(96px);
   }
 }
 
-@keyframes orbitDotE {
+@keyframes orbitUranusSpin {
   from {
-    transform: rotate(210deg) translateX(112px);
+    transform: rotate(170deg) translateX(116px);
   }
   to {
-    transform: rotate(570deg) translateX(112px);
+    transform: rotate(530deg) translateX(116px);
   }
 }
 
-@keyframes orbitDotF {
+@keyframes orbitNeptuneSpin {
   from {
-    transform: rotate(-30deg) translateX(92px);
+    transform: rotate(250deg) translateX(134px);
   }
   to {
-    transform: rotate(330deg) translateX(92px);
+    transform: rotate(610deg) translateX(134px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbitTrack,
-  .orbitTrackInner,
-  .orbitTrackFar,
-  .orbitTrackCore,
-  .orbitDotA,
-  .orbitDotB,
-  .orbitDotC,
-  .orbitDotD,
-  .orbitDotE,
-  .orbitDotF {
+  .planetMercury,
+  .planetVenus,
+  .planetEarth,
+  .planetMars,
+  .planetJupiter,
+  .planetSaturn,
+  .planetUranus,
+  .planetNeptune {
     animation: none;
   }
 }

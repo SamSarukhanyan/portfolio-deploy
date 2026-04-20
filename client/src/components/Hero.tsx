@@ -19,28 +19,63 @@ export function Hero() {
                 {site.domain}
               </Reveal>
               <Reveal className={styles.orbit} direction="right" delayMs={90} aria-hidden>
-                <svg viewBox="0 0 320 220" className={styles.orbitSvg}>
+                <svg viewBox="0 0 360 240" className={styles.orbitSvg}>
                   <defs>
-                    <linearGradient id="orbitA" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#55c7ff" />
-                      <stop offset="100%" stopColor="#71e7c1" />
-                    </linearGradient>
-                    <linearGradient id="orbitB" x1="0" y1="1" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#7bc3ff" />
-                      <stop offset="100%" stopColor="#c7a5ff" />
-                    </linearGradient>
+                    <radialGradient id="solarSun" cx="50%" cy="50%" r="65%">
+                      <stop offset="0%" stopColor="#fff4b7" />
+                      <stop offset="55%" stopColor="#ffd98f" />
+                      <stop offset="100%" stopColor="#ffb76a" />
+                    </radialGradient>
+                    <radialGradient id="planetBlue" cx="35%" cy="35%" r="70%">
+                      <stop offset="0%" stopColor="#def4ff" />
+                      <stop offset="100%" stopColor="#58b8ff" />
+                    </radialGradient>
+                    <radialGradient id="planetGreen" cx="35%" cy="35%" r="70%">
+                      <stop offset="0%" stopColor="#dbffee" />
+                      <stop offset="100%" stopColor="#63d6b0" />
+                    </radialGradient>
+                    <radialGradient id="planetLavender" cx="35%" cy="35%" r="70%">
+                      <stop offset="0%" stopColor="#f5ecff" />
+                      <stop offset="100%" stopColor="#b996ff" />
+                    </radialGradient>
                   </defs>
-                  <ellipse cx="160" cy="110" rx="126" ry="56" className={styles.orbitTrack} />
-                  <ellipse cx="160" cy="110" rx="86" ry="34" className={styles.orbitTrackInner} />
-                  <ellipse cx="160" cy="110" rx="148" ry="72" className={styles.orbitTrackFar} />
-                  <ellipse cx="160" cy="110" rx="62" ry="24" className={styles.orbitTrackCore} />
-                  <circle cx="160" cy="110" r="18" className={styles.orbitCore} />
-                  <circle cx="160" cy="110" r="7" fill="url(#orbitA)" className={styles.orbitDotA} />
-                  <circle cx="160" cy="110" r="5" fill="#d5f4ff" className={styles.orbitDotB} />
-                  <circle cx="160" cy="110" r="4.2" fill="url(#orbitB)" className={styles.orbitDotC} />
-                  <circle cx="160" cy="110" r="3.2" fill="#9ef4db" className={styles.orbitDotD} />
-                  <circle cx="160" cy="110" r="2.8" fill="#8acbff" className={styles.orbitDotE} />
-                  <circle cx="160" cy="110" r="3.6" fill="#c9b6ff" className={styles.orbitDotF} />
+                  <circle cx="180" cy="120" r="26" className={styles.sunHalo} />
+                  <circle cx="180" cy="120" r="13" fill="url(#solarSun)" className={styles.sunCore} />
+
+                  <ellipse cx="180" cy="120" rx="24" ry="14" className={styles.orbitMercury} />
+                  <ellipse cx="180" cy="120" rx="34" ry="20" className={styles.orbitVenus} />
+                  <ellipse cx="180" cy="120" rx="46" ry="27" className={styles.orbitEarth} />
+                  <ellipse cx="180" cy="120" rx="58" ry="34" className={styles.orbitMars} />
+                  <ellipse cx="180" cy="120" rx="76" ry="44" className={styles.orbitJupiter} />
+                  <ellipse cx="180" cy="120" rx="96" ry="56" className={styles.orbitSaturn} />
+                  <ellipse cx="180" cy="120" rx="116" ry="66" className={styles.orbitUranus} />
+                  <ellipse cx="180" cy="120" rx="134" ry="76" className={styles.orbitNeptune} />
+
+                  <g className={styles.planetMercury}>
+                    <circle cx="180" cy="120" r="2.3" fill="#f8dcc2" />
+                  </g>
+                  <g className={styles.planetVenus}>
+                    <circle cx="180" cy="120" r="3.4" fill="#f5d3b0" />
+                  </g>
+                  <g className={styles.planetEarth}>
+                    <circle cx="180" cy="120" r="3.8" fill="url(#planetBlue)" />
+                  </g>
+                  <g className={styles.planetMars}>
+                    <circle cx="180" cy="120" r="3" fill="#e79872" />
+                  </g>
+                  <g className={styles.planetJupiter}>
+                    <circle cx="180" cy="120" r="6.5" fill="#d8b08c" />
+                  </g>
+                  <g className={styles.planetSaturn}>
+                    <ellipse cx="180" cy="120" rx="8.2" ry="2.2" className={styles.saturnRing} />
+                    <circle cx="180" cy="120" r="5.7" fill="#d8c29d" />
+                  </g>
+                  <g className={styles.planetUranus}>
+                    <circle cx="180" cy="120" r="4.8" fill="url(#planetGreen)" />
+                  </g>
+                  <g className={styles.planetNeptune}>
+                    <circle cx="180" cy="120" r="4.6" fill="url(#planetLavender)" />
+                  </g>
                 </svg>
               </Reveal>
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>

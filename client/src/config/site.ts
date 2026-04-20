@@ -2,7 +2,7 @@
 export const site = {
   displayName: "Samvel Sarukhanyan",
   domain: "samsarukhanyan.com",
-  email: "sarukhanyansam@gmail.com",
+  email: "sarukhanyandev@gmail.com",
   githubUrl: "https://github.com/SamSarukhanyan",
   linkedinUrl: "https://www.linkedin.com/in/samvel-sarukhanyan-684327401",
   telegramUrl: "",

@@ -74,7 +74,7 @@ export function LegalSection() {
               restriction, objection, or portability of your personal data.
             </p>
             <p>
-              To submit a request, email <a href="mailto:sarukhanyansam@gmail.com">sarukhanyansam@gmail.com</a>
+              To submit a request, email <a href="mailto:sarukhanyandev@gmail.com">sarukhanyandev@gmail.com</a>
               . We aim to respond within 30 days.
             </p>
           </article>
@@ -98,7 +98,7 @@ export function LegalSection() {
               experience accessibility barriers, please report them by email so we can fix them quickly.
             </p>
             <p>
-              Contact: <a href="mailto:sarukhanyansam@gmail.com">sarukhanyansam@gmail.com</a>
+              Contact: <a href="mailto:sarukhanyandev@gmail.com">sarukhanyandev@gmail.com</a>
             </p>
           </article>
 

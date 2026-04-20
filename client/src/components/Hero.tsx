@@ -19,7 +19,38 @@ export function Hero() {
               <Reveal as="p" className={styles.domain} direction="left">
                 {site.domain}
               </Reveal>
-              <Reveal className={styles.orbit} direction="right" delayMs={90} aria-hidden>
+              <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
+                {heroTitle}
+              </Reveal>
+              <Reveal as="p" className={styles.subtitle} direction="right" delayMs={100}>
+                {t("hero.subtitle")}
+              </Reveal>
+              <Reveal as="p" className={styles.body} direction="up" delayMs={140}>
+                {t("hero.body")}
+              </Reveal>
+              <ul className={styles.focusList}>
+                {focusKeys.map((key, idx) => (
+                  <Reveal
+                    key={key}
+                    as="li"
+                    direction={idx % 2 === 0 ? "left" : "right"}
+                    delayMs={180 + idx * 40}
+                  >
+                    {t(key)}
+                  </Reveal>
+                ))}
+              </ul>
+              <Reveal className={styles.actions} direction="up" delayMs={260}>
+                <a className="btn-primary" href="#contact">
+                  {t("hero.ctaContact")}
+                </a>
+                <a className="btn-ghost" href="#highlights">
+                  {t("hero.ctaHighlights")}
+                </a>
+              </Reveal>
+            </div>
+            <div className={styles.visual} aria-hidden>
+              <Reveal className={styles.orbit} direction="right" delayMs={90}>
                 <div className={styles.motionDock}>
                   <div className={styles.miniSolar}>
                     <span className={styles.miniSun} />
@@ -52,37 +83,6 @@ export function Hero() {
                   </div>
                 </div>
               </Reveal>
-              <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
-                {heroTitle}
-              </Reveal>
-              <Reveal as="p" className={styles.subtitle} direction="right" delayMs={100}>
-                {t("hero.subtitle")}
-              </Reveal>
-              <Reveal as="p" className={styles.body} direction="up" delayMs={140}>
-                {t("hero.body")}
-              </Reveal>
-              <ul className={styles.focusList}>
-                {focusKeys.map((key, idx) => (
-                  <Reveal
-                    key={key}
-                    as="li"
-                    direction={idx % 2 === 0 ? "left" : "right"}
-                    delayMs={180 + idx * 40}
-                  >
-                    {t(key)}
-                  </Reveal>
-                ))}
-              </ul>
-              <Reveal className={styles.actions} direction="up" delayMs={260}>
-                <a className="btn-primary" href="#contact">
-                  {t("hero.ctaContact")}
-                </a>
-                <a className="btn-ghost" href="#highlights">
-                  {t("hero.ctaHighlights")}
-                </a>
-              </Reveal>
-            </div>
-            <div className={styles.visual} aria-hidden>
               <Reveal className={styles.signalPanel} direction="right" delayMs={120}>
                 <Reveal as="p" className={styles.signalTitle} direction="up">
                   {t("hero.signalTitle")}

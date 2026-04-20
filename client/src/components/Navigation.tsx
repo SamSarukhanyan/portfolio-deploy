@@ -79,13 +79,11 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
-          <a
-            className={styles.mobileArt}
-            href={isArtPage ? "/" : "/art"}
-            onClick={(event) => onSpaLinkClick(event, isArtPage ? "/" : "/art")}
-          >
-            {isArtPage ? t("art.backHome") : t("nav.art")}
-          </a>
+          {!isArtPage ? (
+            <a className={styles.mobileArt} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
+              {t("nav.art")}
+            </a>
+          ) : null}
           <a
             className={styles.quickCta}
             href={isArtPage ? "/" : "/art"}

@@ -163,6 +163,20 @@
   font-size: 0.86rem;
 }
 
+.modalTop[data-hidden="true"],
+.navBtn[data-hidden="true"],
+.figure figcaption[data-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+}
+
+.modalTop,
+.navBtn,
+.figure figcaption {
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
 .navBtn {
   position: absolute;
   top: 50%;

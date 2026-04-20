@@ -33,6 +33,7 @@ export function ArtPage() {
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [settling, setSettling] = useState(false);
+  const [gestureActive, setGestureActive] = useState(false);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
@@ -68,24 +69,28 @@ export function ArtPage() {
     setScale(1);
     setOffset({ x: 0, y: 0 });
     pointersRef.current.clear();
+    setGestureActive(false);
   }
 
   function openAt(index: number) {
     setActiveIndex(index);
     setScale(1);
     setOffset({ x: 0, y: 0 });
+    setGestureActive(false);
   }
 
   function showNext() {
     setActiveIndex((v) => (v === null ? null : (v + 1) % artworks.length));
     setScale(1);
     setOffset({ x: 0, y: 0 });
+    setGestureActive(false);
   }
 
   function showPrev() {
     setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
     setScale(1);
     setOffset({ x: 0, y: 0 });
+    setGestureActive(false);
   }
 
   function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
@@ -99,9 +104,11 @@ export function ArtPage() {
       pinchStartDistance.current = Math.hypot(a.x - b.x, a.y - b.y);
       pinchStartScale.current = scale;
       panStart.current = null;
+      setGestureActive(true);
     } else if (pointersRef.current.size === 1 && scale > 1.01) {
       panStart.current = { x: event.clientX, y: event.clientY };
       panOffsetStart.current = offset;
+      setGestureActive(true);
     }
 
     touchStartX.current = event.clientX;
@@ -122,11 +129,18 @@ export function ArtPage() {
 
   function settleTransform(rawScale: number, rawOffset: { x: number; y: number }) {
     setSettling(true);
-    const targetScale = Math.max(1, Math.min(3, rawScale));
-    const targetOffset = clampOffset(rawOffset, targetScale);
-    setScale(targetScale);
-    setOffset(targetOffset);
+    const shouldReset = rawScale > 1.01 || Math.abs(rawOffset.x) > 1 || Math.abs(rawOffset.y) > 1;
+    if (shouldReset) {
+      setScale(1);
+      setOffset({ x: 0, y: 0 });
+    } else {
+      const targetScale = Math.max(1, Math.min(3, rawScale));
+      const targetOffset = clampOffset(rawOffset, targetScale);
+      setScale(targetScale);
+      setOffset(targetOffset);
+    }
     window.setTimeout(() => setSettling(false), 180);
+    window.setTimeout(() => setGestureActive(false), 200);
   }
 
   function onPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
@@ -139,6 +153,7 @@ export function ArtPage() {
       const startDistance = pinchStartDistance.current ?? nextDistance;
       const nextScale = Math.max(0.82, Math.min(3.4, pinchStartScale.current * (nextDistance / startDistance)));
       setScale(nextScale);
+      setGestureActive(true);
       return;
     }
 
@@ -146,6 +161,7 @@ export function ArtPage() {
       const dx = event.clientX - panStart.current.x;
       const dy = event.clientY - panStart.current.y;
       setOffset(clampOffset({ x: panOffsetStart.current.x + dx, y: panOffsetStart.current.y + dy }, scale));
+      setGestureActive(true);
     }
   }
 
@@ -156,6 +172,10 @@ export function ArtPage() {
       settleTransform(scale, offset);
       panStart.current = null;
       pinchStartDistance.current = null;
+    } else if (pointersRef.current.size === 1 && scale > 1.01) {
+      const [point] = Array.from(pointersRef.current.values());
+      panStart.current = { x: point.x, y: point.y };
+      panOffsetStart.current = offset;
     }
 
     if (touchStartX.current === null || touchStartY.current === null) return;
@@ -164,7 +184,7 @@ export function ArtPage() {
     touchStartX.current = null;
     touchStartY.current = null;
 
-    if (scale > 1.01) return;
+    if (scale > 1.01 || gestureActive) return;
     if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) showNext();
     else showPrev();
@@ -178,6 +198,8 @@ export function ArtPage() {
       }) as CSSProperties,
     [offset.x, offset.y, scale, settling],
   );
+
+  const hideUi = gestureActive || scale > 1.01;
 
   return (
     <section className={`section ${styles.section}`}>
@@ -218,7 +240,7 @@ export function ArtPage() {
 
       {activeArtwork ? (
         <div className={styles.modal} role="dialog" aria-modal="true" onClick={closeModal}>
-          <div className={styles.modalTop}>
+          <div className={styles.modalTop} data-hidden={hideUi ? "true" : "false"}>
             <button type="button" onClick={closeModal}>
               {t("art.close")}
             </button>
@@ -241,13 +263,14 @@ export function ArtPage() {
                   event.currentTarget.src = fallbackImage;
                 }}
               />
-              <figcaption>
+              <figcaption data-hidden={hideUi ? "true" : "false"}>
                 {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium} · {activeArtwork.year}
               </figcaption>
             </figure>
             <button
               type="button"
               className={`${styles.navBtn} ${styles.navPrev}`}
+              data-hidden={hideUi ? "true" : "false"}
               onClick={showPrev}
               aria-label={t("art.prev")}
             >
@@ -256,6 +279,7 @@ export function ArtPage() {
             <button
               type="button"
               className={`${styles.navBtn} ${styles.navNext}`}
+              data-hidden={hideUi ? "true" : "false"}
               onClick={showNext}
               aria-label={t("art.next")}
             >

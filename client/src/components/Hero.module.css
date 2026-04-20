@@ -827,71 +827,92 @@
 
 .scrollHint {
   position: fixed;
-  right: clamp(0.7rem, 2.4vw, 1.9rem);
-  top: clamp(52%, 56vh, 66%);
-  z-index: 35;
+  right: clamp(0.9rem, 3vw, 2.5rem);
+  top: 50%;
+  z-index: 45;
   opacity: 0;
-  transform: translateY(10px);
+  transform: translate3d(0, -46%, 0) scale(0.95);
   transition:
     opacity 0.24s ease-out,
-    transform 0.24s ease-out;
+    transform 0.24s ease-out,
+    filter 0.24s ease-out;
   pointer-events: none;
+  filter: saturate(0.82);
 }
 
 .scrollHint[data-show="true"] {
-  opacity: 0.88;
-  transform: translateY(0);
+  opacity: 0.98;
+  transform: translate3d(0, -50%, 0) scale(1);
 }
 
 .scrollHintTrack {
   position: relative;
-  width: 28px;
-  height: 66px;
-  border-radius: 16px;
-  border: 1px solid rgba(150, 177, 208, 0.46);
-  background: rgba(11, 18, 30, 0.5);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 8px 20px rgba(6, 12, 22, 0.4);
+  width: 46px;
+  height: 104px;
+}
+
+.scrollHintTrack::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(183, 193, 204, 0), rgba(183, 193, 204, 0.62), rgba(183, 193, 204, 0));
 }
 
 .scrollHintHand {
   position: absolute;
   left: 50%;
-  top: 8px;
+  top: 10px;
   display: grid;
   justify-items: center;
   transform: translateX(-50%);
-  animation: scrollHintSwipe 1.9s ease-in-out infinite;
+  animation: scrollHintSwipe 2s ease-in-out infinite;
 }
 
 .scrollHintPalm {
-  width: 12px;
-  height: 10px;
-  border-radius: 7px;
-  border: 1px solid rgba(164, 188, 214, 0.56);
-  background: rgba(147, 174, 203, 0.24);
+  position: relative;
+  width: 22px;
+  height: 18px;
+  border-radius: 12px 12px 10px 10px;
+  border: 1px solid rgba(175, 185, 198, 0.72);
+  background: linear-gradient(180deg, rgba(172, 183, 196, 0.62), rgba(136, 148, 164, 0.58));
+}
+
+.scrollHintPalm::before {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 7px;
+  width: 9px;
+  height: 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(173, 184, 197, 0.7);
+  background: rgba(149, 161, 178, 0.64);
 }
 
 .scrollHintFinger {
-  width: 5px;
-  height: 13px;
-  margin-top: -1px;
-  border-radius: 4px;
-  border: 1px solid rgba(164, 188, 214, 0.56);
-  background: rgba(147, 174, 203, 0.26);
+  width: 8px;
+  height: 30px;
+  margin-top: -2px;
+  border-radius: 6px;
+  border: 1px solid rgba(175, 185, 198, 0.74);
+  background: linear-gradient(180deg, rgba(182, 192, 205, 0.78), rgba(129, 142, 160, 0.68));
 }
 
 .scrollHintTap {
   position: absolute;
   left: 50%;
-  bottom: 10px;
-  width: 6px;
-  height: 6px;
+  bottom: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(166, 191, 218, 0.75);
+  background: rgba(184, 195, 208, 0.88);
   transform: translateX(-50%);
-  animation: scrollHintTapPulse 1.9s ease-in-out infinite;
+  animation: scrollHintTapPulse 2s ease-in-out infinite;
 }
 
 @keyframes scrollHintSwipe {
@@ -903,11 +924,11 @@
     opacity: 1;
   }
   56% {
-    transform: translate(-50%, 20px);
+    transform: translate(-50%, 28px);
     opacity: 0.96;
   }
   72% {
-    transform: translate(-50%, 22px);
+    transform: translate(-50%, 30px);
     opacity: 0.25;
   }
   100% {
@@ -927,7 +948,7 @@
     opacity: 0.9;
   }
   84% {
-    box-shadow: 0 0 0 12px rgba(166, 191, 218, 0);
+    box-shadow: 0 0 0 14px rgba(166, 191, 218, 0);
     opacity: 0;
   }
   100% {
@@ -937,38 +958,35 @@
 
 @media (max-width: 899px) {
   .scrollHint {
-    right: 0.5rem;
-    top: auto;
-    bottom: 5.2rem;
-    z-index: 45;
+    right: 0.45rem;
+    top: 56%;
   }
 
   .scrollHintTrack {
-    width: 24px;
-    height: 56px;
-    border-radius: 14px;
+    width: 40px;
+    height: 88px;
   }
 
   .scrollHintPalm {
-    width: 10px;
-    height: 8px;
+    width: 18px;
+    height: 15px;
   }
 
   .scrollHintFinger {
-    width: 4px;
-    height: 11px;
+    width: 7px;
+    height: 24px;
   }
 }
 
 @media (max-width: 420px) {
   .scrollHint {
-    right: 0.4rem;
-    bottom: 4.7rem;
+    right: 0.22rem;
+    top: 58%;
   }
 
   .scrollHintTrack {
-    width: 22px;
-    height: 52px;
+    width: 36px;
+    height: 80px;
   }
 }
 

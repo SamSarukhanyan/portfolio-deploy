@@ -65,26 +65,29 @@ export function Navigation() {
         id={menuId}
         className={styles.drawer}
         data-open={open}
-        hidden={!open}
         role="dialog"
         aria-modal="true"
         aria-label={t("nav.menuDialog")}
+        aria-hidden={!open}
+        onClick={() => setOpen(false)}
       >
-        <nav aria-label={t("nav.ariaMobile")}>
-          <ul className={styles.drawerList}>
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  className={styles.drawerLink}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                >
-                  {t(l.labelKey)}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className={styles.drawerPanel} onClick={(e) => e.stopPropagation()}>
+          <nav aria-label={t("nav.ariaMobile")}>
+            <ul className={styles.drawerList}>
+              {links.map((l) => (
+                <li key={l.href}>
+                  <a
+                    className={styles.drawerLink}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t(l.labelKey)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
   );

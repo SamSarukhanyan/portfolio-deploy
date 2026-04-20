@@ -115,7 +115,7 @@
 
 .orbit {
   position: relative;
-  max-width: min(100%, 480px);
+  max-width: min(100%, 560px);
   margin-bottom: 0.35rem;
   border-radius: 20px;
   border: 1px solid rgba(85, 199, 255, 0.3);
@@ -136,7 +136,7 @@
 
 .orbitSvg {
   width: 100%;
-  height: 188px;
+  height: 222px;
 }
 
 .sunHalo {
@@ -149,8 +149,8 @@
 
 .orbitLine {
   fill: none;
-  stroke-width: 1.15;
-  stroke-dasharray: 4 8;
+  stroke-width: 1.25;
+  stroke-dasharray: 4 10;
   stroke-linecap: round;
 }
 
@@ -190,10 +190,20 @@
   will-change: transform;
 }
 
+.planetStroke {
+  stroke: rgba(255, 255, 255, 0.26);
+  stroke-width: 0.6;
+}
+
+.earthLand {
+  fill: rgba(112, 216, 151, 0.95);
+  opacity: 0.88;
+}
+
 .saturnRing {
   fill: none;
-  stroke: rgba(247, 231, 193, 0.64);
-  stroke-width: 1;
+  stroke: rgba(247, 231, 193, 0.72);
+  stroke-width: 1.15;
 }
 
 .signalPanel {

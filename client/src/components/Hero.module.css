@@ -60,31 +60,34 @@
 
 .title {
   font-family: var(--font-sans);
-  font-size: clamp(1.56rem, 3.8vw, 2.5rem);
+  font-size: clamp(1.5rem, 3.3vw, 2.2rem);
   font-weight: 700;
-  line-height: 1.14;
+  line-height: 1.22;
   margin: 0;
   letter-spacing: -0.02em;
   color: #cdd8e7;
-  max-width: 24ch;
+  max-width: 28ch;
   overflow-wrap: normal;
   word-break: keep-all;
   hyphens: none;
   text-wrap: balance;
+  text-align: center;
+  margin-inline: auto;
 }
 
-.subtitle {
-  margin: 0.7rem 0 0;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #adbed3;
-}
-
-.body {
-  margin: 0.95rem 0 0;
-  max-width: 52ch;
-  color: #98a9bf;
-  font-size: 0.99rem;
+.summary {
+  margin: 0.82rem auto 0;
+  max-width: 56ch;
+  color: #a9bbcf;
+  font-size: 0.94rem;
+  line-height: 1.52;
+  text-align: center;
+  padding: 0.64rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid rgba(118, 142, 171, 0.28);
+  background:
+    linear-gradient(130deg, rgba(59, 78, 102, 0.26), rgba(57, 82, 74, 0.2)),
+    rgba(16, 24, 38, 0.54);
 }
 
 .focusList {
@@ -700,13 +703,21 @@
     gap: 0.35rem;
   }
 
-  .subtitle {
-    margin-top: 0.5rem;
+  .title {
+    max-width: 24ch;
+    font-size: clamp(1.36rem, 6vw, 1.72rem);
+    line-height: 1.23;
+  }
+
+  .summary {
+    margin-top: 0.62rem;
+    padding: 0.52rem 0.62rem;
+    font-size: 0.87rem;
+    line-height: 1.45;
   }
 
   .focusList li,
-  .signalList li,
-  .body {
+  .signalList li {
     font-size: 1rem;
   }
 

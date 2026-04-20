@@ -76,11 +76,8 @@ export function Hero() {
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
               </Reveal>
-              <Reveal as="p" className={styles.subtitle} direction="right" delayMs={100}>
-                {t("hero.subtitle")}
-              </Reveal>
-              <Reveal as="p" className={styles.body} direction="up" delayMs={140}>
-                {t("hero.body")}
+              <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
+                {t("hero.summary")}
               </Reveal>
               <ul className={styles.focusList}>
                 {focusKeys.map((key, idx) => (

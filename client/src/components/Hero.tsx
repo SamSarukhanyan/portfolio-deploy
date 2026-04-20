@@ -49,6 +49,21 @@ export function Hero() {
               </Reveal>
             </div>
             <div className={styles.visual} aria-hidden>
+              <Reveal className={styles.orbit} direction="right" delayMs={90}>
+                <svg viewBox="0 0 320 220" className={styles.orbitSvg}>
+                  <defs>
+                    <linearGradient id="orbitA" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#55c7ff" />
+                      <stop offset="100%" stopColor="#71e7c1" />
+                    </linearGradient>
+                  </defs>
+                  <ellipse cx="160" cy="110" rx="126" ry="56" className={styles.orbitTrack} />
+                  <ellipse cx="160" cy="110" rx="86" ry="34" className={styles.orbitTrackInner} />
+                  <circle cx="160" cy="110" r="18" className={styles.orbitCore} />
+                  <circle cx="286" cy="110" r="7" fill="url(#orbitA)" className={styles.orbitDotA} />
+                  <circle cx="74" cy="110" r="5" fill="#d5f4ff" className={styles.orbitDotB} />
+                </svg>
+              </Reveal>
               <Reveal className={styles.signalPanel} direction="right" delayMs={120}>
                 <Reveal as="p" className={styles.signalTitle} direction="up">
                   {t("hero.signalTitle")}

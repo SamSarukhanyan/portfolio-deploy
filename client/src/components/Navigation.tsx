@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./Navigation.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
+
 export function Navigation() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
@@ -29,8 +30,27 @@ export function Navigation() {
     <header className={styles.header}>
       <div className={`shell ${styles.navShell} ${styles.inner}`}>
         <a className={styles.brand} href="#top" onClick={() => setOpen(false)}>
-          <span className={styles.brandMark} aria-hidden />
-          <span className={styles.brandText}>{site.displayName}</span>
+          <span className={styles.brandGlyph} aria-hidden>
+            <svg viewBox="0 0 48 48">
+              <defs>
+                <linearGradient id="navBrandGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#55c7ff" />
+                  <stop offset="100%" stopColor="#71e7c1" />
+                </linearGradient>
+              </defs>
+              <circle cx="24" cy="24" r="17" className={styles.glyphOuter} />
+              <path
+                d="M16 30c2.8-5.8 5.2-8.8 8-8.8 2.7 0 4.2 2 8 8.8"
+                className={styles.glyphStroke}
+              />
+              <circle cx="24" cy="19" r="3.4" className={styles.glyphCore} />
+              <circle cx="24" cy="24" r="17" stroke="url(#navBrandGradient)" className={styles.glyphRing} />
+            </svg>
+          </span>
+          <span className={styles.brandTextWrap}>
+            <span className={styles.brandText}>{site.displayName}</span>
+            <span className={styles.brandSub}>Full-stack product engineer</span>
+          </span>
         </a>
 
         <div className={styles.middle}>
@@ -48,6 +68,9 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
+          <a className={styles.quickCta} href="#contact">
+            {t("hero.ctaContact")}
+          </a>
           <button
             type="button"
             className={styles.menuBtn}

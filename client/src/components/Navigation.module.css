@@ -1,22 +1,21 @@
 .header {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 90;
   width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  padding-top: calc(env(safe-area-inset-top, 0px) + 0.24rem);
-  background: transparent;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
+  pointer-events: none;
 }
 
 .navShell {
   width: 100%;
+  pointer-events: auto;
 }
 
 @media (max-width: 767px) {
   .header .navShell {
     max-width: none;
     margin-inline: 0;
-    /* Edge-to-edge bar; only notch / home-indicator insets */
     padding-inline: max(0.65rem, env(safe-area-inset-left, 0px)) max(0.65rem, env(safe-area-inset-right, 0px));
   }
 }
@@ -24,45 +23,92 @@
 .inner {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
-  margin-top: 0.1rem;
-  padding: 0.72rem 0 0.5rem;
-  border-radius: 0;
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: none;
-  box-shadow: none;
+  gap: 0.9rem;
+  padding: 0.54rem 0.65rem;
+  border-radius: 18px;
+  background: linear-gradient(125deg, rgba(8, 15, 29, 0.88), rgba(9, 17, 30, 0.68));
+  border: 1px solid rgba(133, 182, 247, 0.24);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 16px 38px rgba(3, 9, 18, 0.45);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  min-height: 48px;
-  padding: 0.1rem 0.15rem;
-  gap: 0.65rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  min-height: 50px;
+  padding: 0.15rem 0.2rem;
+  gap: 0.75rem;
   text-decoration: none;
   color: var(--text);
-  transition: opacity var(--t-micro) var(--ease-out);
+  transition: opacity var(--t-micro) var(--ease-out), transform var(--t-fast) var(--ease-out);
 }
 
 .brand:hover {
   color: var(--text);
+  transform: translateY(-1px);
 }
 
-.brandMark {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #59cbff, #71e7c1);
-  box-shadow: 0 0 14px rgba(85, 199, 255, 0.52);
+.brandGlyph {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 12px;
+  background: rgba(85, 199, 255, 0.1);
+  border: 1px solid rgba(85, 199, 255, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandGlyph svg {
+  width: 30px;
+  height: 30px;
+}
+
+.glyphOuter {
+  fill: rgba(12, 24, 41, 0.82);
+}
+
+.glyphStroke {
+  fill: none;
+  stroke: #d4efff;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.glyphCore {
+  fill: #d8f4ff;
+}
+
+.glyphRing {
+  fill: none;
+  stroke-width: 1.6;
+  stroke-dasharray: 22 9;
+  transform-origin: 50% 50%;
+  animation: spinBrand 10s linear infinite;
+}
+
+.brandTextWrap {
+  display: grid;
+  line-height: 1.2;
 }
 
 .brandText {
-  font-size: 1rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.brandSub {
+  color: #9db6d7;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -81,7 +127,7 @@
 .end {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 @media (max-width: 767px) {
@@ -106,7 +152,7 @@
 
 .list {
   display: flex;
-  gap: 0.38rem;
+  gap: 0.35rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -117,34 +163,69 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 500;
-  color: #bfd5ef;
+  color: #c0d8f3;
   text-decoration: none;
-  padding: 0.42rem 0.78rem;
+  padding: 0.4rem 0.78rem;
   border-radius: 999px;
-  transition: color var(--t-micro) var(--ease-out);
+  border: 1px solid transparent;
+  transition:
+    color var(--t-micro) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out);
 }
 
 .navLink:hover {
   color: #f4faff;
-  background: rgba(85, 199, 255, 0.2);
+  background: rgba(85, 199, 255, 0.16);
+  border-color: rgba(85, 199, 255, 0.28);
+}
+
+.quickCta {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .quickCta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.64rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(113, 231, 193, 0.42);
+    background: linear-gradient(130deg, rgba(85, 199, 255, 0.2), rgba(113, 231, 193, 0.16));
+    color: #e8fdff;
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition:
+      transform var(--t-fast) var(--ease-out),
+      border-color var(--t-fast) var(--ease-out);
+  }
+
+  .quickCta:hover {
+    transform: translateY(-1px);
+    border-color: rgba(113, 231, 193, 0.6);
+  }
 }
 
 .menuBtn {
   width: 48px;
   height: 48px;
-  margin-top: 0.1rem;
   position: relative;
   z-index: 95;
   border-radius: 14px;
-  border: 1px solid rgba(85, 199, 255, 0.34);
+  border: 1px solid rgba(85, 199, 255, 0.28);
   background:
-    linear-gradient(160deg, rgba(85, 199, 255, 0.2), rgba(113, 231, 193, 0.12)),
-    rgba(9, 16, 28, 0.78);
+    linear-gradient(160deg, rgba(85, 199, 255, 0.16), rgba(113, 231, 193, 0.1)),
+    rgba(10, 17, 29, 0.75);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 8px 18px rgba(4, 9, 18, 0.4);
+    inset 0 1px 0 rgba(255, 255, 255, 0.17),
+    0 8px 18px rgba(4, 9, 18, 0.38);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -157,10 +238,10 @@
 
 .menuBtn:hover {
   transform: translateY(-1px);
-  border-color: rgba(113, 231, 193, 0.48);
+  border-color: rgba(113, 231, 193, 0.46);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.24),
-    0 10px 20px rgba(4, 9, 18, 0.46);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 10px 20px rgba(4, 9, 18, 0.44);
 }
 
 .burger {
@@ -289,8 +370,23 @@
 }
 
 @media (max-width: 767px) {
+  .inner {
+    border-radius: 14px;
+    padding: 0.48rem 0.55rem;
+  }
+
+  .brandGlyph {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
   .brandText {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .brandSub {
+    font-size: 0.64rem;
   }
 }
 
@@ -298,4 +394,19 @@
   border-color: rgba(113, 231, 193, 0.46);
   background: rgba(113, 231, 193, 0.14);
   color: #f2fffa;
+}
+
+@keyframes spinBrand {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glyphRing {
+    animation: none;
+  }
 }

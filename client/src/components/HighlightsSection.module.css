@@ -94,7 +94,7 @@
 
 .cardKicker {
   margin: 0;
-  color: #abddf8;
+  color: #8faac2;
   font-size: 0.92rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -106,13 +106,13 @@
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #f2f8ff;
+  color: #cfd9e6;
 }
 
 .cardText {
   margin: 0;
   font-size: 1rem;
-  color: #c7d9ef;
+  color: #a4b4c8;
   line-height: 1.55;
 }
 

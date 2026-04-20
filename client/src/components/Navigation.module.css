@@ -71,14 +71,14 @@
 
 .glyphStroke {
   fill: none;
-  stroke: #d4efff;
+  stroke: #b8ccde;
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .glyphCore {
-  fill: #d8f4ff;
+  fill: #b7cadb;
 }
 
 .glyphRing {
@@ -174,7 +174,7 @@
 }
 
 .navLink:hover {
-  color: #f4faff;
+  color: #d5dfeb;
   background: rgba(85, 199, 255, 0.16);
   border-color: rgba(85, 199, 255, 0.28);
 }
@@ -193,7 +193,7 @@
     border-radius: 999px;
     border: 1px solid rgba(113, 231, 193, 0.42);
     background: linear-gradient(130deg, rgba(85, 199, 255, 0.2), rgba(113, 231, 193, 0.16));
-    color: #e8fdff;
+    color: #c6d9dd;
     font-size: 0.84rem;
     font-weight: 600;
     text-decoration: none;

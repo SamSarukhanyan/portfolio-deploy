@@ -129,12 +129,12 @@
   font-family: var(--font-sans);
   font-size: 0.98rem;
   font-weight: 700;
-  color: #eff6ff;
+  color: #cfd9e7;
 }
 
 .nodeSub {
   font-size: 0.95rem;
-  color: #b9d3f7;
+  color: #9fb3cf;
   text-transform: none;
   letter-spacing: 0.02em;
 }
@@ -142,7 +142,7 @@
 .nodeBody {
   margin: 0;
   font-size: 1rem;
-  color: #d8e7fb;
+  color: #b4c5d9;
   line-height: 1.5;
 }
 
@@ -163,7 +163,7 @@
   background: rgba(113, 231, 193, 0.08);
   padding: 0.85rem 0.95rem;
   font-size: 1rem;
-  color: #d9fff2;
+  color: #bdd3cb;
 }
 
 .railTitle {

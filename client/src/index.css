@@ -3,19 +3,19 @@
   --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
   --t-fast: 0.11s;
   --t-micro: 0.09s;
-  --bg-deep: #080d17;
-  --bg-mid: #111a2b;
-  --accent: #55c7ff;
-  --accent-soft: rgba(85, 199, 255, 0.18);
-  --accent-2: #71e7c1;
-  --text: #eef3ff;
-  --text-muted: rgba(206, 218, 241, 0.73);
-  --glass-bg: rgba(15, 23, 38, 0.68);
-  --glass-border: rgba(125, 168, 228, 0.3);
+  --bg-deep: #0a101b;
+  --bg-mid: #141d2c;
+  --accent: #6fa2c4;
+  --accent-soft: rgba(111, 162, 196, 0.2);
+  --accent-2: #6fa392;
+  --text: #d4dde9;
+  --text-muted: rgba(167, 180, 202, 0.82);
+  --glass-bg: rgba(14, 21, 34, 0.72);
+  --glass-border: rgba(108, 130, 163, 0.32);
   --glass-highlight: rgba(255, 255, 255, 0.2);
   --radius-lg: 26px;
   --radius-md: 16px;
-  --shadow-glow: 0 0 56px rgba(85, 199, 255, 0.14);
+  --shadow-glow: 0 0 44px rgba(111, 162, 196, 0.12);
   --shadow-card: 0 20px 44px rgba(2, 8, 17, 0.5);
   --font-sans:
     Inter,
@@ -41,12 +41,12 @@
   --max-width: 1220px;
   /* Foremost layers first: extra top wash so safe-area + first px match the gray-blue body */
   --page-gradient:
-    radial-gradient(ellipse 120% 78% at 50% -10%, rgba(85, 199, 255, 0.22), transparent 54%),
-    radial-gradient(ellipse 90% 60% at 94% 12%, rgba(113, 231, 193, 0.14), transparent 52%),
-    radial-gradient(ellipse 80% 55% at 8% 88%, rgba(116, 146, 248, 0.16), transparent 56%),
+    radial-gradient(ellipse 120% 78% at 50% -10%, rgba(111, 162, 196, 0.2), transparent 54%),
+    radial-gradient(ellipse 90% 60% at 94% 12%, rgba(111, 163, 146, 0.13), transparent 52%),
+    radial-gradient(ellipse 80% 55% at 8% 88%, rgba(116, 134, 176, 0.14), transparent 56%),
     linear-gradient(
       180deg,
-      #101a2e 0%,
+      #0f1727 0%,
       var(--bg-deep) 18%,
       var(--bg-mid) 45%,
       var(--bg-deep) 100%
@@ -66,7 +66,7 @@ html {
   scroll-padding-top: 0;
   overflow-x: hidden;
   background: var(--page-gradient);
-  background-color: #0e1628;
+  background-color: #0f1726;
   /* iOS Safari: 100vh can exclude the visible area; 100dvh tracks the dynamic visual viewport */
   min-height: 100vh;
   min-height: 100dvh;
@@ -210,7 +210,7 @@ section#top.section {
   letter-spacing: -0.02em;
   margin: 0 0 0.22em;
   line-height: 1.15;
-  color: #f3f7ff;
+  color: #d7e0ee;
 }
 
 .section-lead {
@@ -247,10 +247,10 @@ section#top.section {
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.2) 0%,
     transparent 40%,
     transparent 60%,
-    rgba(85, 199, 255, 0.13) 100%
+    rgba(111, 162, 196, 0.13) 100%
   );
   mask:
     linear-gradient(#000 0 0) content-box,
@@ -303,9 +303,9 @@ section#top.section {
   border: none;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #031322;
-  background: linear-gradient(135deg, var(--accent), #8fe0ff 55%, #9ff1d9 100%);
-  box-shadow: 0 12px 30px rgba(55, 167, 214, 0.28);
+  color: #dbe6f3;
+  background: linear-gradient(135deg, #314964, #3f5b78 52%, #3f5d54 100%);
+  box-shadow: 0 10px 24px rgba(19, 31, 47, 0.45);
   transition:
     transform var(--t-fast) var(--ease-out),
     box-shadow var(--t-fast) var(--ease-out),
@@ -315,17 +315,17 @@ section#top.section {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 32px rgba(55, 167, 214, 0.36);
-  color: #031322;
+  box-shadow: 0 12px 28px rgba(22, 35, 53, 0.55);
+  color: #e4edf8;
 }
 
 .btn-primary:visited {
-  color: #031322;
+  color: #dbe6f3;
 }
 
 .btn-primary:focus-visible {
-  color: #031322;
-  outline: 2px solid rgba(85, 199, 255, 0.62);
+  color: #dbe6f3;
+  outline: 2px solid rgba(111, 162, 196, 0.62);
   outline-offset: 2px;
 }
 
@@ -340,7 +340,7 @@ section#top.section {
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(12px);
   transition:
     border-color var(--t-fast) var(--ease-out),
@@ -351,9 +351,9 @@ section#top.section {
 }
 
 .btn-ghost:hover {
-  border-color: rgba(85, 199, 255, 0.58);
+  border-color: rgba(111, 162, 196, 0.62);
   background: var(--accent-soft);
-  color: #f6fbff;
+  color: #dce7f4;
 }
 
 .btn-ghost:focus-visible {

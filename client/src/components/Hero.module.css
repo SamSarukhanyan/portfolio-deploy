@@ -38,7 +38,7 @@
   border-radius: 999px;
   border: 1px solid rgba(85, 199, 255, 0.35);
   background: rgba(85, 199, 255, 0.14);
-  color: #d8f4ff;
+  color: #c9d8e8;
   font-size: 0.76rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -51,7 +51,7 @@
   border-radius: 999px;
   border: 1px solid rgba(113, 231, 193, 0.38);
   background: rgba(113, 231, 193, 0.12);
-  color: #d9fff1;
+  color: #cdded7;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -65,7 +65,7 @@
   line-height: 1.14;
   margin: 0;
   letter-spacing: -0.02em;
-  color: #f2f8ff;
+  color: #cdd8e7;
   max-width: 24ch;
   overflow-wrap: normal;
   word-break: keep-all;
@@ -77,13 +77,13 @@
   margin: 0.7rem 0 0;
   font-size: 1.05rem;
   font-weight: 600;
-  color: #cbe4ff;
+  color: #adbed3;
 }
 
 .body {
   margin: 0.95rem 0 0;
   max-width: 52ch;
-  color: #b0c2da;
+  color: #98a9bf;
   font-size: 0.99rem;
 }
 
@@ -102,7 +102,7 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.025);
-  color: #d3e3f8;
+  color: #b8c8dc;
   font-size: 0.95rem;
 }
 
@@ -268,7 +268,7 @@
   border-radius: 10px;
   background: rgba(85, 199, 255, 0.15);
   border: 1px solid rgba(85, 199, 255, 0.4);
-  color: #daf3ff;
+  color: #c7d8e8;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -510,7 +510,7 @@
 
 .signalTitle {
   margin: 0;
-  color: #defdf2;
+  color: #c6d8d2;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -530,7 +530,7 @@
   border-radius: 12px;
   padding: 0.75rem;
   background: rgba(113, 231, 193, 0.08);
-  color: #d2f8eb;
+  color: #b9d0c8;
   font-size: 0.91rem;
 }
 
@@ -538,7 +538,7 @@
   margin: 0.1rem 0 0;
   font-size: 0.95rem;
   line-height: 1.45;
-  color: #9fceb9;
+  color: #8ea79f;
 }
 
 .codeStream {
@@ -583,7 +583,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #add3ee;
+  color: #9eb1c4;
 }
 
 .codeViewport {
@@ -598,7 +598,7 @@
   max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  color: #d2e8ff;
+  color: #b6c8da;
   font-size: 0.7rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   border-right: 1.5px solid rgba(160, 225, 255, 0.9);

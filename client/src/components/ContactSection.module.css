@@ -7,6 +7,11 @@
   padding: clamp(1.15rem, 2.4vw, 1.85rem);
   position: relative;
   overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(113, 231, 193, 0.32);
+  background:
+    radial-gradient(circle at 100% 0%, rgba(113, 231, 193, 0.18), transparent 42%),
+    rgba(11, 20, 32, 0.66);
 }
 
 .layout {
@@ -25,14 +30,14 @@
 .lead {
   margin: 0;
   max-width: 52ch;
-  color: var(--text-muted);
+  color: #d5ebff;
   font-size: 1rem;
 }
 
 .hint {
   margin: 1rem 0 0;
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: #aac5e1;
 }
 
 .code {
@@ -63,13 +68,13 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 1rem;
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(85, 199, 255, 0.36);
+  background: rgba(85, 199, 255, 0.14);
   font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  color: var(--text);
+  color: #e8f7ff;
   transition:
     transform var(--t-fast) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
@@ -79,9 +84,9 @@
 }
 
 .social:hover {
-  border-color: rgba(126, 224, 255, 0.4);
-  background: var(--accent-soft);
-  color: var(--text);
+  border-color: rgba(113, 231, 193, 0.5);
+  background: rgba(113, 231, 193, 0.16);
+  color: #f2fff9;
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(126, 224, 255, 0.14);
 }

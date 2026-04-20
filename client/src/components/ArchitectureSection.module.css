@@ -6,7 +6,7 @@
   padding: clamp(1.2rem, 2.4vw, 1.95rem);
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1.1rem;
 }
 
 .flow {
@@ -67,9 +67,9 @@
 .node {
   flex: 1;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.02);
-  padding: 0.95rem 1rem;
+  border: 1px solid rgba(85, 199, 255, 0.25);
+  background: rgba(85, 199, 255, 0.07);
+  padding: 1rem;
   min-height: 100%;
 }
 
@@ -84,20 +84,20 @@
   font-family: var(--font-sans);
   font-size: 0.98rem;
   font-weight: 700;
-  color: #d2e0f2;
+  color: #eff6ff;
 }
 
 .nodeSub {
   font-size: 0.75rem;
-  color: #98adca;
+  color: #b9d3f7;
   text-transform: none;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 .nodeBody {
   margin: 0;
   font-size: 0.92rem;
-  color: #9fb3cc;
+  color: #d8e7fb;
   line-height: 1.5;
 }
 
@@ -114,11 +114,11 @@
 
 .railCard {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(6, 10, 18, 0.35);
+  border: 1px solid rgba(113, 231, 193, 0.3);
+  background: rgba(113, 231, 193, 0.08);
   padding: 0.85rem 0.95rem;
   font-size: 0.9rem;
-  color: #9db2cc;
+  color: #d9fff2;
 }
 
 .railTitle {
@@ -127,7 +127,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #b7a6d4;
+  color: #a4f1d5;
   margin-bottom: 0.4rem;
 }
 

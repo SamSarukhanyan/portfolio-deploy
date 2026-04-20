@@ -19,7 +19,18 @@
   position: relative;
   display: grid;
   align-content: start;
-  gap: 0.85rem;
+  gap: 0.78rem;
+  border-radius: 20px;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 20px 0 0 20px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  opacity: 0.75;
 }
 
 .cardTitle {
@@ -32,8 +43,9 @@
 
 .summary {
   margin: 0;
-  color: #9cb0c8;
+  color: #b7cae2;
   font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .list {
@@ -43,13 +55,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  color: var(--text-muted);
-  font-size: 0.95rem;
+  color: #d7e4f5;
+  font-size: 0.92rem;
 }
 
 .list li {
   position: relative;
-  padding-left: 1.1rem;
+  padding-left: 1rem;
   line-height: 1.45;
 }
 
@@ -61,6 +73,6 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: #91dfff;
   opacity: 0.85;
 }

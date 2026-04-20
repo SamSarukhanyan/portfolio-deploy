@@ -5,6 +5,14 @@ import { Reveal } from "./Reveal";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
+const stackKeys = [
+  "stack.clients.0",
+  "stack.server.0",
+  "stack.server.1",
+  "stack.infra.1",
+  "stack.infra.2",
+  "stack.infra.0",
+] as const;
 
 export function Hero() {
   const { t } = useI18n();
@@ -16,8 +24,9 @@ export function Hero() {
         <Reveal className={`glass ${styles.card}`} direction="up">
           <div className={styles.grid}>
             <div className={styles.copy}>
-              <Reveal as="p" className={styles.domain} direction="left">
-                {site.domain}
+              <Reveal className={styles.domainRow} direction="left">
+                <p className={styles.domain}>{site.domain}</p>
+                <p className={styles.portfolioTag}>Portfolio</p>
               </Reveal>
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
@@ -102,6 +111,16 @@ export function Hero() {
                 <Reveal as="p" className={styles.signalNote} direction="up" delayMs={260}>
                   {t("hero.signalNote")}
                 </Reveal>
+              </Reveal>
+              <Reveal className={styles.stackMini} direction="up" delayMs={180}>
+                <p className={styles.stackMiniTitle}>Core Stack</p>
+                <ul className={styles.stackMiniList}>
+                  {stackKeys.map((key, idx) => (
+                    <Reveal key={key} as="li" direction={idx % 2 === 0 ? "left" : "right"} delayMs={220 + idx * 26}>
+                      {t(key)}
+                    </Reveal>
+                  ))}
+                </ul>
               </Reveal>
             </div>
           </div>

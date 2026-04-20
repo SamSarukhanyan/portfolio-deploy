@@ -539,9 +539,28 @@
   background:
     radial-gradient(circle at 100% 0%, rgba(122, 168, 154, 0.18), transparent 45%),
     rgba(8, 16, 27, 0.62);
-  padding: 0.95rem;
+  padding: 0.82rem;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.58rem;
+  min-height: 128px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stackMini::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.06), transparent 34%);
+  pointer-events: none;
+}
+
+.stackMiniMobile {
+  display: none;
+}
+
+.stackMiniDesktop {
+  display: grid;
 }
 
 .stackMiniTitle {
@@ -558,17 +577,62 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.45rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.42rem;
 }
 
 .stackMiniList li {
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
   border: 1px solid rgba(122, 168, 154, 0.24);
   border-radius: 10px;
-  padding: 0.52rem 0.6rem;
+  padding: 0.46rem 0.52rem;
   background: rgba(122, 168, 154, 0.09);
   color: #d8efe6;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   line-height: 1.35;
+  animation: techChipFloat 3.2s ease-in-out infinite;
+}
+
+.stackMiniList li:nth-child(2n) {
+  animation-delay: 0.4s;
+}
+
+.stackMiniList li:nth-child(3n) {
+  animation-delay: 0.8s;
+}
+
+.stackMiniList li:nth-child(5n) {
+  animation-delay: 1.1s;
+}
+
+.stackBadgeIcon {
+  min-width: 2.4em;
+  height: 1.35rem;
+  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #03191b;
+  background: linear-gradient(135deg, #8ff6d9, #55c7ff);
+  box-shadow: 0 4px 10px rgba(85, 199, 255, 0.28);
+}
+
+@keyframes techChipFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+    border-color: rgba(122, 168, 154, 0.24);
+  }
+  50% {
+    transform: translateY(-1.5px);
+    border-color: rgba(122, 168, 154, 0.5);
+  }
 }
 
 @media (max-width: 767px) {
@@ -670,13 +734,23 @@
     gap: 0.55rem;
   }
 
+  .stackMiniMobile {
+    display: grid;
+    margin-bottom: 0.65rem;
+  }
+
+  .stackMiniDesktop {
+    display: none;
+  }
+
   .stackMiniList {
-    gap: 0.4rem;
+    grid-template-columns: 1fr;
+    gap: 0.34rem;
   }
 
   .stackMiniList li {
-    padding: 0.48rem 0.55rem;
-    font-size: 0.85rem;
+    padding: 0.44rem 0.5rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -703,7 +777,7 @@
     align-content: stretch;
   }
 
-  .stackMini {
+  .stackMiniDesktop {
     min-height: 0;
     height: 100%;
   }

@@ -5,16 +5,6 @@ import { Reveal } from "./Reveal";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
-const stackLogoItems = [
-  { key: "aws", label: "AWS EC2" },
-  { key: "node", label: "Node.js" },
-  { key: "https", label: "HTTPS" },
-  { key: "cicd", label: "CI/CD" },
-  { key: "nginx", label: "Nginx + PM2" },
-  { key: "security", label: "Security" },
-  { key: "deploy", label: "Deploy" },
-  { key: "mysql", label: "MySQL API" },
-] as const;
 
 export function Hero() {
   const { t } = useI18n();
@@ -62,23 +52,6 @@ export function Hero() {
                     <span className={styles.glyphMail} />
                   </div>
                 </div>
-              </Reveal>
-              <Reveal className={`${styles.stackMini} ${styles.stackMiniMobile}`} direction="up" delayMs={120}>
-                <ul className={styles.stackMiniList}>
-                  {stackLogoItems.map((item, idx) => (
-                    <Reveal
-                      key={item.key}
-                      as="li"
-                      className={styles.stackLogo}
-                      direction={idx % 2 === 0 ? "left" : "right"}
-                      delayMs={150 + idx * 24}
-                      aria-label={item.label}
-                    >
-                      <span className={styles.stackLogoHalo} />
-                      <span className={styles.stackLogoCore} data-stack={item.key} />
-                    </Reveal>
-                  ))}
-                </ul>
               </Reveal>
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
@@ -144,23 +117,6 @@ export function Hero() {
                   </div>
                 </div>
               </Reveal>
-              <Reveal className={`${styles.stackMini} ${styles.stackMiniDesktop}`} direction="up" delayMs={120}>
-                <ul className={styles.stackMiniList}>
-                  {stackLogoItems.map((item, idx) => (
-                    <Reveal
-                      key={item.key}
-                      as="li"
-                      className={styles.stackLogo}
-                      direction={idx % 2 === 0 ? "left" : "right"}
-                      delayMs={150 + idx * 24}
-                      aria-label={item.label}
-                    >
-                      <span className={styles.stackLogoHalo} />
-                      <span className={styles.stackLogoCore} data-stack={item.key} />
-                    </Reveal>
-                  ))}
-                </ul>
-              </Reveal>
               <Reveal className={styles.signalPanel} direction="right" delayMs={120}>
                 <Reveal as="p" className={styles.signalTitle} direction="up">
                   {t("hero.signalTitle")}
@@ -180,6 +136,25 @@ export function Hero() {
                 <Reveal as="p" className={styles.signalNote} direction="up" delayMs={260}>
                   {t("hero.signalNote")}
                 </Reveal>
+              </Reveal>
+              <Reveal className={styles.codeStream} direction="up" delayMs={160} aria-hidden>
+                <div className={styles.codeStreamTop}>
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeLabel}>developer mode</span>
+                </div>
+                <div className={styles.codeViewport}>
+                  <span className={`${styles.codeLine} ${styles.codeLineOne}`}>
+                    const deploy = await pipeline.run("production");
+                  </span>
+                  <span className={`${styles.codeLine} ${styles.codeLineTwo}`}>
+                    if (health.ok) pm2.reload("api") &amp;&amp; notify("done");
+                  </span>
+                  <span className={`${styles.codeLine} ${styles.codeLineThree}`}>
+                    security.headers.enable(); tls.renew(); logs.stream();
+                  </span>
+                </div>
               </Reveal>
             </div>
           </div>

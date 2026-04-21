@@ -9,7 +9,7 @@ export type Artwork = {
 // Put your real painting files into: /client/public/artworks/
 // Example filename values below: art-01.jpg, art-02.jpg ...
 export const artworks: Artwork[] = [
-  { id: "art-01", title: "Landscape", filename: "1.jpg", size: "50x70", medium: "Oil on Canvas" },
+  { id: "art-01", title: "Landscape", filename: "1.jpg", size: "60x70", medium: "Oil on Canvas" },
   { id: "art-02", title: "Khor Virap", filename: "2.jpg", size: "50x70", medium: "Oil on Canvas" },
   { id: "art-03", title: "Paruyr Sevak", filename: "3.jpg", size: "40x50", medium: "Oil on Canvas" },
   { id: "art-04", title: "Frunzik Mkrtchyan", filename: "4.jpg", size: "40x50", medium: "Oil on Canvas" },

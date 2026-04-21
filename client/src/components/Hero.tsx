@@ -3,7 +3,6 @@ import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
-import { onSpaLinkClick } from "../utils/spaRouter";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
@@ -35,7 +34,7 @@ export function Hero() {
   return (
     <section id="top" className="section">
       <div className="shell">
-        <Reveal className={`glass ${styles.card}`} direction="up">
+        <Reveal className={styles.card} direction="up">
           <div className={styles.grid}>
             <div className={styles.copy}>
               <Reveal className={styles.domainRow} direction="left">
@@ -50,20 +49,6 @@ export function Hero() {
                     <span className={styles.devRing}>
                       <span className={styles.devDot} />
                     </span>
-                  </div>
-                  <div className={styles.sectionGlyphs}>
-                    <span className={styles.glyphBars}>
-                      <span />
-                      <span />
-                      <span />
-                    </span>
-                    <span className={styles.glyphStack}>
-                      <span />
-                      <span />
-                      <span />
-                    </span>
-                    <span className={styles.glyphRoute} />
-                    <span className={styles.glyphMail} />
                   </div>
                 </div>
               </Reveal>
@@ -111,9 +96,6 @@ export function Hero() {
                 <a className="btn-ghost" href="#highlights">
                   {t("hero.ctaHighlights")}
                 </a>
-                <a className="btn-art" href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
-                  {t("hero.ctaArt")}
-                </a>
               </Reveal>
             </div>
             <div className={styles.visual} aria-hidden>
@@ -125,20 +107,6 @@ export function Hero() {
                     <span className={styles.devRing}>
                       <span className={styles.devDot} />
                     </span>
-                  </div>
-                  <div className={styles.sectionGlyphs}>
-                    <span className={styles.glyphBars}>
-                      <span />
-                      <span />
-                      <span />
-                    </span>
-                    <span className={styles.glyphStack}>
-                      <span />
-                      <span />
-                      <span />
-                    </span>
-                    <span className={styles.glyphRoute} />
-                    <span className={styles.glyphMail} />
                   </div>
                 </div>
               </Reveal>

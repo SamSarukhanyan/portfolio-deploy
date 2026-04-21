@@ -1,6 +1,7 @@
 import styles from "./HighlightsSection.module.css";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
+import { onSpaLinkClick } from "../utils/spaRouter";
 
 const cards = [
   { titleKey: "highlights.1.title" as const, bodyKey: "highlights.1.body" as const },
@@ -30,6 +31,11 @@ export function HighlightsSection() {
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
           {t("highlights.lead")}
+        </Reveal>
+        <Reveal className={styles.artPortalWrap} direction="up" delayMs={95}>
+          <a className={styles.artPortal} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
+            {t("hero.ctaArt")}
+          </a>
         </Reveal>
         <ul className={styles.grid}>
           {cards.map((h, idx) => (

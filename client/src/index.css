@@ -224,6 +224,12 @@ section#top.section {
   padding-bottom: var(--space-section-bottom);
 }
 
+section#top.section > .shell {
+  max-width: 100%;
+  padding-left: clamp(0.72rem, 2.8vw, 1.8rem);
+  padding-right: clamp(0.72rem, 2.8vw, 1.8rem);
+}
+
 .section-title {
   font-family: var(--font-sans);
   font-size: clamp(2rem, 4.5vw, 2.75rem);
@@ -502,6 +508,38 @@ section#top.section {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(14, 22, 38, 0.78);
+  }
+
+  #highlights {
+    background: linear-gradient(180deg, rgba(84, 132, 188, 0.1), transparent 80%);
+  }
+
+  #stack {
+    background: linear-gradient(180deg, rgba(84, 190, 157, 0.1), transparent 80%);
+  }
+
+  #architecture {
+    background: linear-gradient(180deg, rgba(160, 116, 205, 0.1), transparent 80%);
+  }
+
+  #contact {
+    background: linear-gradient(180deg, rgba(209, 136, 102, 0.1), transparent 80%);
+  }
+
+  .btn-primary,
+  .btn-ghost,
+  .btn-art {
+    border-radius: 16px 8px 18px 10px;
+    min-height: 46px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(130deg, #355f8b, #44639a 48%, #4a8b78 100%);
+  }
+
+  .btn-ghost {
+    border-color: rgba(132, 170, 209, 0.52);
+    background: linear-gradient(130deg, rgba(78, 103, 145, 0.2), rgba(101, 149, 136, 0.15));
   }
 
   .section .glass:hover {

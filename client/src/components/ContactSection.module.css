@@ -170,7 +170,10 @@
 
   .card {
     padding: 0.95rem;
-    border-radius: 20px;
+    border-radius: 12px 24px 10px 26px;
+    background:
+      radial-gradient(circle at 86% 10%, rgba(113, 231, 193, 0.24), transparent 48%),
+      linear-gradient(145deg, rgba(51, 108, 133, 0.2), rgba(18, 30, 36, 0.72));
   }
 
   .layout {
@@ -183,6 +186,21 @@
 
   .socialRow {
     gap: 0.5rem;
+  }
+
+  .social:nth-child(1) {
+    border-radius: 19px 9px 14px 8px;
+    background: linear-gradient(145deg, rgba(92, 144, 219, 0.24), rgba(18, 29, 46, 0.74));
+  }
+
+  .social:nth-child(2) {
+    border-radius: 9px 20px 11px 23px;
+    background: linear-gradient(145deg, rgba(115, 205, 184, 0.24), rgba(14, 32, 37, 0.74));
+  }
+
+  .social:nth-child(3) {
+    border-radius: 22px 11px 9px 20px;
+    background: linear-gradient(145deg, rgba(168, 130, 224, 0.24), rgba(23, 27, 42, 0.74));
   }
 
   .mailPulse {

@@ -1,13 +1,17 @@
 .card {
-  padding: clamp(1.25rem, 3vw, 2.35rem);
+  padding: clamp(1rem, 2.6vw, 1.8rem) 0;
   overflow: hidden;
-  border-radius: 30px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .grid {
   display: grid;
   gap: clamp(1.4rem, 3.2vw, 2.5rem);
   align-items: stretch;
+  width: 100%;
 }
 
 @media (min-width: 900px) {
@@ -713,8 +717,7 @@
 
 @media (max-width: 767px) {
   .card {
-    padding: 1rem;
-    border-radius: 22px;
+    padding: 0.6rem 0 0.1rem;
   }
 
   .grid {
@@ -762,6 +765,26 @@
 
   .visual {
     gap: 0.55rem;
+  }
+
+  .focusList li:nth-child(1) {
+    border-radius: 18px 10px 22px 8px;
+    background: linear-gradient(145deg, rgba(75, 117, 166, 0.24), rgba(17, 25, 40, 0.72));
+  }
+
+  .focusList li:nth-child(2) {
+    border-radius: 9px 20px 11px 24px;
+    background: linear-gradient(145deg, rgba(83, 151, 132, 0.22), rgba(17, 25, 40, 0.72));
+  }
+
+  .focusList li:nth-child(3) {
+    border-radius: 24px 12px 10px 18px;
+    background: linear-gradient(145deg, rgba(165, 127, 217, 0.2), rgba(17, 25, 40, 0.72));
+  }
+
+  .focusList li:nth-child(4) {
+    border-radius: 12px 24px 18px 10px;
+    background: linear-gradient(145deg, rgba(218, 149, 112, 0.18), rgba(17, 25, 40, 0.72));
   }
 
   .orbit {

@@ -15,7 +15,7 @@
   width: 112px;
   height: 52px;
   border-radius: 18px 9px 16px 10px;
-  border: 1px solid rgba(156, 187, 224, 0.32);
+  border: 1px solid rgba(186, 170, 120, 0.32);
   background: linear-gradient(145deg, rgba(16, 27, 46, 0.64), rgba(13, 30, 35, 0.58));
   display: flex;
   align-items: center;
@@ -34,7 +34,7 @@
   inset: auto;
   width: 66%;
   height: 42%;
-  border: 1px solid rgba(171, 198, 232, 0.34);
+  border: 1px solid rgba(186, 170, 120, 0.34);
   border-radius: 50%;
   --wave-shift: -10%;
   --wave-rot: -10deg;
@@ -96,7 +96,7 @@
   min-height: 48px;
   padding: 0.72rem 1.1rem;
   border-radius: 14px;
-  border: 1px solid rgba(173, 131, 230, 0.5);
+  border: 1px solid rgba(186, 170, 120, 0.5);
   background: linear-gradient(130deg, rgba(77, 92, 159, 0.58), rgba(126, 84, 186, 0.45));
   color: #e4dcf3;
   font-size: 0.86rem;
@@ -151,7 +151,7 @@
   align-content: start;
   gap: 0.65rem;
   border-radius: 20px;
-  border: 1px solid rgba(85, 199, 255, 0.28);
+  border: 1px solid rgba(186, 170, 120, 0.28);
   background:
     radial-gradient(circle at 0% 0%, rgba(85, 199, 255, 0.12), transparent 48%),
     rgba(14, 23, 37, 0.6);

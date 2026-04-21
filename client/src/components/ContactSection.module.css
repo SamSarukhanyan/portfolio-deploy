@@ -210,6 +210,21 @@
     box-shadow var(--t-fast) var(--ease-out);
 }
 
+.social:nth-child(1) {
+  border-radius: 19px 9px 14px 8px;
+  background: linear-gradient(145deg, rgba(92, 144, 219, 0.24), rgba(18, 29, 46, 0.74));
+}
+
+.social:nth-child(2) {
+  border-radius: 9px 20px 11px 23px;
+  background: linear-gradient(145deg, rgba(115, 205, 184, 0.24), rgba(14, 32, 37, 0.74));
+}
+
+.social:nth-child(3) {
+  border-radius: 22px 11px 9px 20px;
+  background: linear-gradient(145deg, rgba(168, 130, 224, 0.24), rgba(23, 27, 42, 0.74));
+}
+
 .social:hover {
   border-color: rgba(113, 231, 193, 0.5);
   background: rgba(113, 231, 193, 0.16);

@@ -157,6 +157,48 @@
     rgba(14, 23, 37, 0.6);
 }
 
+.card:nth-child(1) {
+  border-radius: 24px 10px 22px 8px;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(85, 199, 255, 0.18), transparent 54%),
+    rgba(11, 25, 44, 0.7);
+}
+
+.card:nth-child(2) {
+  border-radius: 10px 22px 12px 24px;
+  background:
+    radial-gradient(circle at 80% 14%, rgba(125, 235, 197, 0.19), transparent 52%),
+    rgba(12, 30, 33, 0.72);
+}
+
+.card:nth-child(3) {
+  border-radius: 22px 12px 8px 24px;
+  background:
+    radial-gradient(circle at 80% 84%, rgba(178, 160, 255, 0.19), transparent 52%),
+    rgba(18, 23, 41, 0.72);
+}
+
+.card:nth-child(4) {
+  border-radius: 12px 24px 22px 10px;
+  background:
+    radial-gradient(circle at 18% 88%, rgba(255, 184, 122, 0.15), transparent 56%),
+    rgba(32, 26, 36, 0.7);
+}
+
+.card:nth-child(5) {
+  border-radius: 24px 8px 18px 12px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(120, 165, 255, 0.15), transparent 56%),
+    rgba(15, 27, 45, 0.74);
+}
+
+.card:nth-child(6) {
+  border-radius: 9px 22px 24px 11px;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(121, 224, 189, 0.15), transparent 56%),
+    rgba(17, 31, 33, 0.74);
+}
+
 .cardKicker {
   margin: 0;
   color: #8faac2;

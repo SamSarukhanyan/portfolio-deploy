@@ -437,31 +437,35 @@
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  gap: 0.52rem;
-  margin: 0 0 0.3rem;
+  gap: 0.62rem;
+  margin: 0 0 0.36rem;
 }
 
 .heroArtLabel {
-  color: #a9b8cd;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: #9eb0c7;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  padding-left: 0.48rem;
+  border-left: 1px solid rgba(186, 170, 120, 0.4);
+  line-height: 1.2;
 }
 
 .heroArtLink {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
-  padding: 0.58rem 0.92rem;
-  border-radius: 15px 9px 17px 8px;
+  min-height: 36px;
+  min-width: 172px;
+  padding: 0.44rem 1.38rem;
+  border-radius: 13px 8px 15px 7px;
   border: 1px solid rgba(186, 170, 120, 0.54);
   background: linear-gradient(130deg, rgba(81, 101, 174, 0.66), rgba(121, 89, 194, 0.58));
   color: #e8e0f4;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
   transition:
@@ -1304,6 +1308,17 @@
   .heroArtRow {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .heroArtLink {
+    min-width: 158px;
+    min-height: 34px;
+    padding: 0.4rem 1.1rem;
+  }
+
+  .heroArtLabel {
+    font-size: 0.73rem;
+    padding-left: 0.4rem;
   }
 
   .motionDock {

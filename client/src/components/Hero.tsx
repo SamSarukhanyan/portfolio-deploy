@@ -84,10 +84,10 @@ export function Hero() {
                 </div>
               </Reveal>
               <Reveal className={styles.heroArtRow} direction="up" delayMs={102}>
-                <span className={styles.heroArtLabel}>Explore selected works</span>
                 <a className={styles.heroArtLink} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
                   {t("hero.ctaArt")}
                 </a>
+                <span className={styles.heroArtLabel}>Explore selected works</span>
               </Reveal>
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}

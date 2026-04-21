@@ -4,7 +4,7 @@
 
 .head {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: clamp(0.55rem, 1.3vw, 0.95rem);
   flex-wrap: nowrap;
@@ -19,7 +19,7 @@
   background: linear-gradient(145deg, rgba(24, 24, 24, 0.66), rgba(30, 30, 30, 0.58));
   position: relative;
   overflow: hidden;
-  transform: translateY(3px);
+  transform: none;
   margin-left: auto;
 }
 
@@ -60,7 +60,7 @@
     width: 214px;
     height: 98px;
     border-radius: 26px 13px 24px 14px;
-    transform: translateY(7px);
+    transform: none;
   }
 
   .routeCore {
@@ -288,7 +288,7 @@
 @media (max-width: 560px) {
   .head {
     gap: 0.6rem;
-    align-items: flex-end;
+    align-items: center;
   }
 
   .diagram {
@@ -344,6 +344,6 @@
   .route {
     width: 88px;
     height: 40px;
-    transform: translateY(4px);
+    transform: none;
   }
 }

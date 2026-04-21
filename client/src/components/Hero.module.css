@@ -118,10 +118,7 @@
 
   .visual {
     order: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.36rem !important;
+    display: block !important;
     max-width: none;
     margin: 0 !important;
     min-height: auto !important;
@@ -135,6 +132,7 @@
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    display: block !important;
   }
 
   .orbit::after {
@@ -162,12 +160,10 @@
   }
 
   .codeStreamDesktop {
-    order: 2 !important;
     display: block !important;
     width: 100% !important;
     max-width: none !important;
-    margin: 0 !important;
-    align-self: stretch !important;
+    margin: 0.36rem 0 0 !important;
     padding: 0.5rem 0.56rem !important;
   }
 

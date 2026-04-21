@@ -28,6 +28,22 @@ function MotionDockSnake() {
   );
 }
 
+function MobileTitleSnake() {
+  return (
+    <span className={styles.mobileTitleSnake} aria-hidden>
+      {Array.from({ length: SNAKE_SEGMENTS }, (_, i) => (
+        <span
+          key={i}
+          className={styles.mobileTitleSnakeSegRing}
+          style={{ ["--i" as string]: String(i) } as CSSProperties}
+        >
+          <span className={styles.mobileTitleSnakeSegDot} />
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export function Hero() {
   const { t } = useI18n();
   const heroTitle = t("hero.title").replace("Production full-stack", "Production\u00A0full-stack");
@@ -38,9 +54,12 @@ export function Hero() {
         <Reveal className={styles.card} direction="up">
           <div className={styles.grid}>
             <div className={styles.copy}>
-              <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
-                {heroTitle}
-              </Reveal>
+              <div className={styles.titleRowMobile}>
+                <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
+                  {heroTitle}
+                </Reveal>
+                <MobileTitleSnake />
+              </div>
               <Reveal className={styles.domainRow} direction="left" delayMs={82}>
                 <p className={styles.domain}>{site.domain}</p>
                 <p className={styles.portfolioTag}>Portfolio</p>

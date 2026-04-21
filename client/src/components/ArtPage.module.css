@@ -266,7 +266,38 @@
 
 @media (min-width: 1180px) {
   .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 320px));
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .card {
+    width: 320px;
+    max-width: 320px;
+    padding: 0.5rem;
+    gap: 0.42rem;
+  }
+
+  .imageBtn {
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+  }
+
+  .imageBtn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .meta h2 {
+    font-size: 0.95rem;
+    line-height: 1.28;
+  }
+
+  .meta p {
+    margin-top: 0.18rem;
+    font-size: 0.82rem;
+    line-height: 1.24;
   }
 }
 
@@ -481,39 +512,62 @@
 
 @media (min-width: 1024px) {
   .hero {
-    padding: clamp(1.2rem, 2.4vw, 1.9rem);
+    padding: 1rem 1.15rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title top"
+      "lead top";
+    column-gap: clamp(1rem, 2.4vw, 2rem);
+    row-gap: 0.38rem;
+    align-items: center;
   }
 
   .heroTop {
+    grid-area: top;
+    margin: 0;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     justify-content: center;
-    min-height: clamp(74px, 9.4vw, 110px);
-    margin-bottom: 0.9rem;
-    position: relative;
+    gap: 0.58rem;
   }
 
   .backLink {
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
+    transform: none;
+    padding: 0.36rem 0.8rem;
+    min-height: 34px;
   }
 
   .heroMonoMotion {
-    min-width: clamp(240px, 34vw, 430px);
+    min-width: clamp(220px, 24vw, 300px);
     justify-content: center;
-    gap: clamp(0.8rem, 1.65vw, 1.25rem);
+    gap: clamp(0.7rem, 1.3vw, 1rem);
     transform: none;
   }
 
-  .title,
-  .lead {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+  .shapeCircle,
+  .shapeDiamond,
+  .shapeSnake {
+    width: clamp(56px, 3.8vw, 66px);
+    height: clamp(56px, 3.8vw, 66px);
+  }
+
+  .title {
+    grid-area: title;
+    text-align: left;
+    margin: 0;
+    font-size: clamp(1.85rem, 3.1vw, 2.4rem);
   }
 
   .lead {
-    max-width: 72ch;
+    grid-area: lead;
+    margin: 0;
+    max-width: 56ch;
+    text-align: left;
+    font-size: 0.98rem;
   }
 }
 

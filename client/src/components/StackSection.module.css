@@ -94,6 +94,28 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .head {
+    align-items: flex-start;
+  }
+
+  .stackGlyph {
+    width: 174px;
+    height: 82px;
+    align-self: flex-start;
+    margin-top: 0.34rem;
+  }
+
+  .techOrb {
+    width: 20px;
+    height: 20px;
+  }
+
+  .techTrail {
+    height: 3px;
+  }
+}
+
 .grid {
   display: grid;
   gap: 1rem;

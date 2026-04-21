@@ -144,6 +144,25 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .head {
+    align-items: flex-start;
+  }
+
+  .signal {
+    width: 176px;
+    height: 78px;
+    padding: 0.5rem 0.66rem;
+    align-self: flex-start;
+    margin-top: 0.28rem;
+  }
+
+  .signalComet {
+    width: 10px;
+    height: 10px;
+  }
+}
+
 .card {
   padding: 1.15rem;
   height: 100%;

@@ -74,6 +74,29 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .head {
+    align-items: flex-start;
+  }
+
+  .route {
+    width: 170px;
+    height: 78px;
+    align-self: flex-start;
+    margin-top: 0.3rem;
+  }
+
+  .routeCore {
+    width: 16px;
+    height: 16px;
+  }
+
+  .routeOrb {
+    width: 10px;
+    height: 10px;
+  }
+}
+
 .diagram {
   padding: clamp(1.2rem, 2.4vw, 1.95rem);
   display: flex;

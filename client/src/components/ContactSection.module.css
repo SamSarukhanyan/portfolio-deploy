@@ -161,6 +161,34 @@
   }
 }
 
+@media (min-width: 1440px) {
+  .titleRow {
+    align-items: flex-start;
+  }
+
+  .mailPulseDesktop {
+    width: 188px;
+    height: 96px;
+    align-self: flex-start;
+    margin-top: 0.34rem;
+  }
+
+  .mailPulseDesktop .mailSpark {
+    width: 9px;
+    height: 9px;
+  }
+
+  .mailPulseDesktop .mailIcon {
+    width: 66px;
+    height: 50px;
+  }
+
+  .mailPulseDesktop .mailIcon svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 .lead {
   margin: 0;
   max-width: 52ch;

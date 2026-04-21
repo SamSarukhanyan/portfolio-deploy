@@ -141,12 +141,25 @@
   width: 3px;
   border-radius: 20px 0 0 20px;
   background: linear-gradient(180deg, var(--accent-subtle), var(--accent-soft));
-  opacity: 0.75;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .card:hover {
   border-color: var(--accent-soft);
   box-shadow: 0 0 0 1px var(--accent-subtle);
+}
+
+.card:hover::after {
+  opacity: 0.78;
+}
+
+.card:nth-child(2)::after {
+  opacity: 0.5;
+}
+
+.card:nth-child(3) {
+  border-color: rgba(245, 197, 66, 0.28);
 }
 
 .cardTitle {

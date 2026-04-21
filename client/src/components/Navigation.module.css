@@ -30,6 +30,7 @@
   box-shadow:
     inset 0 1px 0 rgba(242, 242, 242, 0.1),
     0 16px 38px rgba(0, 0, 0, 0.45);
+  border-bottom-color: var(--accent-subtle);
 }
 
 .brand {
@@ -178,16 +179,65 @@
   padding: 0.4rem 0.78rem;
   border-radius: 999px;
   border: 1px solid transparent;
+  position: relative;
   transition:
     color var(--t-micro) var(--ease-out),
     border-color var(--t-fast) var(--ease-out),
-    background-color var(--t-fast) var(--ease-out);
+    background-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.28rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-main), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .navLink:hover {
   color: var(--text-primary);
   background: rgba(42, 42, 47, 0.92);
   border-color: var(--accent-soft);
+  box-shadow: 0 0 14px rgba(245, 197, 66, 0.12);
+}
+
+.navLink:hover::after,
+.navLink:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.navLink:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+
+:global(.app-shell--art) .navLink[href="/art"] {
+  color: var(--text-primary);
+  border-color: var(--accent-soft);
+  background: rgba(42, 42, 47, 0.96);
+  box-shadow:
+    inset 0 -1px 0 var(--accent-main),
+    0 0 16px rgba(245, 197, 66, 0.14);
+}
+
+:global(.app-shell--art) .navLink[href="/art"]::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.navLink[href="#highlights"] {
+  border-color: rgba(245, 197, 66, 0.3);
+  box-shadow: inset 0 -1px 0 rgba(245, 197, 66, 0.85);
 }
 
 .quickCta {
@@ -218,6 +268,7 @@
   .quickCta:hover {
     transform: translateY(-1px);
     border-color: var(--accent-soft);
+    box-shadow: 0 0 18px rgba(245, 197, 66, 0.14);
   }
 }
 
@@ -400,6 +451,7 @@
   border-color: var(--accent-soft);
   background: var(--accent-subtle);
   color: var(--text-primary);
+  box-shadow: 0 0 14px rgba(245, 197, 66, 0.12);
 }
 
 :global(.app-shell--art) .inner {

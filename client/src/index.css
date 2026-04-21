@@ -3,20 +3,30 @@
   --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
   --t-fast: 0.11s;
   --t-micro: 0.09s;
-  --bg-deep: #0a0a0b;
-  --bg-mid: #141416;
-  --accent: #c8c9cc;
-  --accent-soft: rgba(200, 201, 204, 0.12);
-  --accent-2: #9d9ea3;
-  --text: #e0e1e4;
-  --text-muted: rgba(176, 178, 183, 0.84);
-  --glass-bg: rgba(19, 19, 21, 0.78);
-  --glass-border: rgba(186, 170, 120, 0.34);
-  --glass-highlight: rgba(255, 255, 255, 0.2);
+  --bg-0: #0b0b0c;
+  --bg-1: #111113;
+  --bg-2: #1a1a1d;
+  --surface: #202024;
+  --surface-2: #2a2a2f;
+  --text-primary: #f2f2f2;
+  --text-secondary: #b0b0b5;
+  --border-neutral: #2f2f35;
+  --accent-main: #f5c542;
+  --accent-soft: rgba(245, 197, 66, 0.4);
+  --accent-subtle: rgba(245, 197, 66, 0.15);
+  --bg-deep: var(--bg-0);
+  --bg-mid: var(--bg-1);
+  --accent: #cdcdcd;
+  --accent-2: #a5a5a5;
+  --text: var(--text-primary);
+  --text-muted: var(--text-secondary);
+  --glass-bg: rgba(32, 32, 36, 0.78);
+  --glass-border: rgba(47, 47, 53, 0.95);
+  --glass-highlight: rgba(242, 242, 242, 0.12);
   --radius-lg: 26px;
   --radius-md: 16px;
-  --shadow-glow: 0 0 44px rgba(165, 167, 173, 0.1);
-  --shadow-card: 0 20px 44px rgba(2, 8, 17, 0.5);
+  --shadow-glow: 0 0 32px rgba(245, 197, 66, 0.08);
+  --shadow-card: 0 20px 44px rgba(0, 0, 0, 0.45);
   --font-sans:
     Inter,
     "Segoe UI",
@@ -41,10 +51,10 @@
   --max-width: 1220px;
   /* Foremost layers first: extra top wash so safe-area + first px match the gray-blue body */
   --page-gradient:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(188, 190, 195, 0.09), transparent 52%),
-    radial-gradient(ellipse 82% 58% at 92% 16%, rgba(160, 162, 168, 0.06), transparent 50%),
-    radial-gradient(ellipse 78% 54% at 10% 86%, rgba(144, 147, 154, 0.06), transparent 54%),
-    linear-gradient(180deg, #0b0b0c 0%, #101113 34%, #141518 66%, #0c0d0e 100%);
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(242, 242, 242, 0.04), transparent 52%),
+    radial-gradient(ellipse 82% 58% at 92% 16%, rgba(242, 242, 242, 0.02), transparent 50%),
+    radial-gradient(ellipse 78% 54% at 10% 86%, rgba(242, 242, 242, 0.02), transparent 54%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 34%, var(--bg-2) 66%, var(--bg-0) 100%);
 }
 
 *,
@@ -59,10 +69,10 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 0;
   overflow-x: hidden;
-  scrollbar-color: rgba(126, 129, 135, 0.84) rgba(19, 20, 23, 0.96);
+  scrollbar-color: rgba(176, 176, 181, 0.84) rgba(17, 17, 19, 0.96);
   scrollbar-width: thin;
   background: var(--page-gradient);
-  background-color: #0b0c0d;
+  background-color: var(--bg-0);
   /* iOS Safari: 100vh can exclude the visible area; 100dvh tracks the dynamic visual viewport */
   min-height: 100vh;
   min-height: 100dvh;
@@ -75,17 +85,17 @@ html {
 }
 
 *::-webkit-scrollbar-track {
-  background: rgba(19, 20, 23, 0.96);
+  background: rgba(17, 17, 19, 0.96);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, rgba(136, 139, 145, 0.92), rgba(98, 101, 106, 0.92));
+  background: linear-gradient(180deg, rgba(176, 176, 181, 0.92), rgba(122, 122, 129, 0.92));
   border-radius: 999px;
-  border: 2px solid rgba(19, 20, 23, 0.96);
+  border: 2px solid rgba(17, 17, 19, 0.96);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, rgba(151, 154, 160, 0.95), rgba(112, 115, 121, 0.95));
+  background: linear-gradient(180deg, rgba(196, 196, 200, 0.95), rgba(137, 137, 144, 0.95));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -114,7 +124,7 @@ body {
   font-weight: 400;
   color: var(--text);
   background: var(--page-gradient);
-  background-color: #0d0e10;
+  background-color: var(--bg-0);
   line-height: 1.6;
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
@@ -135,10 +145,10 @@ body {
 
 .app-shell--art .page-bg {
   background:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(162, 162, 162, 0.08), transparent 52%),
-    radial-gradient(ellipse 82% 58% at 92% 16%, rgba(120, 120, 120, 0.06), transparent 50%),
-    radial-gradient(ellipse 78% 54% at 10% 86%, rgba(106, 106, 106, 0.06), transparent 54%),
-    linear-gradient(180deg, #0b0b0c 0%, #101011 34%, #141416 66%, #0c0c0d 100%);
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(242, 242, 242, 0.04), transparent 52%),
+    radial-gradient(ellipse 82% 58% at 92% 16%, rgba(242, 242, 242, 0.02), transparent 50%),
+    radial-gradient(ellipse 78% 54% at 10% 86%, rgba(242, 242, 242, 0.02), transparent 54%),
+    linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 34%, var(--bg-2) 66%, var(--bg-0) 100%);
 }
 
 .app-shell--art .page-bg::before {
@@ -249,19 +259,19 @@ section#top.section > .shell {
 }
 
 #highlights {
-  background: linear-gradient(180deg, rgba(144, 146, 152, 0.1), transparent 80%);
+  background: linear-gradient(180deg, rgba(32, 32, 36, 0.72), transparent 88%);
 }
 
 #stack {
-  background: linear-gradient(180deg, rgba(131, 133, 138, 0.1), transparent 80%);
+  background: linear-gradient(180deg, rgba(42, 42, 47, 0.56), transparent 88%);
 }
 
 #architecture {
-  background: linear-gradient(180deg, rgba(118, 120, 126, 0.1), transparent 80%);
+  background: linear-gradient(180deg, rgba(32, 32, 36, 0.56), transparent 88%);
 }
 
 #contact {
-  background: linear-gradient(180deg, rgba(105, 108, 113, 0.1), transparent 80%);
+  background: linear-gradient(180deg, rgba(42, 42, 47, 0.5), transparent 88%);
 }
 
 .section-title {
@@ -271,7 +281,7 @@ section#top.section > .shell {
   letter-spacing: -0.02em;
   margin: 0 0 0.22em;
   line-height: 1.15;
-  color: #d7e0ee;
+  color: var(--text-primary);
 }
 
 .section-lead {
@@ -291,7 +301,7 @@ section#top.section > .shell {
   border-radius: var(--radius-lg);
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
-    0 28px 52px rgba(3, 9, 18, 0.5),
+    0 28px 52px rgba(0, 0, 0, 0.45),
     var(--shadow-glow);
   transition:
     transform 0.32s var(--ease-out),
@@ -308,10 +318,10 @@ section#top.section > .shell {
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.2) 0%,
+    rgba(242, 242, 242, 0.14) 0%,
     transparent 40%,
     transparent 60%,
-    rgba(111, 162, 196, 0.13) 100%
+    rgba(245, 197, 66, 0.12) 100%
   );
   mask:
     linear-gradient(#000 0 0) content-box,
@@ -331,11 +341,11 @@ section#top.section > .shell {
 
 .section .glass:hover {
   transform: translateY(-3px);
-  border-color: rgba(185, 170, 118, 0.38);
+  border-color: var(--accent-soft);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 1px 0 rgba(242, 242, 242, 0.18),
     var(--shadow-card),
-    0 0 48px rgba(185, 170, 118, 0.14);
+    0 0 32px var(--accent-subtle);
 }
 
 .tag {
@@ -349,7 +359,7 @@ section#top.section > .shell {
   text-transform: uppercase;
   border-radius: 999px;
   border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(42, 42, 47, 0.56);
   color: var(--text-muted);
 }
 
@@ -364,29 +374,31 @@ section#top.section > .shell {
   border: none;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #dbe6f3;
-  background: linear-gradient(135deg, #4a4c52, #5a5d65 52%, #404247 100%);
-  box-shadow: 0 10px 24px rgba(19, 31, 47, 0.45);
+  color: var(--text-primary);
+  background: linear-gradient(135deg, #2f2f35, #37373d 52%, #2a2a2f 100%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+  border: 1px solid var(--border-neutral);
   transition:
     transform var(--t-fast) var(--ease-out),
     box-shadow var(--t-fast) var(--ease-out),
-    filter var(--t-fast) var(--ease-out);
+    border-color var(--t-fast) var(--ease-out);
   text-decoration: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 28px rgba(22, 35, 53, 0.55);
-  color: #e4edf8;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+  border-color: var(--accent-soft);
+  color: var(--text-primary);
 }
 
 .btn-primary:visited {
-  color: #dbe6f3;
+  color: var(--text-primary);
 }
 
 .btn-primary:focus-visible {
-  color: #dbe6f3;
-  outline: 2px solid rgba(111, 162, 196, 0.62);
+  color: var(--text-primary);
+  outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
 
@@ -401,7 +413,7 @@ section#top.section > .shell {
   font-weight: 600;
   font-size: 0.95rem;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(32, 32, 36, 0.62);
   backdrop-filter: blur(12px);
   transition:
     border-color var(--t-fast) var(--ease-out),
@@ -412,13 +424,13 @@ section#top.section > .shell {
 }
 
 .btn-ghost:hover {
-  border-color: rgba(185, 170, 118, 0.42);
-  background: rgba(185, 170, 118, 0.08);
-  color: #dce7f4;
+  border-color: var(--accent-soft);
+  background: var(--accent-subtle);
+  color: var(--text-primary);
 }
 
 .btn-ghost:focus-visible {
-  outline: 2px solid rgba(185, 170, 118, 0.42);
+  outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
 
@@ -429,9 +441,9 @@ section#top.section > .shell {
   min-height: 48px;
   padding: 0.85rem 1.2rem;
   border-radius: 12px;
-  border: 1px solid rgba(153, 156, 164, 0.46);
-  background: linear-gradient(140deg, rgba(75, 78, 86, 0.92), rgba(56, 59, 66, 0.92));
-  color: #d1dde9;
+  border: 1px solid var(--border-neutral);
+  background: linear-gradient(140deg, rgba(42, 42, 47, 0.92), rgba(32, 32, 36, 0.92));
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
@@ -445,13 +457,13 @@ section#top.section > .shell {
 
 .btn-art:hover {
   transform: translateY(-1px);
-  border-color: rgba(185, 170, 118, 0.42);
-  box-shadow: 0 12px 24px rgba(17, 28, 42, 0.45);
-  color: #dde8f4;
+  border-color: var(--accent-soft);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.42);
+  color: var(--text-primary);
 }
 
 .btn-art:focus-visible {
-  outline: 2px solid rgba(185, 170, 118, 0.42);
+  outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
 
@@ -532,7 +544,7 @@ section#top.section > .shell {
   .glass {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: rgba(14, 22, 38, 0.78);
+    background: rgba(32, 32, 36, 0.78);
   }
 
   .btn-primary,
@@ -543,12 +555,12 @@ section#top.section > .shell {
   }
 
   .btn-primary {
-    background: linear-gradient(130deg, #50545d, #686d77 48%, #50545c 100%);
+    background: linear-gradient(130deg, #2f2f35, #3b3b42 48%, #2f2f35 100%);
   }
 
   .btn-ghost {
-    border-color: rgba(157, 160, 168, 0.52);
-    background: linear-gradient(130deg, rgba(88, 92, 100, 0.2), rgba(116, 120, 129, 0.16));
+    border-color: rgba(47, 47, 53, 0.92);
+    background: linear-gradient(130deg, rgba(42, 42, 47, 0.62), rgba(32, 32, 36, 0.62));
   }
 
   .section .glass:hover {

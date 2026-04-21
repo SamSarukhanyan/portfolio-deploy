@@ -7,10 +7,10 @@
   padding: clamp(1rem, 2.2vw, 1.4rem);
   margin-bottom: 1rem;
   border-radius: 20px;
-  border: 1px solid rgba(132, 136, 144, 0.34);
+  border: 1px solid var(--border-neutral);
   background:
     radial-gradient(circle at 100% 0%, rgba(170, 170, 170, 0.12), transparent 54%),
-    linear-gradient(140deg, rgba(28, 28, 30, 0.9), rgba(18, 18, 20, 0.9));
+    linear-gradient(140deg, rgba(28, 28, 28, 0.9), rgba(18, 18, 18, 0.9));
 }
 
 .heroTop {
@@ -25,20 +25,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #d5d8de;
+  color: #d8d8d8;
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid rgba(145, 150, 159, 0.5);
+  border: 1px solid var(--border-neutral);
   border-radius: 999px;
   padding: 0.44rem 0.9rem;
-  background: linear-gradient(140deg, rgba(61, 66, 74, 0.9), rgba(47, 52, 60, 0.88));
-  box-shadow: 0 8px 18px rgba(11, 20, 31, 0.34);
+  background: linear-gradient(140deg, rgba(66, 66, 66, 0.9), rgba(52, 52, 52, 0.88));
+  box-shadow: 0 8px 18px rgba(19, 19, 19, 0.34);
 }
 
 .backLink:hover {
-  color: #e1e4ea;
-  border-color: rgba(164, 169, 178, 0.66);
+  color: #e4e4e4;
+  border-color: var(--accent-soft);
 }
 
 .heroMonoMotion {
@@ -66,10 +66,10 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 1px solid rgba(146, 150, 158, 0.34);
-  background: radial-gradient(circle at 30% 28%, rgba(214, 217, 223, 0.2), transparent 52%),
-    radial-gradient(circle at 50% 50%, rgba(84, 88, 96, 0.45), rgba(30, 33, 39, 0.55));
-  box-shadow: inset 0 0 0 1px rgba(25, 27, 32, 0.4), 0 0 0 1px rgba(37, 40, 47, 0.35);
+  border: 1px solid rgba(150, 150, 150, 0.34);
+  background: radial-gradient(circle at 30% 28%, rgba(217, 217, 217, 0.2), transparent 52%),
+    radial-gradient(circle at 50% 50%, rgba(88, 88, 88, 0.45), rgba(33, 33, 33, 0.55));
+  box-shadow: inset 0 0 0 1px rgba(27, 27, 27, 0.4), 0 0 0 1px rgba(40, 40, 40, 0.35);
   animation: shapePulse 2.5s ease-in-out infinite;
 }
 
@@ -78,7 +78,7 @@
   width: 62%;
   height: 62%;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, rgba(228, 231, 236, 0.75), rgba(129, 134, 142, 0.35));
+  background: radial-gradient(circle at 32% 30%, rgba(231, 231, 231, 0.75), rgba(134, 134, 134, 0.35));
   box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12);
 }
 
@@ -95,9 +95,9 @@
   height: 46%;
   transform: rotate(45deg);
   border-radius: 3px;
-  border: 1px solid rgba(150, 154, 162, 0.55);
-  background: linear-gradient(140deg, rgba(202, 207, 216, 0.38), rgba(85, 90, 99, 0.42));
-  box-shadow: 0 0 12px rgba(124, 130, 141, 0.18);
+  border: 1px solid rgba(154, 154, 154, 0.55);
+  background: linear-gradient(140deg, rgba(207, 207, 207, 0.38), rgba(90, 90, 90, 0.42));
+  box-shadow: 0 0 12px rgba(130, 130, 130, 0.18);
   animation: shapeTilt 3s ease-in-out infinite;
 }
 
@@ -105,8 +105,8 @@
 .shapeSnake {
   position: relative;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(53, 57, 64, 0.35), transparent 62%);
-  box-shadow: inset 0 0 0 1px rgba(119, 124, 133, 0.14);
+  background: radial-gradient(circle at 50% 50%, rgba(57, 57, 57, 0.35), transparent 62%);
+  box-shadow: inset 0 0 0 1px rgba(124, 124, 124, 0.14);
 }
 
 .shapeSnake::before {
@@ -114,7 +114,7 @@
   position: absolute;
   inset: 3px;
   border-radius: 50%;
-  border: 1px dashed rgba(147, 153, 162, 0.3);
+  border: 1px dashed rgba(152, 152, 152, 0.3);
   opacity: 0.85;
   animation: snakeRingDrift 14s linear infinite;
 }
@@ -137,8 +137,8 @@
   height: 6px;
   margin: 0;
   border-radius: 2px;
-  background: linear-gradient(155deg, rgba(226, 229, 234, 0.95), rgba(118, 123, 132, 0.58));
-  box-shadow: 0 0 7px rgba(152, 158, 168, 0.35);
+  background: linear-gradient(155deg, rgba(229, 229, 229, 0.95), rgba(123, 123, 123, 0.58));
+  box-shadow: 0 0 7px rgba(157, 157, 157, 0.35);
   animation: snakeBitTrail 2.2s linear infinite;
   animation-delay: calc(var(--i) * -183.333ms);
 }
@@ -178,13 +178,13 @@
     opacity: 1;
     transform: translateY(0) scale(1.12);
     filter: brightness(1.15);
-    box-shadow: 0 0 10px rgba(163, 168, 177, 0.55);
+    box-shadow: 0 0 10px rgba(168, 168, 168, 0.55);
   }
   32% {
     opacity: 0.72;
     transform: translateY(0) scale(0.94);
     filter: brightness(1);
-    box-shadow: 0 0 4px rgba(163, 168, 177, 0.2);
+    box-shadow: 0 0 4px rgba(168, 168, 168, 0.2);
   }
   46% {
     opacity: 0.32;
@@ -217,7 +217,7 @@
 
 .title {
   margin: 0;
-  color: #d6d9df;
+  color: #d9d9d9;
   font-size: clamp(1.55rem, 3.4vw, 2.2rem);
   line-height: 1.14;
 }
@@ -225,7 +225,7 @@
 .lead {
   margin: 0.55rem 0 0;
   max-width: 64ch;
-  color: #9ea3ad;
+  color: #a3a3a3;
 }
 
 .grid {
@@ -245,10 +245,18 @@
   border-radius: 16px;
   display: grid;
   gap: 0.62rem;
-  border: 1px solid rgba(128, 132, 140, 0.3);
+  border: 1px solid var(--border-neutral);
   background:
     radial-gradient(circle at 0 0, rgba(165, 165, 165, 0.08), transparent 46%),
-    linear-gradient(145deg, rgba(24, 24, 26, 0.88), rgba(16, 16, 18, 0.88));
+    linear-gradient(145deg, rgba(24, 24, 24, 0.88), rgba(16, 16, 16, 0.88));
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
 }
 
 /* Override global .glass highlight layer to remove blue tint */
@@ -259,7 +267,7 @@
     rgba(255, 255, 255, 0.16) 0%,
     transparent 44%,
     transparent 64%,
-    rgba(156, 160, 168, 0.14) 100%
+    rgba(160, 160, 160, 0.14) 100%
   ) !important;
 }
 
@@ -285,14 +293,14 @@
 
 .meta h2 {
   margin: 0;
-  color: #d8dbe1;
+  color: #dbdbdb;
   font-size: 1rem;
   line-height: 1.35;
 }
 
 .meta p {
   margin: 0.35rem 0 0;
-  color: #9fa5b0;
+  color: #a5a5a5;
   display: flex;
   flex-wrap: wrap;
   gap: 0.32rem 0.56rem;
@@ -302,14 +310,14 @@
 .meta p span:not(:last-child)::after {
   content: "·";
   margin-left: 0.56rem;
-  color: rgba(160, 165, 173, 0.62);
+  color: rgba(165, 165, 165, 0.62);
 }
 
 .modal {
   position: fixed;
   inset: 0;
   z-index: 120;
-  background: rgba(5, 9, 16, 0.92);
+  background: rgba(9, 9, 9, 0.92);
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 0.25rem;
@@ -323,9 +331,9 @@
 
 .modalTop button,
 .navBtn {
-  border: 1px solid rgba(142, 147, 158, 0.42);
-  background: rgba(34, 36, 42, 0.85);
-  color: #d3d7de;
+  border: 1px solid var(--border-neutral);
+  background: rgba(36, 36, 36, 0.85);
+  color: #d7d7d7;
   border-radius: 10px;
   padding: 0.5rem 0.72rem;
 }
@@ -346,7 +354,7 @@
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(5, 9, 16, 0.9);
+  background: rgba(9, 9, 9, 0.9);
   padding: 0.3rem;
 }
 
@@ -372,7 +380,7 @@
 }
 
 .figure figcaption {
-  color: #a6abb4;
+  color: #ababab;
   text-align: center;
   font-size: 0.86rem;
 }
@@ -401,7 +409,16 @@
   min-height: 44px;
   border-radius: 999px;
   backdrop-filter: blur(10px);
-  background: rgba(27, 29, 35, 0.74);
+  background: rgba(29, 29, 29, 0.74);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.navBtn:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
 }
 
 .navPrev {

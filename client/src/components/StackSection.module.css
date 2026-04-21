@@ -26,7 +26,7 @@
   top: 50%;
   height: 2px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(156, 187, 224, 0.2), rgba(130, 209, 188, 0.5), rgba(170, 153, 226, 0.2));
+  background: linear-gradient(90deg, rgba(183, 183, 183, 0.2), rgba(191, 191, 191, 0.5), rgba(162, 162, 162, 0.2));
   overflow: hidden;
   border-radius: 999px;
 }
@@ -39,7 +39,7 @@
   width: 20px;
   height: 2px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(221, 233, 251, 0.85), rgba(221, 233, 251, 0));
+  background: linear-gradient(90deg, rgba(232, 232, 232, 0.85), rgba(232, 232, 232, 0));
   animation: techTrailRun 2.8s ease-in-out infinite;
 }
 
@@ -49,9 +49,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 1px solid rgba(186, 170, 120, 0.42);
-  background: radial-gradient(circle at 30% 30%, rgba(238, 245, 255, 0.88), rgba(118, 170, 225, 0.45));
-  box-shadow: 0 0 14px rgba(125, 171, 226, 0.25);
+  border: 1px solid rgba(170, 170, 170, 0.42);
+  background: radial-gradient(circle at 30% 30%, rgba(244, 244, 244, 0.88), rgba(163, 163, 163, 0.45));
+  box-shadow: 0 0 14px rgba(165, 165, 165, 0.25);
 }
 
 .techOrb:nth-child(1) {
@@ -113,21 +113,25 @@
   align-content: start;
   gap: 0.78rem;
   border-radius: 20px;
+  border: 1px solid var(--border-neutral);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .card:nth-child(1) {
   border-radius: 23px 10px 16px 8px;
-  background: linear-gradient(145deg, rgba(63, 106, 160, 0.26), rgba(12, 22, 40, 0.75));
+  background: linear-gradient(145deg, rgba(101, 101, 101, 0.26), rgba(21, 21, 21, 0.75));
 }
 
 .card:nth-child(2) {
   border-radius: 9px 21px 11px 24px;
-  background: linear-gradient(145deg, rgba(77, 154, 133, 0.24), rgba(10, 31, 33, 0.75));
+  background: linear-gradient(145deg, rgba(136, 136, 136, 0.24), rgba(27, 27, 27, 0.75));
 }
 
 .card:nth-child(3) {
   border-radius: 24px 12px 8px 21px;
-  background: linear-gradient(145deg, rgba(146, 122, 198, 0.24), rgba(18, 22, 38, 0.75));
+  background: linear-gradient(145deg, rgba(133, 133, 133, 0.24), rgba(22, 22, 22, 0.75));
 }
 
 .card::after {
@@ -136,8 +140,13 @@
   inset: 0 auto 0 0;
   width: 3px;
   border-radius: 20px 0 0 20px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  background: linear-gradient(180deg, var(--accent-subtle), var(--accent-soft));
   opacity: 0.75;
+}
+
+.card:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
 }
 
 .cardTitle {
@@ -150,7 +159,7 @@
 
 .summary {
   margin: 0;
-  color: #9fb0c5;
+  color: #aeaeae;
   font-size: 1rem;
   line-height: 1.45;
 }
@@ -162,7 +171,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  color: #b4c3d5;
+  color: #c1c1c1;
   font-size: 1rem;
 }
 
@@ -180,29 +189,29 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #91dfff;
+  background: var(--accent-main);
   opacity: 0.85;
 }
 
 .list li:nth-child(odd)::before {
   border-radius: 38% 62% 54% 46%;
-  background: #91dfff;
+  background: var(--accent-main);
 }
 
 .list li:nth-child(even)::before {
   border-radius: 62% 38% 46% 54%;
-  background: #8ff6d9;
+  background: rgba(245, 197, 66, 0.7);
 }
 
 @keyframes techOrbPulse {
   0%,
   100% {
     transform: translateY(-50%) scale(0.92);
-    box-shadow: 0 0 10px rgba(125, 171, 226, 0.2);
+    box-shadow: 0 0 10px rgba(165, 165, 165, 0.2);
   }
   50% {
     transform: translateY(-50%) scale(1.12);
-    box-shadow: 0 0 17px rgba(140, 201, 194, 0.28);
+    box-shadow: 0 0 17px rgba(188, 188, 188, 0.28);
   }
 }
 
@@ -236,27 +245,27 @@
 
   .card:nth-child(1) {
     border-radius: 23px 10px 16px 8px;
-    background: linear-gradient(145deg, rgba(63, 106, 160, 0.26), rgba(12, 22, 40, 0.75));
+    background: linear-gradient(145deg, rgba(101, 101, 101, 0.26), rgba(21, 21, 21, 0.75));
   }
 
   .card:nth-child(2) {
     border-radius: 9px 21px 11px 24px;
-    background: linear-gradient(145deg, rgba(77, 154, 133, 0.24), rgba(10, 31, 33, 0.75));
+    background: linear-gradient(145deg, rgba(136, 136, 136, 0.24), rgba(27, 27, 27, 0.75));
   }
 
   .card:nth-child(3) {
     border-radius: 24px 12px 8px 21px;
-    background: linear-gradient(145deg, rgba(146, 122, 198, 0.24), rgba(18, 22, 38, 0.75));
+    background: linear-gradient(145deg, rgba(133, 133, 133, 0.24), rgba(22, 22, 22, 0.75));
   }
 
   .list li:nth-child(odd)::before {
     border-radius: 38% 62% 54% 46%;
-    background: #91dfff;
+    background: var(--accent-main);
   }
 
   .list li:nth-child(even)::before {
     border-radius: 62% 38% 46% 54%;
-    background: #8ff6d9;
+    background: rgba(245, 197, 66, 0.7);
   }
 
   .stackGlyph {

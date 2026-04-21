@@ -45,7 +45,7 @@ function MobileTitleSnake() {
 
 export function Hero() {
   const { t } = useI18n();
-  const heroTitle = t("hero.title").replace("Production full-stack", "Production\u00A0full-stack");
+  const heroTitle = t("hero.title");
 
   return (
     <section id="top" className="section">

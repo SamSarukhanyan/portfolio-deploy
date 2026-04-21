@@ -4,50 +4,55 @@
 
 .head {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: clamp(0.55rem, 1.3vw, 0.95rem);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .route {
   flex: 0 0 auto;
-  width: 120px;
-  height: 38px;
-  border-radius: 999px;
-  border: 1px solid rgba(195, 167, 255, 0.42);
-  background: rgba(14, 20, 36, 0.72);
+  width: 106px;
+  height: 46px;
+  border-radius: 17px 9px 16px 10px;
+  border: 1px solid rgba(168, 186, 228, 0.36);
+  background: linear-gradient(145deg, rgba(17, 24, 44, 0.66), rgba(16, 33, 39, 0.58));
   position: relative;
   overflow: hidden;
-  transform: translateY(1px);
+  transform: translateY(3px);
+  margin-left: auto;
 }
 
-.route::before {
-  content: "";
+.routePulse {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  top: 50%;
-  height: 2px;
-  transform: translateY(-50%);
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(197, 171, 255, 0.8) 0 8px,
-    rgba(197, 171, 255, 0.12) 8px 15px
-  );
-}
-
-.routeDot {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  width: 9px;
-  height: 9px;
+  inset: 14% 20%;
   border-radius: 50%;
-  transform: translateY(-50%);
-  background: #c7a5ff;
-  box-shadow: 0 0 12px rgba(199, 165, 255, 0.75);
-  animation: architectureRouteRun 2.6s ease-in-out infinite alternate;
+  border: 1px solid rgba(173, 199, 240, 0.26);
+  animation: architecturePulseField 3.6s ease-in-out infinite;
+}
+
+.routeCore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, rgba(240, 247, 255, 0.96), rgba(126, 184, 242, 0.58));
+  box-shadow: 0 0 14px rgba(145, 192, 238, 0.34);
+}
+
+.routeOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(209, 223, 255, 0.95), rgba(157, 224, 198, 0.76));
+  box-shadow: 0 0 11px rgba(164, 203, 244, 0.34);
+  animation: architectureOrbSwirl 2.9s ease-in-out infinite;
 }
 
 .diagram {
@@ -183,19 +188,38 @@
   margin: 0;
 }
 
-@keyframes architectureRouteRun {
-  from {
-    left: 12px;
+@keyframes architecturePulseField {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.54;
   }
-  to {
-    left: calc(100% - 20px);
+  50% {
+    transform: scale(1.15);
+    opacity: 0.88;
+  }
+}
+
+@keyframes architectureOrbSwirl {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(0) translateY(-13px) scale(0.92);
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(90deg) translateX(12px) translateY(0) scale(1.04);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) translateX(0) translateY(13px) scale(0.96);
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(270deg) translateX(-12px) translateY(0) scale(1.05);
   }
 }
 
 @media (max-width: 560px) {
   .head {
     gap: 0.6rem;
-    align-items: flex-start;
+    align-items: flex-end;
   }
 
   .diagram {
@@ -249,18 +273,8 @@
   }
 
   .route {
-    width: 90px;
-    height: 32px;
-  }
-
-  .route::before {
-    left: 9px;
-    right: 9px;
-  }
-
-  .routeDot {
-    left: 9px;
-    width: 7px;
-    height: 7px;
+    width: 88px;
+    height: 40px;
+    transform: translateY(4px);
   }
 }

@@ -198,8 +198,8 @@
 .devCore,
 .sectionGlyphs {
   border-radius: 14px;
-  border: 1px solid rgba(180, 216, 255, 0.2);
-  background: rgba(6, 13, 24, 0.62);
+  border: none;
+  background: transparent;
 }
 
 .heroSnakeCell {
@@ -258,12 +258,12 @@
 
 .snakeSegDot {
   position: absolute;
-  left: -4px;
+  left: -6px;
   top: -40px;
-  width: 9px;
-  height: 9px;
+  width: 13px;
+  height: 13px;
   margin: 0;
-  border-radius: 46% 54% 58% 42%;
+  border-radius: 38% 62% 54% 46%;
   background: linear-gradient(155deg, rgba(255, 255, 255, 0.88), rgba(150, 183, 232, 0.72) 55%, rgba(128, 220, 194, 0.6));
   box-shadow: 0 0 14px rgba(167, 197, 236, 0.46);
   animation: heroSnakeBitTrail 2.2s linear infinite;
@@ -878,33 +878,33 @@
   }
 
   .motionDock {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    min-height: 312px;
-    gap: 0.62rem;
-    padding: 0.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    min-height: 168px;
+    gap: 0.42rem;
+    padding: 0.2rem 0.08rem;
   }
 
   .heroSnake {
-    width: 94px;
-    height: 94px;
+    width: 90px;
+    height: 90px;
   }
 
   .snakeSegDot {
-    left: -3.5px;
-    top: -36px;
-    width: 8px;
-    height: 8px;
+    left: -5px;
+    top: -34px;
+    width: 11px;
+    height: 11px;
   }
 
   .heroSnakeCell,
   .devCore {
-    width: min(100%, 250px);
-    min-height: 138px;
+    width: 100%;
+    min-height: 114px;
   }
 
   .coreBloom {
-    width: 128px;
+    width: 96px;
   }
 
   .sectionGlyphs {
@@ -953,23 +953,23 @@
 
 @media (max-width: 420px) {
   .motionDock {
-    min-height: 292px;
+    min-height: 154px;
   }
 
   .heroSnakeCell,
   .devCore {
-    min-height: 126px;
+    min-height: 106px;
   }
 
   .heroSnake {
-    width: 86px;
-    height: 86px;
+    width: 82px;
+    height: 82px;
   }
 
   .snakeSegDot {
-    top: -33px;
-    width: 7px;
-    height: 7px;
+    top: -31px;
+    width: 10px;
+    height: 10px;
   }
 }
 

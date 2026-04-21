@@ -4,10 +4,10 @@
 
 .head {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: clamp(0.55rem, 1.3vw, 0.95rem);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .signal {
@@ -24,7 +24,9 @@
   padding: 0.4rem 0.55rem;
   position: relative;
   overflow: hidden;
-  transform: translateY(1px);
+  margin-left: auto;
+  margin-top: 0.12rem;
+  transform: translateY(3px);
 }
 
 .signalWave {
@@ -195,7 +197,7 @@
 @media (max-width: 560px) {
   .head {
     gap: 0.6rem;
-    align-items: flex-start;
+    align-items: flex-end;
   }
 
   .grid {
@@ -269,6 +271,7 @@
     width: 88px;
     height: 44px;
     padding: 0.34rem 0.4rem;
+    transform: translateY(4px);
   }
 
   .signalWave {

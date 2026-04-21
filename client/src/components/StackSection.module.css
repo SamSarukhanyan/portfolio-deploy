@@ -4,10 +4,10 @@
 
 .head {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: clamp(0.55rem, 1.3vw, 0.95rem);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .stackGlyph {
@@ -16,6 +16,7 @@
   height: 52px;
   position: relative;
   transform: translateY(2px);
+  margin-left: auto;
 }
 
 .techTrail {
@@ -173,7 +174,7 @@
 @media (max-width: 560px) {
   .head {
     gap: 0.6rem;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
   }
 

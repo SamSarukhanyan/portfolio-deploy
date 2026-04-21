@@ -34,7 +34,9 @@ export function ArchitectureSection() {
             {t("arch.title")}
           </Reveal>
           <Reveal className={styles.route} direction="left" delayMs={70} aria-hidden>
-            <span className={styles.routeDot} />
+            <span className={styles.routePulse} />
+            <span className={styles.routeCore} />
+            <span className={styles.routeOrb} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>

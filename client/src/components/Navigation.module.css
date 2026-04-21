@@ -66,27 +66,21 @@
 }
 
 .glyphOuter {
-  fill: rgba(12, 24, 41, 0.82);
+  fill: rgba(14, 31, 52, 0.82);
+  stroke: rgba(124, 196, 255, 0.42);
+  stroke-width: 1.2;
 }
 
 .glyphStroke {
   fill: none;
-  stroke: #b8ccde;
-  stroke-width: 1.8;
+  stroke: #d6e8fb;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .glyphCore {
-  fill: #b7cadb;
-}
-
-.glyphRing {
-  fill: none;
-  stroke-width: 1.6;
-  stroke-dasharray: 22 9;
-  transform-origin: 50% 50%;
-  animation: spinBrand 10s linear infinite;
+  fill: #bce7dc;
 }
 
 .brandTextWrap {
@@ -416,17 +410,3 @@
   color: #f2fffa;
 }
 
-@keyframes spinBrand {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glyphRing {
-    animation: none;
-  }
-}

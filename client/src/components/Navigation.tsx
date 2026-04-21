@@ -49,13 +49,11 @@ export function Navigation() {
                   <stop offset="100%" stopColor="#71e7c1" />
                 </linearGradient>
               </defs>
-              <circle cx="24" cy="24" r="17" className={styles.glyphOuter} />
-              <path
-                d="M16 30c2.8-5.8 5.2-8.8 8-8.8 2.7 0 4.2 2 8 8.8"
-                className={styles.glyphStroke}
-              />
-              <circle cx="24" cy="19" r="3.4" className={styles.glyphCore} />
-              <circle cx="24" cy="24" r="17" stroke="url(#navBrandGradient)" className={styles.glyphRing} />
+              <rect x="11" y="11" width="26" height="26" rx="9" className={styles.glyphOuter} />
+              <path d="M18 29.5 24 18.5 30 29.5" className={styles.glyphStroke} />
+              <circle cx="24" cy="24" r="2.8" className={styles.glyphCore} />
+              <circle cx="18.4" cy="30" r="1.8" className={styles.glyphCore} />
+              <circle cx="29.6" cy="30" r="1.8" className={styles.glyphCore} />
             </svg>
           </span>
           <span className={styles.brandTextWrap}>

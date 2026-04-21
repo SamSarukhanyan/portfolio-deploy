@@ -38,12 +38,12 @@ export function Hero() {
         <Reveal className={styles.card} direction="up">
           <div className={styles.grid}>
             <div className={styles.copy}>
-              <Reveal className={styles.domainRow} direction="left">
-                <p className={styles.domain}>{site.domain}</p>
-                <p className={styles.portfolioTag}>Portfolio</p>
-              </Reveal>
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
+              </Reveal>
+              <Reveal className={styles.domainRow} direction="left" delayMs={82}>
+                <p className={styles.domain}>{site.domain}</p>
+                <p className={styles.portfolioTag}>Portfolio</p>
               </Reveal>
               <Reveal className={`${styles.codeStream} ${styles.codeStreamInline}`} direction="up" delayMs={95} aria-hidden>
                 <div className={styles.codeStreamTop}>

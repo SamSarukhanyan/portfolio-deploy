@@ -133,14 +133,20 @@ body {
   filter: none;
 }
 
-.app-shell--mono {
-  filter: grayscale(1) saturate(0.18) contrast(1.04);
+.app-shell--art .page-bg {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(162, 162, 162, 0.08), transparent 52%),
+    radial-gradient(ellipse 82% 58% at 92% 16%, rgba(120, 120, 120, 0.06), transparent 50%),
+    radial-gradient(ellipse 78% 54% at 10% 86%, rgba(106, 106, 106, 0.06), transparent 54%),
+    linear-gradient(180deg, #0b0b0c 0%, #101011 34%, #141416 66%, #0c0c0d 100%);
 }
 
-.app-shell--art .page-bg,
-.app-shell--art .header,
-.app-shell--art .footer {
-  filter: grayscale(1) saturate(0.18) contrast(1.04);
+.app-shell--art .page-bg::before {
+  opacity: 0.28;
+}
+
+.app-shell--art .page-bg::after {
+  opacity: 0.12;
 }
 
 /* Контент над декоративным .page-bg */

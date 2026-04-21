@@ -1,7 +1,7 @@
 .footer {
   padding: clamp(1.35rem, 3vw, 1.85rem) 0 clamp(1.75rem, 3.5vw, 2.25rem);
-  border-top: 1px solid rgba(219, 203, 156, 0.2);
-  background: linear-gradient(180deg, transparent, rgba(80, 70, 42, 0.18));
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.12));
 }
 
 .shell {
@@ -59,7 +59,7 @@
   gap: 0.5rem 1.1rem;
   padding-top: clamp(0.85rem, 2vw, 1rem);
   margin: 0;
-  border-top: 1px solid rgba(219, 203, 156, 0.16);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 @media (min-width: 720px) {
@@ -75,7 +75,7 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   text-transform: none;
-  color: rgba(231, 222, 194, 0.62);
+  color: rgba(214, 220, 232, 0.55);
   text-decoration: none;
   transition:
     color var(--t-micro) var(--ease-out),
@@ -87,7 +87,7 @@
 }
 
 .link:focus-visible {
-  outline: 2px solid rgba(219, 203, 156, 0.48);
+  outline: 2px solid rgba(126, 224, 255, 0.45);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -95,7 +95,7 @@
 @media (min-width: 480px) {
   .links .link:not(:last-child) {
     padding-right: 1.1rem;
-    border-right: 1px solid rgba(219, 203, 156, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     margin-right: 0.15rem;
   }
 }

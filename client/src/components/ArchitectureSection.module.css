@@ -15,8 +15,8 @@
   width: 106px;
   height: 46px;
   border-radius: 17px 9px 16px 10px;
-  border: 1px solid rgba(202, 184, 136, 0.38);
-  background: linear-gradient(145deg, rgba(35, 30, 21, 0.68), rgba(28, 35, 24, 0.6));
+  border: 1px solid rgba(168, 186, 228, 0.36);
+  background: linear-gradient(145deg, rgba(17, 24, 44, 0.66), rgba(16, 33, 39, 0.58));
   position: relative;
   overflow: hidden;
   transform: translateY(3px);
@@ -139,25 +139,25 @@
 .node {
   flex: 1;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(214, 195, 141, 0.28);
-  background: rgba(214, 195, 141, 0.08);
+  border: 1px solid rgba(85, 199, 255, 0.25);
+  background: rgba(85, 199, 255, 0.07);
   padding: 1rem;
   min-height: 100%;
 }
 
 .flowItem:nth-child(1) .node {
   border-radius: 22px 10px 14px 8px;
-  background: linear-gradient(145deg, rgba(154, 136, 95, 0.24), rgba(24, 22, 16, 0.74));
+  background: linear-gradient(145deg, rgba(98, 143, 206, 0.2), rgba(17, 26, 43, 0.74));
 }
 
 .flowItem:nth-child(2) .node {
   border-radius: 10px 22px 12px 24px;
-  background: linear-gradient(145deg, rgba(96, 142, 96, 0.22), rgba(16, 30, 20, 0.74));
+  background: linear-gradient(145deg, rgba(99, 195, 166, 0.19), rgba(12, 30, 34, 0.74));
 }
 
 .flowItem:nth-child(3) .node {
   border-radius: 24px 12px 9px 20px;
-  background: linear-gradient(145deg, rgba(171, 149, 104, 0.2), rgba(25, 22, 17, 0.74));
+  background: linear-gradient(145deg, rgba(176, 138, 231, 0.2), rgba(18, 21, 37, 0.74));
 }
 
 .nodeHead {
@@ -171,12 +171,12 @@
   font-family: var(--font-sans);
   font-size: 0.98rem;
   font-weight: 700;
-  color: #e7ddc4;
+  color: #cfd9e7;
 }
 
 .nodeSub {
   font-size: 0.95rem;
-  color: #c7ba96;
+  color: #9fb3cf;
   text-transform: none;
   letter-spacing: 0.02em;
 }
@@ -184,7 +184,7 @@
 .nodeBody {
   margin: 0;
   font-size: 1rem;
-  color: #d8cdb0;
+  color: #b4c5d9;
   line-height: 1.5;
 }
 
@@ -201,21 +201,21 @@
 
 .railCard {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(162, 206, 171, 0.34);
-  background: rgba(162, 206, 171, 0.1);
+  border: 1px solid rgba(113, 231, 193, 0.3);
+  background: rgba(113, 231, 193, 0.08);
   padding: 0.85rem 0.95rem;
   font-size: 1rem;
-  color: #d6decf;
+  color: #bdd3cb;
 }
 
 .railCard:nth-child(1) {
   border-radius: 18px 9px 22px 10px;
-  background: linear-gradient(145deg, rgba(213, 194, 141, 0.18), rgba(24, 23, 17, 0.68));
+  background: linear-gradient(145deg, rgba(85, 199, 255, 0.14), rgba(12, 26, 34, 0.66));
 }
 
 .railCard:nth-child(2) {
   border-radius: 9px 21px 11px 23px;
-  background: linear-gradient(145deg, rgba(162, 206, 171, 0.18), rgba(18, 30, 21, 0.68));
+  background: linear-gradient(145deg, rgba(113, 231, 193, 0.15), rgba(11, 27, 28, 0.66));
 }
 
 .railTitle {
@@ -224,7 +224,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #dfe7c8;
+  color: #a4f1d5;
   margin-bottom: 0.4rem;
 }
 

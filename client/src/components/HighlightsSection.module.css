@@ -15,8 +15,8 @@
   width: 112px;
   height: 52px;
   border-radius: 18px 9px 16px 10px;
-  border: 1px solid rgba(201, 184, 136, 0.34);
-  background: linear-gradient(145deg, rgba(40, 33, 22, 0.7), rgba(30, 35, 24, 0.62));
+  border: 1px solid rgba(156, 187, 224, 0.32);
+  background: linear-gradient(145deg, rgba(16, 27, 46, 0.64), rgba(13, 30, 35, 0.58));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,57 +151,57 @@
   align-content: start;
   gap: 0.65rem;
   border-radius: 20px;
-  border: 1px solid rgba(214, 195, 141, 0.3);
+  border: 1px solid rgba(85, 199, 255, 0.28);
   background:
-    radial-gradient(circle at 0% 0%, rgba(214, 195, 141, 0.14), transparent 48%),
-    rgba(22, 20, 14, 0.62);
+    radial-gradient(circle at 0% 0%, rgba(85, 199, 255, 0.12), transparent 48%),
+    rgba(14, 23, 37, 0.6);
 }
 
 .card:nth-child(1) {
   border-radius: 24px 10px 22px 8px;
   background:
-    radial-gradient(circle at 14% 20%, rgba(214, 195, 141, 0.2), transparent 54%),
-    rgba(30, 26, 17, 0.72);
+    radial-gradient(circle at 14% 20%, rgba(85, 199, 255, 0.18), transparent 54%),
+    rgba(11, 25, 44, 0.7);
 }
 
 .card:nth-child(2) {
   border-radius: 10px 22px 12px 24px;
   background:
-    radial-gradient(circle at 80% 14%, rgba(162, 206, 171, 0.2), transparent 52%),
-    rgba(20, 33, 22, 0.72);
+    radial-gradient(circle at 80% 14%, rgba(125, 235, 197, 0.19), transparent 52%),
+    rgba(12, 30, 33, 0.72);
 }
 
 .card:nth-child(3) {
   border-radius: 22px 12px 8px 24px;
   background:
-    radial-gradient(circle at 80% 84%, rgba(201, 184, 136, 0.16), transparent 52%),
-    rgba(28, 24, 18, 0.72);
+    radial-gradient(circle at 80% 84%, rgba(178, 160, 255, 0.19), transparent 52%),
+    rgba(18, 23, 41, 0.72);
 }
 
 .card:nth-child(4) {
   border-radius: 12px 24px 22px 10px;
   background:
-    radial-gradient(circle at 18% 88%, rgba(223, 188, 130, 0.18), transparent 56%),
-    rgba(34, 28, 19, 0.72);
+    radial-gradient(circle at 18% 88%, rgba(255, 184, 122, 0.15), transparent 56%),
+    rgba(32, 26, 36, 0.7);
 }
 
 .card:nth-child(5) {
   border-radius: 24px 8px 18px 12px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(196, 179, 132, 0.16), transparent 56%),
-    rgba(27, 24, 17, 0.74);
+    radial-gradient(circle at 50% 0%, rgba(120, 165, 255, 0.15), transparent 56%),
+    rgba(15, 27, 45, 0.74);
 }
 
 .card:nth-child(6) {
   border-radius: 9px 22px 24px 11px;
   background:
-    radial-gradient(circle at 50% 100%, rgba(162, 206, 171, 0.16), transparent 56%),
-    rgba(21, 31, 22, 0.74);
+    radial-gradient(circle at 50% 100%, rgba(121, 224, 189, 0.15), transparent 56%),
+    rgba(17, 31, 33, 0.74);
 }
 
 .cardKicker {
   margin: 0;
-  color: #c5b78d;
+  color: #8faac2;
   font-size: 0.92rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -213,13 +213,13 @@
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #e7ddc3;
+  color: #cfd9e6;
 }
 
 .cardText {
   margin: 0;
   font-size: 1rem;
-  color: #cfc3a4;
+  color: #a4b4c8;
   line-height: 1.55;
 }
 

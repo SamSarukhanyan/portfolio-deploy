@@ -107,6 +107,16 @@
 }
 
 @media (min-width: 760px) and (max-width: 900px) {
+  .orbitMobile,
+  .codeStreamMobile {
+    display: none !important;
+  }
+
+  .orbitDesktop,
+  .codeStreamDesktop {
+    display: block !important;
+  }
+
   .card {
     padding: 0.38rem 0 0.06rem !important;
   }

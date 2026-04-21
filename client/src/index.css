@@ -130,7 +130,7 @@ body {
   min-height: -webkit-fill-available;
   position: relative;
   isolation: isolate;
-  filter: grayscale(1) saturate(0.18) contrast(1.04);
+  filter: none;
 }
 
 /* Контент над декоративным .page-bg */

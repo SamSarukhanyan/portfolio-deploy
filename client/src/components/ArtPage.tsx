@@ -259,7 +259,6 @@ export function ArtPage() {
                 <p>
                   <span>{art.size}</span>
                   <span>{art.medium}</span>
-                  <span>{art.year}</span>
                 </p>
               </div>
             </article>
@@ -294,7 +293,7 @@ export function ArtPage() {
                 }}
               />
               <figcaption data-hidden={hideUi ? "true" : "false"}>
-                {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium} · {activeArtwork.year}
+                {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
               </figcaption>
             </figure>
             <button

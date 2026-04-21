@@ -118,18 +118,18 @@
 
   .visual {
     order: 1 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 250px !important;
-    align-items: start !important;
-    gap: 0.42rem !important;
-    max-width: 760px;
-    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.36rem !important;
+    max-width: none;
+    margin: 0 !important;
     min-height: auto !important;
   }
 
   /* Requested: remove background on first animation block */
   .orbit {
-    grid-column: 1 !important;
+    width: 100% !important;
     border: none !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -142,34 +142,33 @@
   }
 
   .motionDock {
-    min-height: 126px !important;
-    gap: 0.2rem !important;
+    min-height: 156px !important;
+    gap: 0.28rem !important;
     padding: 0 !important;
   }
 
   .heroSnakeCell,
   .devCore {
-    min-height: 78px !important;
+    min-height: 98px !important;
   }
 
   .heroSnake {
-    width: 86px !important;
-    height: 86px !important;
+    width: 102px !important;
+    height: 102px !important;
   }
 
   .coreBloom {
-    width: 88px !important;
+    width: 104px !important;
   }
 
   .codeStreamDesktop {
-    grid-column: 2 !important;
+    order: 2 !important;
     display: block !important;
-    min-width: 0 !important;
     width: 100% !important;
-    max-width: 250px !important;
+    max-width: none !important;
     margin: 0 !important;
     align-self: stretch !important;
-    padding: 0.42rem 0.46rem !important;
+    padding: 0.5rem 0.56rem !important;
   }
 
   /* Prevent right-side overlap/covering in this range */
@@ -180,25 +179,25 @@
   .copy {
     order: 2 !important;
     width: 100%;
-    max-width: 760px;
-    margin: 0 auto !important;
+    max-width: none;
+    margin: 0 !important;
     padding-right: 0 !important;
   }
 
   .domainRow {
-    justify-content: center !important;
+    justify-content: flex-start !important;
     margin-bottom: 0.56rem !important;
   }
 
   .title {
-    text-align: center !important;
-    margin-inline: auto !important;
+    text-align: left !important;
+    margin-inline: 0 !important;
   }
 
   .summary,
   .focusList,
   .actions {
-    margin-inline: auto !important;
+    margin-inline: 0 !important;
   }
 }
 

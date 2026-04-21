@@ -30,6 +30,49 @@
   }
 }
 
+@media (min-width: 760px) and (max-width: 899px) {
+  .card {
+    padding: 0.45rem 0 0.1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 0.72rem;
+  }
+
+  .copy {
+    order: 2;
+    padding-right: 0;
+  }
+
+  .visual {
+    order: 1;
+    min-height: auto;
+    gap: 0.55rem;
+  }
+
+  .orbit {
+    margin-bottom: 0;
+    padding: 0.22rem;
+  }
+
+  .motionDock {
+    min-height: 184px;
+    gap: 0.42rem;
+    padding: 0.2rem;
+  }
+
+  .heroSnakeCell,
+  .devCore {
+    min-height: 106px;
+  }
+
+  .signalPanel {
+    padding: 0.86rem;
+    gap: 0.52rem;
+  }
+}
+
 .copy {
   position: relative;
   z-index: 1;

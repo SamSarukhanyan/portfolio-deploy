@@ -8,8 +8,8 @@
   margin-bottom: 1rem;
   border-radius: 20px;
   background:
-    radial-gradient(circle at 100% 0%, rgba(118, 140, 172, 0.2), transparent 48%),
-    rgba(12, 18, 30, 0.74);
+    radial-gradient(circle at 100% 0%, rgba(207, 189, 138, 0.22), transparent 48%),
+    rgba(22, 19, 14, 0.74);
 }
 
 .heroTop {
@@ -24,20 +24,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #cfdae8;
+  color: #e8dec3;
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid rgba(123, 154, 189, 0.5);
+  border: 1px solid rgba(202, 184, 134, 0.5);
   border-radius: 999px;
   padding: 0.44rem 0.9rem;
-  background: linear-gradient(140deg, rgba(55, 75, 100, 0.9), rgba(42, 63, 82, 0.88));
-  box-shadow: 0 8px 18px rgba(11, 20, 31, 0.34);
+  background: linear-gradient(140deg, rgba(92, 82, 58, 0.9), rgba(72, 66, 49, 0.88));
+  box-shadow: 0 8px 18px rgba(34, 29, 20, 0.34);
 }
 
 .backLink:hover {
-  color: #dbe7f4;
-  border-color: rgba(141, 171, 204, 0.66);
+  color: #f3e9cd;
+  border-color: rgba(216, 198, 146, 0.66);
 }
 
 .heroMonoMotion {
@@ -216,7 +216,7 @@
 
 .title {
   margin: 0;
-  color: #cfd8e5;
+  color: #e8ddc2;
   font-size: clamp(1.55rem, 3.4vw, 2.2rem);
   line-height: 1.14;
 }
@@ -224,7 +224,7 @@
 .lead {
   margin: 0.55rem 0 0;
   max-width: 64ch;
-  color: #9caec1;
+  color: #cdbf99;
 }
 
 .grid {
@@ -245,8 +245,8 @@
   display: grid;
   gap: 0.62rem;
   background:
-    radial-gradient(circle at 0 0, rgba(111, 162, 196, 0.12), transparent 42%),
-    rgba(13, 20, 33, 0.74);
+    radial-gradient(circle at 0 0, rgba(210, 191, 139, 0.14), transparent 42%),
+    rgba(22, 19, 14, 0.74);
 }
 
 .imageBtn {
@@ -271,14 +271,14 @@
 
 .meta h2 {
   margin: 0;
-  color: #cfd9e6;
+  color: #e7ddc3;
   font-size: 1rem;
   line-height: 1.35;
 }
 
 .meta p {
   margin: 0.35rem 0 0;
-  color: #98abbe;
+  color: #c6b994;
   display: flex;
   flex-wrap: wrap;
   gap: 0.32rem 0.56rem;

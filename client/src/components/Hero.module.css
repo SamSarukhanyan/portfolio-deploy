@@ -228,9 +228,9 @@
   margin: 0;
   padding: 0.34rem 0.8rem;
   border-radius: 14px 8px 16px 7px;
-  border: 1px solid rgba(116, 170, 244, 0.46);
-  background: linear-gradient(130deg, rgba(55, 99, 162, 0.42), rgba(30, 59, 102, 0.28));
-  color: #c8ddfb;
+  border: 1px solid rgba(213, 194, 141, 0.5);
+  background: linear-gradient(130deg, rgba(133, 117, 78, 0.46), rgba(83, 77, 56, 0.32));
+  color: #e8ddbf;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -241,9 +241,9 @@
   margin: 0;
   padding: 0.34rem 0.72rem;
   border-radius: 8px 15px 9px 16px;
-  border: 1px solid rgba(152, 218, 192, 0.46);
-  background: linear-gradient(130deg, rgba(52, 109, 94, 0.42), rgba(29, 76, 64, 0.28));
-  color: #c8f0e0;
+  border: 1px solid rgba(162, 206, 171, 0.5);
+  background: linear-gradient(130deg, rgba(72, 112, 80, 0.42), rgba(44, 82, 52, 0.3));
+  color: #d7ecd4;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.07em;
@@ -257,7 +257,7 @@
   line-height: 1.2;
   margin: 0;
   letter-spacing: -0.015em;
-  color: #b9c5d9;
+  color: #e1d8c1;
   max-width: 23ch;
   overflow-wrap: normal;
   word-break: keep-all;
@@ -270,17 +270,17 @@
 .summary {
   margin: 0.82rem 0 0;
   max-width: 56ch;
-  color: #b7cae1;
+  color: #d8cfb6;
   font-size: 0.94rem;
   line-height: 1.52;
   text-align: left;
   padding: 0.72rem 0.9rem;
   border-radius: 18px 10px 20px 9px;
-  border: 1px solid rgba(132, 162, 199, 0.34);
+  border: 1px solid rgba(200, 183, 135, 0.36);
   background:
-    radial-gradient(circle at 12% 8%, rgba(107, 161, 228, 0.2), transparent 52%),
-    linear-gradient(130deg, rgba(57, 78, 109, 0.34), rgba(66, 102, 92, 0.24)),
-    rgba(16, 24, 38, 0.58);
+    radial-gradient(circle at 12% 8%, rgba(211, 191, 134, 0.2), transparent 52%),
+    linear-gradient(130deg, rgba(95, 84, 58, 0.34), rgba(76, 102, 72, 0.24)),
+    rgba(24, 22, 15, 0.62);
 }
 
 .focusList {
@@ -296,30 +296,30 @@
   position: relative;
   padding: 0.68rem 0.75rem 0.68rem 1.55rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: #b8c8dc;
+  border: 1px solid rgba(213, 194, 141, 0.24);
+  background: rgba(228, 211, 162, 0.06);
+  color: #d6ccb0;
   font-size: 0.95rem;
 }
 
 .focusList li:nth-child(1) {
   border-radius: 18px 10px 22px 8px;
-  background: linear-gradient(145deg, rgba(75, 117, 166, 0.24), rgba(17, 25, 40, 0.72));
+  background: linear-gradient(145deg, rgba(147, 129, 85, 0.26), rgba(25, 23, 17, 0.74));
 }
 
 .focusList li:nth-child(2) {
   border-radius: 9px 20px 11px 24px;
-  background: linear-gradient(145deg, rgba(83, 151, 132, 0.22), rgba(17, 25, 40, 0.72));
+  background: linear-gradient(145deg, rgba(96, 139, 96, 0.24), rgba(24, 30, 20, 0.72));
 }
 
 .focusList li:nth-child(3) {
   border-radius: 24px 12px 10px 18px;
-  background: linear-gradient(145deg, rgba(165, 127, 217, 0.2), rgba(17, 25, 40, 0.72));
+  background: linear-gradient(145deg, rgba(167, 148, 108, 0.2), rgba(24, 23, 19, 0.72));
 }
 
 .focusList li:nth-child(4) {
   border-radius: 12px 24px 18px 10px;
-  background: linear-gradient(145deg, rgba(218, 149, 112, 0.18), rgba(17, 25, 40, 0.72));
+  background: linear-gradient(145deg, rgba(182, 148, 102, 0.22), rgba(27, 23, 18, 0.72));
 }
 
 .focusList li::before {
@@ -361,10 +361,10 @@
   width: 100%;
   margin-bottom: 0;
   border-radius: 20px;
-  border: 1px solid rgba(85, 199, 255, 0.3);
+  border: 1px solid rgba(214, 195, 141, 0.34);
   background:
-    radial-gradient(circle at 16% 14%, rgba(85, 199, 255, 0.2), transparent 50%),
-    rgba(7, 14, 24, 0.56);
+    radial-gradient(circle at 16% 14%, rgba(214, 195, 141, 0.22), transparent 50%),
+    rgba(18, 17, 12, 0.6);
   padding: 0.4rem;
   overflow: hidden;
 }
@@ -898,10 +898,10 @@
   width: 100%;
   padding: 1.1rem;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(113, 231, 193, 0.32);
+  border: 1px solid rgba(162, 206, 171, 0.36);
   background:
-    radial-gradient(circle at 18% 0%, rgba(113, 231, 193, 0.2), transparent 48%),
-    rgba(7, 14, 24, 0.58);
+    radial-gradient(circle at 18% 0%, rgba(162, 206, 171, 0.2), transparent 48%),
+    rgba(18, 18, 13, 0.62);
   display: grid;
   align-content: start;
   gap: 0.75rem;
@@ -925,11 +925,11 @@
 }
 
 .signalList li {
-  border: 1px solid rgba(113, 231, 193, 0.24);
+  border: 1px solid rgba(162, 206, 171, 0.28);
   border-radius: 12px;
   padding: 0.75rem;
-  background: rgba(113, 231, 193, 0.08);
-  color: #b9d0c8;
+  background: rgba(162, 206, 171, 0.11);
+  color: #d2ddc8;
   font-size: 0.91rem;
 }
 
@@ -942,10 +942,10 @@
 
 .codeStream {
   border-radius: 14px;
-  border: 1px solid rgba(125, 168, 228, 0.34);
+  border: 1px solid rgba(202, 186, 139, 0.36);
   background:
-    radial-gradient(circle at 0% 0%, rgba(85, 199, 255, 0.12), transparent 45%),
-    rgba(9, 17, 29, 0.7);
+    radial-gradient(circle at 0% 0%, rgba(202, 186, 139, 0.16), transparent 45%),
+    rgba(20, 18, 13, 0.72);
   padding: 0.55rem 0.65rem 0.62rem;
   overflow: hidden;
 }

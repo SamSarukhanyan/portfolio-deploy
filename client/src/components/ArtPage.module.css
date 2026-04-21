@@ -8,8 +8,8 @@
   margin-bottom: 1rem;
   border-radius: 20px;
   background:
-    radial-gradient(circle at 100% 0%, rgba(118, 140, 172, 0.2), transparent 48%),
-    rgba(12, 18, 30, 0.74);
+    radial-gradient(circle at 100% 0%, rgba(158, 162, 170, 0.2), transparent 48%),
+    rgba(14, 16, 20, 0.74);
 }
 
 .heroTop {
@@ -24,20 +24,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #cfdae8;
+  color: #d5d8de;
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid rgba(186, 170, 120, 0.5);
+  border: 1px solid rgba(145, 150, 159, 0.5);
   border-radius: 999px;
   padding: 0.44rem 0.9rem;
-  background: linear-gradient(140deg, rgba(55, 75, 100, 0.9), rgba(42, 63, 82, 0.88));
+  background: linear-gradient(140deg, rgba(61, 66, 74, 0.9), rgba(47, 52, 60, 0.88));
   box-shadow: 0 8px 18px rgba(11, 20, 31, 0.34);
 }
 
 .backLink:hover {
-  color: #dbe7f4;
-  border-color: rgba(141, 171, 204, 0.66);
+  color: #e1e4ea;
+  border-color: rgba(164, 169, 178, 0.66);
 }
 
 .heroMonoMotion {
@@ -216,7 +216,7 @@
 
 .title {
   margin: 0;
-  color: #cfd8e5;
+  color: #d6d9df;
   font-size: clamp(1.55rem, 3.4vw, 2.2rem);
   line-height: 1.14;
 }
@@ -224,7 +224,7 @@
 .lead {
   margin: 0.55rem 0 0;
   max-width: 64ch;
-  color: #9caec1;
+  color: #9ea3ad;
 }
 
 .grid {
@@ -245,8 +245,8 @@
   display: grid;
   gap: 0.62rem;
   background:
-    radial-gradient(circle at 0 0, rgba(111, 162, 196, 0.12), transparent 42%),
-    rgba(13, 20, 33, 0.74);
+    radial-gradient(circle at 0 0, rgba(154, 158, 165, 0.12), transparent 42%),
+    rgba(15, 17, 22, 0.74);
 }
 
 .imageBtn {
@@ -271,14 +271,14 @@
 
 .meta h2 {
   margin: 0;
-  color: #cfd9e6;
+  color: #d8dbe1;
   font-size: 1rem;
   line-height: 1.35;
 }
 
 .meta p {
   margin: 0.35rem 0 0;
-  color: #98abbe;
+  color: #9fa5b0;
   display: flex;
   flex-wrap: wrap;
   gap: 0.32rem 0.56rem;
@@ -288,7 +288,7 @@
 .meta p span:not(:last-child)::after {
   content: "·";
   margin-left: 0.56rem;
-  color: rgba(152, 171, 190, 0.62);
+  color: rgba(160, 165, 173, 0.62);
 }
 
 .modal {
@@ -309,9 +309,9 @@
 
 .modalTop button,
 .navBtn {
-  border: 1px solid rgba(186, 170, 120, 0.42);
-  background: rgba(25, 34, 50, 0.85);
-  color: #cdd9e9;
+  border: 1px solid rgba(142, 147, 158, 0.42);
+  background: rgba(34, 36, 42, 0.85);
+  color: #d3d7de;
   border-radius: 10px;
   padding: 0.5rem 0.72rem;
 }
@@ -358,7 +358,7 @@
 }
 
 .figure figcaption {
-  color: #9eb2c8;
+  color: #a6abb4;
   text-align: center;
   font-size: 0.86rem;
 }
@@ -387,7 +387,7 @@
   min-height: 44px;
   border-radius: 999px;
   backdrop-filter: blur(10px);
-  background: rgba(18, 27, 40, 0.74);
+  background: rgba(27, 29, 35, 0.74);
 }
 
 .navPrev {

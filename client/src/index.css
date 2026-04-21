@@ -166,6 +166,10 @@ body {
   z-index: 1;
 }
 
+.app-shell--art .app-main {
+  z-index: 140;
+}
+
 a {
   color: inherit;
   text-decoration-thickness: 1px;

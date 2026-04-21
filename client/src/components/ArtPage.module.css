@@ -252,6 +252,7 @@
 }
 
 .grid {
+  --art-card-radius: 16px;
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(0.72rem, 1.1vw, 0.95rem);
@@ -280,7 +281,6 @@
 
   .imageBtn {
     aspect-ratio: 4 / 3;
-    border-radius: 10px;
   }
 
   .imageBtn img {
@@ -303,7 +303,7 @@
 
 .card {
   padding: clamp(0.48rem, 0.85vw, 0.62rem);
-  border-radius: 16px;
+  border-radius: var(--art-card-radius, 16px);
   display: grid;
   gap: 0.44rem;
   align-content: start;
@@ -340,7 +340,7 @@
 .imageBtn {
   border: none;
   padding: 0;
-  border-radius: 12px;
+  border-radius: var(--art-card-radius, 16px);
   overflow: hidden;
   background: transparent;
   cursor: zoom-in;
@@ -348,14 +348,22 @@
 }
 
 .imageBtn img {
+  display: block;
   width: 100%;
   height: auto;
+  border-radius: inherit;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
 
 .imageBtn:hover img {
   transform: scale(1.025);
+}
+
+.meta {
+  padding-block-end: 0.52rem;
+  padding-inline-start: 0.28rem;
+  padding-inline-end: 0.12rem;
 }
 
 .meta h2 {

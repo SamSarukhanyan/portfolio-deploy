@@ -65,8 +65,8 @@
 .shapeCircle,
 .shapeDiamond,
 .shapeSnake {
-  width: 44px;
-  height: 44px;
+  width: clamp(44px, 3.6vw, 58px);
+  height: clamp(44px, 3.6vw, 58px);
   flex-shrink: 0;
   box-sizing: border-box;
 }
@@ -141,10 +141,10 @@
 
 .snakeSegDot {
   position: absolute;
-  left: -3px;
-  top: -17px;
-  width: 6px;
-  height: 6px;
+  left: clamp(-4px, -0.28vw, -3px);
+  top: clamp(-22px, -1.6vw, -17px);
+  width: clamp(6px, 0.5vw, 8px);
+  height: clamp(6px, 0.5vw, 8px);
   margin: 0;
   border-radius: 2px;
   background: linear-gradient(155deg, rgba(229, 229, 229, 0.95), rgba(123, 123, 123, 0.58));
@@ -254,7 +254,8 @@
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.9rem;
+  gap: clamp(0.72rem, 1.1vw, 0.95rem);
+  align-items: start;
 }
 
 @media (min-width: 760px) {
@@ -263,11 +264,18 @@
   }
 }
 
+@media (min-width: 1180px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .card {
-  padding: 0.62rem;
+  padding: clamp(0.48rem, 0.85vw, 0.62rem);
   border-radius: 16px;
   display: grid;
-  gap: 0.62rem;
+  gap: 0.44rem;
+  align-content: start;
   border: 1px solid var(--border-neutral);
   background:
     radial-gradient(circle at 0 0, rgba(165, 165, 165, 0.08), transparent 46%),
@@ -305,6 +313,7 @@
   overflow: hidden;
   background: transparent;
   cursor: zoom-in;
+  display: block;
 }
 
 .imageBtn img {
@@ -337,12 +346,13 @@
 }
 
 .meta p {
-  margin: 0.35rem 0 0;
+  margin: 0.22rem 0 0;
   color: #a5a5a5;
   display: flex;
   flex-wrap: wrap;
   gap: 0.32rem 0.56rem;
   font-size: 0.88rem;
+  line-height: 1.32;
 }
 
 .meta p span:not(:last-child)::after {
@@ -467,6 +477,44 @@
 
 .navNext {
   right: 0.7rem;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    padding: clamp(1.2rem, 2.4vw, 1.9rem);
+  }
+
+  .heroTop {
+    justify-content: center;
+    min-height: clamp(74px, 9.4vw, 110px);
+    margin-bottom: 0.9rem;
+    position: relative;
+  }
+
+  .backLink {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .heroMonoMotion {
+    min-width: clamp(240px, 34vw, 430px);
+    justify-content: center;
+    gap: clamp(0.8rem, 1.65vw, 1.25rem);
+    transform: none;
+  }
+
+  .title,
+  .lead {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .lead {
+    max-width: 72ch;
+  }
 }
 
 @media (max-width: 759px) {

@@ -262,10 +262,7 @@
   width: 100%;
   height: clamp(240px, 34vw, 340px);
   object-fit: cover;
-  filter: grayscale(1) contrast(1.05);
-  transition:
-    transform 0.3s ease,
-    filter 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .imageBtn:hover img {
@@ -355,7 +352,6 @@
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: grayscale(1) contrast(1.05);
   transition: transform 0.2s ease-out;
   transform-origin: center center;
   touch-action: none;

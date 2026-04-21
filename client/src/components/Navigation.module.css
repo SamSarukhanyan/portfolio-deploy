@@ -404,3 +404,76 @@
   color: #f2fffa;
 }
 
+:global(.app-shell--art) .inner {
+  background: linear-gradient(125deg, rgba(14, 16, 21, 0.9), rgba(16, 18, 23, 0.72));
+  border-color: rgba(136, 140, 148, 0.28);
+}
+
+:global(.app-shell--art) .brandGlyph {
+  background: rgba(150, 154, 162, 0.12);
+  border-color: rgba(136, 140, 148, 0.38);
+}
+
+:global(.app-shell--art) .brandSub {
+  color: #a2a7b0;
+}
+
+:global(.app-shell--art) .navLink {
+  color: #c6c9cf;
+}
+
+:global(.app-shell--art) .navLink:hover {
+  color: #d8dbe1;
+  background: rgba(148, 152, 160, 0.14);
+  border-color: rgba(148, 152, 160, 0.28);
+}
+
+:global(.app-shell--art) .quickCta {
+  border-color: rgba(140, 145, 154, 0.42);
+  background: linear-gradient(130deg, rgba(142, 146, 154, 0.16), rgba(102, 106, 114, 0.16));
+  color: #c9cdd3;
+}
+
+:global(.app-shell--art) .quickCta:hover {
+  border-color: rgba(153, 158, 167, 0.56);
+}
+
+:global(.app-shell--art) .mobileArt {
+  background: rgba(137, 141, 149, 0.12);
+  color: #d2d6dc;
+}
+
+:global(.app-shell--art) .menuBtn {
+  border-color: rgba(136, 140, 148, 0.32);
+  background:
+    linear-gradient(160deg, rgba(145, 149, 157, 0.16), rgba(113, 117, 125, 0.1)),
+    rgba(17, 19, 24, 0.75);
+}
+
+:global(.app-shell--art) .menuBtn:hover {
+  border-color: rgba(154, 159, 168, 0.46);
+}
+
+:global(.app-shell--art) .burger,
+:global(.app-shell--art) .burger::before,
+:global(.app-shell--art) .burger::after {
+  background: #d6dbe2;
+}
+
+:global(.app-shell--art) .drawerPanel {
+  border-color: rgba(140, 145, 154, 0.36);
+  background: rgba(16, 18, 23, 0.92);
+}
+
+:global(.app-shell--art) .drawerLink {
+  border-color: rgba(140, 145, 154, 0.26);
+  background: rgba(133, 138, 147, 0.12);
+  color: #d2d6dc;
+}
+
+:global(.app-shell--art) .drawerLink:hover {
+  border-color: rgba(153, 158, 167, 0.46);
+  background: rgba(153, 158, 167, 0.16);
+  color: #eef1f5;
+}
+

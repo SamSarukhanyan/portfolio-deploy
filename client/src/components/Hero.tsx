@@ -3,6 +3,7 @@ import styles from "./Hero.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
+import { onSpaLinkClick } from "../utils/spaRouter";
 
 const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
@@ -62,6 +63,12 @@ export function Hero() {
                     security.headers.enable(); tls.renew(); logs.stream();
                   </span>
                 </div>
+              </Reveal>
+              <Reveal className={styles.heroArtRow} direction="up" delayMs={102}>
+                <span className={styles.heroArtLabel}>My art link</span>
+                <a className={styles.heroArtLink} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
+                  {t("hero.ctaArt")}
+                </a>
               </Reveal>
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}

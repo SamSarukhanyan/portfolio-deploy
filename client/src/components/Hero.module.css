@@ -387,8 +387,59 @@
 
 .codeStreamInline {
   display: block;
-  margin-top: 0.62rem;
-  margin-bottom: 0.28rem;
+  margin-top: 0.56rem;
+  margin-bottom: 0.34rem;
+  width: min(100%, 560px);
+  border-radius: 22px 10px 26px 9px;
+  border-color: rgba(146, 177, 227, 0.48);
+  background:
+    radial-gradient(circle at 14% 8%, rgba(128, 184, 255, 0.16), transparent 48%),
+    linear-gradient(140deg, rgba(14, 35, 62, 0.82), rgba(12, 25, 45, 0.78));
+  box-shadow:
+    inset 0 1px 0 rgba(210, 226, 249, 0.2),
+    0 14px 30px rgba(7, 17, 31, 0.4);
+}
+
+.heroArtRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.52rem;
+  margin: 0 0 0.3rem;
+}
+
+.heroArtLabel {
+  color: #a9b8cd;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.heroArtLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.58rem 0.92rem;
+  border-radius: 15px 9px 17px 8px;
+  border: 1px solid rgba(170, 138, 231, 0.54);
+  background: linear-gradient(130deg, rgba(81, 101, 174, 0.66), rgba(121, 89, 194, 0.58));
+  color: #e8e0f4;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    transform var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
+}
+
+.heroArtLink:hover {
+  transform: translateY(-1px);
+  border-color: rgba(209, 185, 247, 0.7);
+  box-shadow: 0 12px 22px rgba(52, 36, 74, 0.38);
 }
 
 .orbit::after {
@@ -1125,6 +1176,16 @@
     display: block;
     margin-bottom: 0.24rem;
     margin-inline: auto;
+  }
+
+  .codeStreamInline {
+    width: 100%;
+    border-radius: 16px 8px 19px 8px;
+  }
+
+  .heroArtRow {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .motionDock {

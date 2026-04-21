@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
     <linearGradient id="bg" x1="7" y1="6" x2="57" y2="58" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#102440" />
-      <stop offset="1" stop-color="#0B1628" />
+      <stop stop-color="#1f2228" />
+      <stop offset="1" stop-color="#111418" />
     </linearGradient>
     <linearGradient id="glyph" x1="18" y1="14" x2="50" y2="52" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#94E3FF" />
-      <stop offset="1" stop-color="#CFF4FF" />
+      <stop stop-color="#f2f3f5" />
+      <stop offset="1" stop-color="#b9bcc2" />
     </linearGradient>
   </defs>
   <rect width="64" height="64" fill="url(#bg)" />

@@ -221,6 +221,18 @@
   flex-wrap: wrap;
   gap: 0.55rem;
   margin: 0.52rem 0 0.76rem;
+  position: relative;
+  padding-bottom: 0.24rem;
+}
+
+.domainRow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: min(42%, 220px);
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-subtle), transparent);
 }
 
 .domain {
@@ -228,26 +240,28 @@
   margin: 0;
   padding: 0.34rem 0.8rem;
   border-radius: 14px 8px 16px 7px;
-  border: 1px solid var(--border-neutral);
+  border: 1px solid rgba(245, 197, 66, 0.34);
   background: linear-gradient(130deg, rgba(94, 94, 94, 0.42), rgba(56, 56, 56, 0.28));
   color: #dbdbdb;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: none;
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.12);
 }
 
 .portfolioTag {
   margin: 0;
   padding: 0.34rem 0.72rem;
   border-radius: 8px 15px 9px 16px;
-  border: 1px solid var(--border-neutral);
+  border: 1px solid rgba(245, 197, 66, 0.28);
   background: linear-gradient(130deg, rgba(96, 96, 96, 0.42), rgba(65, 65, 65, 0.28));
   color: #e6e6e6;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.1);
 }
 
 .title {
@@ -309,10 +323,12 @@
   padding: 0.72rem 0.9rem;
   border-radius: 18px 10px 20px 9px;
   border: 1px solid var(--border-neutral);
+  border-left-color: rgba(245, 197, 66, 0.46);
   background:
     radial-gradient(circle at 12% 8%, rgba(154, 154, 154, 0.2), transparent 52%),
     linear-gradient(130deg, rgba(76, 76, 76, 0.34), rgba(94, 94, 94, 0.24)),
     rgba(23, 23, 23, 0.58);
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.1);
 }
 
 .focusList {
@@ -332,6 +348,9 @@
   background: rgba(255, 255, 255, 0.03);
   color: #c6c6c6;
   font-size: 0.95rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .focusList li:nth-child(1) {
@@ -342,6 +361,7 @@
 .focusList li:nth-child(2) {
   border-radius: 9px 20px 11px 24px;
   background: linear-gradient(145deg, rgba(135, 135, 135, 0.22), rgba(24, 24, 24, 0.72));
+  border-color: rgba(245, 197, 66, 0.24);
 }
 
 .focusList li:nth-child(3) {
@@ -352,6 +372,7 @@
 .focusList li:nth-child(4) {
   border-radius: 12px 24px 18px 10px;
   background: linear-gradient(145deg, rgba(161, 161, 161, 0.18), rgba(24, 24, 24, 0.72));
+  border-color: rgba(245, 197, 66, 0.24);
 }
 
 .focusList li::before {
@@ -362,7 +383,13 @@
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(135deg, var(--accent-main), var(--accent-warm));
+  box-shadow: 0 0 8px rgba(245, 197, 66, 0.3);
+}
+
+.focusList li:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
 }
 
 .actions {
@@ -423,13 +450,26 @@
   margin-bottom: 0.34rem;
   width: min(100%, 560px);
   border-radius: 22px 10px 26px 9px;
-  border-color: rgba(174, 174, 174, 0.48);
+  border-color: rgba(245, 197, 66, 0.34);
   background:
     radial-gradient(circle at 14% 8%, rgba(177, 177, 177, 0.16), transparent 48%),
     linear-gradient(140deg, rgba(32, 32, 32, 0.82), rgba(24, 24, 24, 0.78));
   box-shadow:
     inset 0 1px 0 rgba(224, 224, 224, 0.2),
-    0 14px 30px rgba(16, 16, 16, 0.4);
+    0 14px 30px rgba(16, 16, 16, 0.4),
+    0 0 0 1px rgba(245, 197, 66, 0.14);
+  position: relative;
+}
+
+.codeStreamInline::before {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  top: 0.38rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 197, 66, 0.75), transparent);
+  pointer-events: none;
 }
 
 .heroArtRow {
@@ -941,6 +981,7 @@
   display: grid;
   align-content: start;
   gap: 0.75rem;
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.1);
 }
 
 .signalTitle {
@@ -950,6 +991,8 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  border-left: 1px solid rgba(245, 197, 66, 0.5);
+  padding-left: 0.5rem;
 }
 
 .signalList {
@@ -967,6 +1010,15 @@
   background: rgba(203, 203, 203, 0.08);
   color: #cbcbcb;
   font-size: 0.91rem;
+  transition: border-color 0.2s ease;
+}
+
+.signalList li:nth-child(2) {
+  border-color: rgba(245, 197, 66, 0.28);
+}
+
+.signalList li:hover {
+  border-color: var(--accent-soft);
 }
 
 .signalNote {
@@ -1001,11 +1053,11 @@
 }
 
 .codeDot:nth-child(1) {
-  background: #d1d1d1;
+  background: var(--accent-main);
 }
 
 .codeDot:nth-child(2) {
-  background: #dedede;
+  background: var(--accent-warm);
 }
 
 .codeDot:nth-child(3) {
@@ -1018,7 +1070,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #aeaeae;
+  color: rgba(255, 184, 77, 0.95);
 }
 
 .codeViewport {
@@ -1036,7 +1088,7 @@
   color: #c5c5c5;
   font-size: 0.7rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  border-right: 1.5px solid rgba(213, 213, 213, 0.9);
+  border-right: 1.5px solid rgba(245, 197, 66, 0.88);
   opacity: 0;
 }
 

@@ -11,6 +11,7 @@
   background:
     radial-gradient(circle at 100% 0%, rgba(170, 170, 170, 0.12), transparent 54%),
     linear-gradient(140deg, rgba(28, 28, 28, 0.9), rgba(18, 18, 18, 0.9));
+  box-shadow: inset 0 -1px 0 rgba(245, 197, 66, 0.24);
 }
 
 .heroTop {
@@ -29,16 +30,25 @@
   text-decoration: none;
   font-size: 0.8rem;
   font-weight: 600;
-  border: 1px solid var(--border-neutral);
+  border: 1px solid rgba(245, 197, 66, 0.34);
   border-radius: 999px;
   padding: 0.44rem 0.9rem;
   background: linear-gradient(140deg, rgba(66, 66, 66, 0.9), rgba(52, 52, 52, 0.88));
-  box-shadow: 0 8px 18px rgba(19, 19, 19, 0.34);
+  box-shadow:
+    0 8px 18px rgba(19, 19, 19, 0.34),
+    inset 0 0 0 1px rgba(245, 197, 66, 0.12);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
 }
 
 .backLink:hover {
   color: #e4e4e4;
   border-color: var(--accent-soft);
+  box-shadow:
+    0 8px 18px rgba(19, 19, 19, 0.34),
+    0 0 16px rgba(245, 197, 66, 0.14);
 }
 
 .heroMonoMotion {
@@ -220,6 +230,19 @@
   color: #d9d9d9;
   font-size: clamp(1.55rem, 3.4vw, 2.2rem);
   line-height: 1.14;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.title::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-main), var(--accent-warm));
+  box-shadow: 0 0 10px rgba(245, 197, 66, 0.22);
 }
 
 .lead {
@@ -259,6 +282,10 @@
   box-shadow: 0 0 0 1px var(--accent-subtle);
 }
 
+.card:nth-child(3n + 2) {
+  border-color: rgba(245, 197, 66, 0.24);
+}
+
 /* Override global .glass highlight layer to remove blue tint */
 .hero::before,
 .card::before {
@@ -296,6 +323,17 @@
   color: #dbdbdb;
   font-size: 1rem;
   line-height: 1.35;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.meta h2::before {
+  content: "";
+  width: 8px;
+  height: 1px;
+  background: rgba(245, 197, 66, 0.78);
 }
 
 .meta p {
@@ -310,7 +348,7 @@
 .meta p span:not(:last-child)::after {
   content: "·";
   margin-left: 0.56rem;
-  color: rgba(165, 165, 165, 0.62);
+  color: rgba(245, 197, 66, 0.62);
 }
 
 .modal {
@@ -331,7 +369,7 @@
 
 .modalTop button,
 .navBtn {
-  border: 1px solid var(--border-neutral);
+  border: 1px solid rgba(245, 197, 66, 0.28);
   background: rgba(36, 36, 36, 0.85);
   color: #d7d7d7;
   border-radius: 10px;
@@ -418,7 +456,9 @@
 
 .navBtn:hover {
   border-color: var(--accent-soft);
-  box-shadow: 0 0 0 1px var(--accent-subtle);
+  box-shadow:
+    0 0 0 1px var(--accent-subtle),
+    0 0 16px rgba(245, 197, 66, 0.12);
 }
 
 .navPrev {

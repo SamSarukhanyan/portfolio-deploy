@@ -260,8 +260,8 @@
 
 .imageBtn img {
   width: 100%;
-  height: clamp(240px, 34vw, 340px);
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 

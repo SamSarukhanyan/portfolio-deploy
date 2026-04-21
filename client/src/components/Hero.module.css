@@ -16,8 +16,17 @@
 
 @media (min-width: 900px) {
   .grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1.03fr) minmax(0, 0.97fr);
+    align-items: center;
+    gap: clamp(1rem, 1.8vw, 1.6rem);
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .visual {
+    min-height: auto;
+    gap: 0.72rem;
+    align-self: center;
   }
 }
 
@@ -857,6 +866,13 @@
     width: 100%;
     margin-bottom: 0.15rem;
     margin-inline: auto;
+    border: none;
+    background: transparent;
+    padding: 0.1rem 0;
+  }
+
+  .orbit::after {
+    content: none;
   }
 
   .orbitMobile {
@@ -880,14 +896,14 @@
   .motionDock {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
-    min-height: 168px;
-    gap: 0.42rem;
-    padding: 0.2rem 0.08rem;
+    min-height: 172px;
+    gap: 0.2rem;
+    padding: 0.08rem 0;
   }
 
   .heroSnake {
-    width: 90px;
-    height: 90px;
+    width: 98px;
+    height: 98px;
   }
 
   .snakeSegDot {
@@ -900,11 +916,11 @@
   .heroSnakeCell,
   .devCore {
     width: 100%;
-    min-height: 114px;
+    min-height: 126px;
   }
 
   .coreBloom {
-    width: 96px;
+    width: 106px;
   }
 
   .sectionGlyphs {
@@ -953,35 +969,23 @@
 
 @media (max-width: 420px) {
   .motionDock {
-    min-height: 154px;
+    min-height: 162px;
   }
 
   .heroSnakeCell,
   .devCore {
-    min-height: 106px;
+    min-height: 114px;
   }
 
   .heroSnake {
-    width: 82px;
-    height: 82px;
+    width: 88px;
+    height: 88px;
   }
 
   .snakeSegDot {
     top: -31px;
     width: 10px;
     height: 10px;
-  }
-}
-
-@media (min-width: 900px) {
-  .visual {
-    display: grid;
-    grid-template-rows: auto auto auto;
-    align-content: stretch;
-  }
-
-  .codeStreamDesktop {
-    min-height: 0;
   }
 }
 

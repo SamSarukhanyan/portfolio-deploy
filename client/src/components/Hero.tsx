@@ -49,7 +49,7 @@ export function Hero() {
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
-                      <span className={styles.bloomCenter}>AI</span>
+                      <span className={styles.bloomCenter}>OPS</span>
                     </span>
                   </div>
                 </div>
@@ -109,7 +109,7 @@ export function Hero() {
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
-                      <span className={styles.bloomCenter}>AI</span>
+                      <span className={styles.bloomCenter}>OPS</span>
                     </span>
                   </div>
                 </div>

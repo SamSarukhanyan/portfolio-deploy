@@ -72,6 +72,28 @@
   animation: techOrbPulse 2.9s ease-in-out infinite 640ms;
 }
 
+@media (min-width: 1024px) {
+  .stackGlyph {
+    width: 212px;
+    height: 108px;
+    transform: translateY(6px);
+  }
+
+  .techTrail {
+    height: 4px;
+  }
+
+  .techTrail::after {
+    width: 40px;
+    height: 4px;
+  }
+
+  .techOrb {
+    width: 28px;
+    height: 28px;
+  }
+}
+
 .grid {
   display: grid;
   gap: 1rem;

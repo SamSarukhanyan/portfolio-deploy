@@ -55,6 +55,25 @@
   animation: architectureOrbSwirl 2.9s ease-in-out infinite;
 }
 
+@media (min-width: 1024px) {
+  .route {
+    width: 214px;
+    height: 98px;
+    border-radius: 26px 13px 24px 14px;
+    transform: translateY(7px);
+  }
+
+  .routeCore {
+    width: 22px;
+    height: 22px;
+  }
+
+  .routeOrb {
+    width: 14px;
+    height: 14px;
+  }
+}
+
 .diagram {
   padding: clamp(1.2rem, 2.4vw, 1.95rem);
   display: flex;

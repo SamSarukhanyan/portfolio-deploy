@@ -49,7 +49,13 @@ export function Hero() {
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
-                      <span className={styles.bloomCenter}>OPS</span>
+                      <span className={styles.bloomCenter} aria-hidden>
+                        <span className={styles.logoChip}>
+                          <span className={styles.logoNode} />
+                          <span className={styles.logoNode} />
+                          <span className={styles.logoNode} />
+                        </span>
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -109,7 +115,13 @@ export function Hero() {
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
                       <span className={styles.bloomRing} />
-                      <span className={styles.bloomCenter}>OPS</span>
+                      <span className={styles.bloomCenter} aria-hidden>
+                        <span className={styles.logoChip}>
+                          <span className={styles.logoNode} />
+                          <span className={styles.logoNode} />
+                          <span className={styles.logoNode} />
+                        </span>
+                      </span>
                     </span>
                   </div>
                 </div>

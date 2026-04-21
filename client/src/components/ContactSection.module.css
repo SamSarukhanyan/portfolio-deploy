@@ -41,6 +41,10 @@
   transform: translateY(4px);
 }
 
+.mailPulseDesktop {
+  display: none;
+}
+
 .wave {
   position: absolute;
   inset: 12% 16%;
@@ -111,8 +115,41 @@
 
 @media (min-width: 800px) {
   .layout {
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     align-items: center;
+    column-gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .actions {
+    justify-self: center;
+    align-items: center;
+  }
+
+  .mailPulseMobile {
+    display: none;
+  }
+
+  .mailPulseDesktop {
+    display: block;
+    justify-self: end;
+    width: 244px;
+    height: 128px;
+    transform: none;
+  }
+
+  .mailPulseDesktop .mailSpark {
+    width: 12px;
+    height: 12px;
+  }
+
+  .mailPulseDesktop .mailIcon {
+    width: 86px;
+    height: 66px;
+  }
+
+  .mailPulseDesktop .mailIcon svg {
+    width: 34px;
+    height: 34px;
   }
 }
 

@@ -95,7 +95,7 @@ export function ContactSection() {
                 <Reveal as="h2" className={`section-title ${styles.title}`} direction="left">
                   {t("contact.title")}
                 </Reveal>
-                <Reveal className={styles.mailPulse} direction="right" delayMs={30} aria-hidden>
+                <Reveal className={`${styles.mailPulse} ${styles.mailPulseMobile}`} direction="right" delayMs={30} aria-hidden>
                   <span className={styles.wave} />
                   <span className={styles.wave} />
                   <span className={styles.wave} />
@@ -140,6 +140,18 @@ export function ContactSection() {
                   </Reveal>
                 ))}
               </div>
+            </Reveal>
+            <Reveal className={`${styles.mailPulse} ${styles.mailPulseDesktop}`} direction="right" delayMs={130} aria-hidden>
+              <span className={styles.wave} />
+              <span className={styles.wave} />
+              <span className={styles.wave} />
+              <span className={styles.mailSpark} />
+              <span className={styles.mailSpark} />
+              <span className={styles.mailIcon}>
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h15A1.5 1.5 0 0 1 21 7.5v9A1.5 1.5 0 0 1 19.5 18h-15A1.5 1.5 0 0 1 3 16.5v-9Zm1.9-.3L12 12.1l7.1-4.9" />
+                </svg>
+              </span>
             </Reveal>
           </div>
         </Reveal>

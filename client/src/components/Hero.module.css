@@ -1106,22 +1106,19 @@
     content: none;
   }
 
-  .orbitMobile {
-    display: block;
+  .orbitMobile,
+  .codeStreamMobile {
+    display: none;
   }
 
   .orbitDesktop {
-    display: none;
-  }
-
-  .codeStreamMobile {
     display: block;
-    margin-bottom: 0.24rem;
-    margin-inline: auto;
   }
 
   .codeStreamDesktop {
-    display: none;
+    display: block;
+    margin-bottom: 0.24rem;
+    margin-inline: auto;
   }
 
   .motionDock {

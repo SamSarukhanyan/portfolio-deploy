@@ -133,6 +133,10 @@ body {
   filter: none;
 }
 
+.app-shell--mono {
+  filter: grayscale(1) saturate(0.18) contrast(1.04);
+}
+
 /* Контент над декоративным .page-bg */
 .app-main {
   position: relative;

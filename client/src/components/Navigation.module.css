@@ -66,21 +66,15 @@
 }
 
 .glyphOuter {
-  fill: rgba(14, 31, 52, 0.82);
-  stroke: rgba(124, 196, 255, 0.42);
+  stroke: rgba(171, 175, 183, 0.38);
   stroke-width: 1.2;
 }
 
-.glyphStroke {
-  fill: none;
-  stroke: #d6e8fb;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.glyphCore {
-  fill: #bce7dc;
+.glyphLetter {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
 .brandTextWrap {

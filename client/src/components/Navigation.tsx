@@ -44,16 +44,26 @@ export function Navigation() {
           <span className={styles.brandGlyph} aria-hidden>
             <svg viewBox="0 0 48 48">
               <defs>
-                <linearGradient id="navBrandGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#55c7ff" />
-                  <stop offset="100%" stopColor="#71e7c1" />
+                <linearGradient id="navGlyphBg" x1="5" y1="5" x2="43" y2="43" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#1f2228" />
+                  <stop offset="100%" stopColor="#111418" />
+                </linearGradient>
+                <linearGradient id="navGlyphLetter" x1="12" y1="10" x2="37" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#f2f3f5" />
+                  <stop offset="100%" stopColor="#b9bcc2" />
                 </linearGradient>
               </defs>
-              <rect x="11" y="11" width="26" height="26" rx="9" className={styles.glyphOuter} />
-              <path d="M18 29.5 24 18.5 30 29.5" className={styles.glyphStroke} />
-              <circle cx="24" cy="24" r="2.8" className={styles.glyphCore} />
-              <circle cx="18.4" cy="30" r="1.8" className={styles.glyphCore} />
-              <circle cx="29.6" cy="30" r="1.8" className={styles.glyphCore} />
+              <rect x="5" y="5" width="38" height="38" rx="10" fill="url(#navGlyphBg)" className={styles.glyphOuter} />
+              <text
+                x="24"
+                y="26"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="url(#navGlyphLetter)"
+                className={styles.glyphLetter}
+              >
+                S
+              </text>
             </svg>
           </span>
           <span className={styles.brandTextWrap}>

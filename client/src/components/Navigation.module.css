@@ -150,7 +150,7 @@
     font-size: 0.64rem;
     font-weight: 600;
     letter-spacing: 0.03em;
-    text-transform: uppercase;
+    text-transform: none;
     white-space: nowrap;
   }
 }
@@ -269,7 +269,7 @@
     font-weight: 600;
     text-decoration: none;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
+    text-transform: none;
     transition:
       transform var(--t-fast) var(--ease-out),
       border-color var(--t-fast) var(--ease-out);

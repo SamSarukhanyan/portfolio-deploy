@@ -403,6 +403,8 @@
 .heroArtRow {
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 0.52rem;
   margin: 0 0 0.3rem;
 }
@@ -1185,7 +1187,7 @@
 
   .heroArtRow {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
   .motionDock {

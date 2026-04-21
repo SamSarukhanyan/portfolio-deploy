@@ -7,9 +7,10 @@
   padding: clamp(1rem, 2.2vw, 1.4rem);
   margin-bottom: 1rem;
   border-radius: 20px;
+  border: 1px solid rgba(132, 136, 144, 0.34);
   background:
-    radial-gradient(circle at 100% 0%, rgba(170, 170, 170, 0.14), transparent 52%),
-    linear-gradient(140deg, rgba(26, 26, 28, 0.86), rgba(18, 18, 20, 0.86));
+    radial-gradient(circle at 100% 0%, rgba(170, 170, 170, 0.12), transparent 54%),
+    linear-gradient(140deg, rgba(28, 28, 30, 0.9), rgba(18, 18, 20, 0.9));
 }
 
 .heroTop {
@@ -244,9 +245,22 @@
   border-radius: 16px;
   display: grid;
   gap: 0.62rem;
+  border: 1px solid rgba(128, 132, 140, 0.3);
   background:
-    radial-gradient(circle at 0 0, rgba(170, 170, 170, 0.1), transparent 44%),
-    linear-gradient(145deg, rgba(24, 24, 26, 0.84), rgba(16, 16, 18, 0.84));
+    radial-gradient(circle at 0 0, rgba(165, 165, 165, 0.08), transparent 46%),
+    linear-gradient(145deg, rgba(24, 24, 26, 0.88), rgba(16, 16, 18, 0.88));
+}
+
+/* Override global .glass highlight layer to remove blue tint */
+.hero::before,
+.card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    transparent 44%,
+    transparent 64%,
+    rgba(156, 160, 168, 0.14) 100%
+  ) !important;
 }
 
 .imageBtn {

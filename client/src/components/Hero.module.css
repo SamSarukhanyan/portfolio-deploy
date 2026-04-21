@@ -106,6 +106,102 @@
   }
 }
 
+@media (min-width: 760px) and (max-width: 900px) {
+  .card {
+    padding: 0.38rem 0 0.06rem !important;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.58rem !important;
+  }
+
+  .visual {
+    order: 1 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 250px !important;
+    align-items: start !important;
+    gap: 0.42rem !important;
+    max-width: 760px;
+    margin: 0 auto !important;
+    min-height: auto !important;
+  }
+
+  /* Requested: remove background on first animation block */
+  .orbit {
+    grid-column: 1 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .orbit::after {
+    content: none !important;
+  }
+
+  .motionDock {
+    min-height: 126px !important;
+    gap: 0.2rem !important;
+    padding: 0 !important;
+  }
+
+  .heroSnakeCell,
+  .devCore {
+    min-height: 78px !important;
+  }
+
+  .heroSnake {
+    width: 86px !important;
+    height: 86px !important;
+  }
+
+  .coreBloom {
+    width: 88px !important;
+  }
+
+  .codeStreamDesktop {
+    grid-column: 2 !important;
+    display: block !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 250px !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    padding: 0.42rem 0.46rem !important;
+  }
+
+  /* Prevent right-side overlap/covering in this range */
+  .signalPanel {
+    display: none !important;
+  }
+
+  .copy {
+    order: 2 !important;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto !important;
+    padding-right: 0 !important;
+  }
+
+  .domainRow {
+    justify-content: center !important;
+    margin-bottom: 0.56rem !important;
+  }
+
+  .title {
+    text-align: center !important;
+    margin-inline: auto !important;
+  }
+
+  .summary,
+  .focusList,
+  .actions {
+    margin-inline: auto !important;
+  }
+}
+
 .copy {
   position: relative;
   z-index: 1;

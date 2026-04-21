@@ -385,6 +385,12 @@
   display: block;
 }
 
+.codeStreamInline {
+  display: block;
+  margin-top: 0.62rem;
+  margin-bottom: 0.28rem;
+}
+
 .orbit::after {
   content: "";
   position: absolute;
@@ -1301,6 +1307,16 @@
   .focusList,
   .actions {
     margin-inline: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .visual {
+    display: none !important;
+  }
+
+  .codeStreamInline {
+    display: block;
   }
 }
 

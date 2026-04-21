@@ -44,6 +44,25 @@ export function Hero() {
               <Reveal as="h1" className={styles.title} direction="up" delayMs={60}>
                 {heroTitle}
               </Reveal>
+              <Reveal className={`${styles.codeStream} ${styles.codeStreamInline}`} direction="up" delayMs={95} aria-hidden>
+                <div className={styles.codeStreamTop}>
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeDot} />
+                  <span className={styles.codeLabel}>Release pipeline</span>
+                </div>
+                <div className={styles.codeViewport}>
+                  <span className={`${styles.codeLine} ${styles.codeLineOne}`}>
+                    const deploy = await pipeline.run("production");
+                  </span>
+                  <span className={`${styles.codeLine} ${styles.codeLineTwo}`}>
+                    if (health.ok) pm2.reload("api") &amp;&amp; notify("done");
+                  </span>
+                  <span className={`${styles.codeLine} ${styles.codeLineThree}`}>
+                    security.headers.enable(); tls.renew(); logs.stream();
+                  </span>
+                </div>
+              </Reveal>
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}
               </Reveal>
@@ -86,25 +105,6 @@ export function Hero() {
                       </span>
                     </span>
                   </div>
-                </div>
-              </Reveal>
-              <Reveal className={`${styles.codeStream} ${styles.codeStreamDesktop}`} direction="up" delayMs={110} aria-hidden>
-                <div className={styles.codeStreamTop}>
-                  <span className={styles.codeDot} />
-                  <span className={styles.codeDot} />
-                  <span className={styles.codeDot} />
-                  <span className={styles.codeLabel}>Release pipeline</span>
-                </div>
-                <div className={styles.codeViewport}>
-                  <span className={`${styles.codeLine} ${styles.codeLineOne}`}>
-                    const deploy = await pipeline.run("production");
-                  </span>
-                  <span className={`${styles.codeLine} ${styles.codeLineTwo}`}>
-                    if (health.ok) pm2.reload("api") &amp;&amp; notify("done");
-                  </span>
-                  <span className={`${styles.codeLine} ${styles.codeLineThree}`}>
-                    security.headers.enable(); tls.renew(); logs.stream();
-                  </span>
                 </div>
               </Reveal>
               <Reveal className={styles.signalPanel} direction="right" delayMs={120}>

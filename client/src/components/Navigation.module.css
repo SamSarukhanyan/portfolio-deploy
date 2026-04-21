@@ -23,14 +23,23 @@
   gap: 0.9rem;
   padding: 0.54rem 0.65rem;
   border-radius: 18px;
-  background: linear-gradient(125deg, rgba(32, 32, 36, 0.9), rgba(26, 26, 29, 0.82));
-  border: 1px solid rgba(47, 47, 53, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow:
-    inset 0 1px 0 rgba(242, 242, 242, 0.1),
-    0 16px 38px rgba(0, 0, 0, 0.45);
-  border-bottom-color: var(--accent-subtle);
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  position: relative;
+}
+
+.inner::after {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  right: 0.2rem;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-subtle), transparent);
+  pointer-events: none;
 }
 
 .brand {
@@ -47,6 +56,7 @@
 .brand:hover {
   color: var(--text);
   transform: translateY(-1px);
+  text-shadow: 0 0 10px rgba(245, 197, 66, 0.16);
 }
 
 .brandGlyph {
@@ -205,8 +215,8 @@
 
 .navLink:hover {
   color: var(--text-primary);
-  background: rgba(42, 42, 47, 0.92);
-  border-color: var(--accent-soft);
+  background: transparent;
+  border-color: rgba(245, 197, 66, 0.38);
   box-shadow: 0 0 14px rgba(245, 197, 66, 0.12);
 }
 
@@ -223,8 +233,8 @@
 
 :global(.app-shell--art) .navLink[href="/art"] {
   color: var(--text-primary);
-  border-color: var(--accent-soft);
-  background: rgba(42, 42, 47, 0.96);
+  border-color: rgba(245, 197, 66, 0.46);
+  background: transparent;
   box-shadow:
     inset 0 -1px 0 var(--accent-main),
     0 0 16px rgba(245, 197, 66, 0.14);
@@ -236,7 +246,7 @@
 }
 
 .navLink[href="#highlights"] {
-  border-color: rgba(245, 197, 66, 0.3);
+  border-color: rgba(245, 197, 66, 0.42);
   box-shadow: inset 0 -1px 0 rgba(245, 197, 66, 0.85);
 }
 
@@ -455,8 +465,8 @@
 }
 
 :global(.app-shell--art) .inner {
-  background: linear-gradient(125deg, rgba(32, 32, 36, 0.9), rgba(26, 26, 29, 0.82));
-  border-color: rgba(47, 47, 53, 0.95);
+  background: transparent;
+  border-color: transparent;
 }
 
 :global(.app-shell--art) .brandGlyph {

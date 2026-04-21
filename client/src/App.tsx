@@ -8,6 +8,9 @@ import { usePathname } from "./utils/spaRouter";
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
 );
+const DeliveryFocusSection = lazy(() =>
+  import("./components/DeliveryFocusSection").then((module) => ({ default: module.DeliveryFocusSection })),
+);
 const StackSection = lazy(() =>
   import("./components/StackSection").then((module) => ({ default: module.StackSection })),
 );
@@ -34,6 +37,7 @@ export default function App() {
             <Hero />
             <Suspense fallback={<div className="shell section" aria-hidden />}>
               <HighlightsSection />
+              <DeliveryFocusSection />
               <StackSection />
               <ArchitectureSection />
               <ContactSection />

@@ -5,7 +5,6 @@ import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 import { onSpaLinkClick } from "../utils/spaRouter";
 
-const focusKeys = ["hero.focus.0", "hero.focus.1", "hero.focus.2", "hero.focus.3"] as const;
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 
 const SNAKE_SEGMENTS = 12;
@@ -92,18 +91,6 @@ export function Hero() {
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}
               </Reveal>
-              <ul className={styles.focusList}>
-                {focusKeys.map((key, idx) => (
-                  <Reveal
-                    key={key}
-                    as="li"
-                    direction={idx % 2 === 0 ? "left" : "right"}
-                    delayMs={180 + idx * 40}
-                  >
-                    {t(key)}
-                  </Reveal>
-                ))}
-              </ul>
               <Reveal className={styles.actions} direction="up" delayMs={260}>
                 <a className="btn-primary" href="#contact">
                   {t("hero.ctaContact")}

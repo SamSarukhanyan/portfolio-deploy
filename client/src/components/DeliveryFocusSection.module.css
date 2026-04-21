@@ -1,0 +1,71 @@
+.section {
+  padding-top: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 0.72rem;
+}
+
+@media (min-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+}
+
+.card {
+  position: relative;
+  padding: 0.8rem 0.88rem 0.8rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border-neutral);
+  background: linear-gradient(140deg, rgba(34, 34, 39, 0.9), rgba(23, 23, 26, 0.88));
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.marker {
+  position: absolute;
+  left: 0.56rem;
+  top: 0.9rem;
+  width: 2px;
+  height: 62%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent-main), transparent);
+}
+
+.card:nth-child(1) {
+  border-radius: 20px 9px 16px 8px;
+}
+
+.card:nth-child(2) {
+  border-radius: 9px 19px 11px 22px;
+  border-color: rgba(245, 197, 66, 0.26);
+}
+
+.card:nth-child(3) {
+  border-radius: 22px 11px 8px 18px;
+}
+
+.card:nth-child(4) {
+  border-radius: 11px 22px 18px 10px;
+  border-color: rgba(245, 197, 66, 0.26);
+}
+
+.card:hover {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px var(--accent-subtle);
+}
+
+.card:hover .marker {
+  background: linear-gradient(180deg, var(--accent-main), var(--accent-subtle));
+}
+

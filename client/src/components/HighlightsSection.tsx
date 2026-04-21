@@ -23,16 +23,16 @@ export function HighlightsSection() {
             {t("highlights.title")}
           </Reveal>
           <Reveal className={styles.signal} direction="right" delayMs={70} aria-hidden>
-            <span className={styles.signalBar} />
-            <span className={styles.signalBar} />
-            <span className={styles.signalBar} />
-            <span className={styles.signalDot} />
+            <span className={styles.signalWave} />
+            <span className={styles.signalWave} />
+            <span className={styles.signalComet} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
           {t("highlights.lead")}
         </Reveal>
         <Reveal className={styles.artPortalWrap} direction="up" delayMs={95}>
+          <p className={styles.artPortalLabel}>Open my art</p>
           <a className={styles.artPortal} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
             {t("hero.ctaArt")}
           </a>

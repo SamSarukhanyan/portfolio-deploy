@@ -12,39 +12,63 @@
 
 .stackGlyph {
   flex: 0 0 auto;
-  width: 92px;
-  height: 56px;
+  width: 102px;
+  height: 52px;
   position: relative;
-  transform: translateY(1px);
+  transform: translateY(2px);
 }
 
-.stackLayer {
+.techTrail {
   position: absolute;
-  left: 50%;
-  width: 58px;
-  height: 18px;
-  border-radius: 8px;
-  border: 1px solid rgba(130, 201, 255, 0.45);
-  background: rgba(10, 19, 31, 0.74);
-  transform: translateX(-50%);
-  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.24);
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(156, 187, 224, 0.2), rgba(130, 209, 188, 0.5), rgba(170, 153, 226, 0.2));
+  overflow: hidden;
+  border-radius: 999px;
 }
 
-.stackLayer:nth-child(1) {
-  top: 2px;
-  animation: stackFloatOne 2.8s ease-in-out infinite;
+.techTrail::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(221, 233, 251, 0.85), rgba(221, 233, 251, 0));
+  animation: techTrailRun 2.8s ease-in-out infinite;
 }
 
-.stackLayer:nth-child(2) {
-  top: 19px;
-  width: 52px;
-  animation: stackFloatTwo 3.4s ease-in-out infinite;
+.techOrb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(172, 200, 236, 0.42);
+  background: radial-gradient(circle at 30% 30%, rgba(238, 245, 255, 0.88), rgba(118, 170, 225, 0.45));
+  box-shadow: 0 0 14px rgba(125, 171, 226, 0.25);
 }
 
-.stackLayer:nth-child(3) {
-  top: 36px;
-  width: 46px;
-  animation: stackFloatThree 3s ease-in-out infinite;
+.techOrb:nth-child(1) {
+  left: 12%;
+  transform: translateY(-50%);
+  animation: techOrbPulse 2.9s ease-in-out infinite;
+}
+
+.techOrb:nth-child(2) {
+  left: 46%;
+  transform: translateY(-50%);
+  animation: techOrbPulse 2.9s ease-in-out infinite 320ms;
+}
+
+.techOrb:nth-child(3) {
+  right: 12%;
+  transform: translateY(-50%);
+  animation: techOrbPulse 2.9s ease-in-out infinite 640ms;
 }
 
 .grid {
@@ -122,42 +146,35 @@
   opacity: 0.85;
 }
 
-@keyframes stackFloatOne {
+@keyframes techOrbPulse {
   0%,
   100% {
-    transform: translateX(-50%) translateY(0);
-    border-color: rgba(130, 201, 255, 0.4);
+    transform: translateY(-50%) scale(0.92);
+    box-shadow: 0 0 10px rgba(125, 171, 226, 0.2);
   }
   50% {
-    transform: translateX(-50%) translateY(-4px);
-    border-color: rgba(130, 201, 255, 0.72);
+    transform: translateY(-50%) scale(1.12);
+    box-shadow: 0 0 17px rgba(140, 201, 194, 0.28);
   }
 }
 
-@keyframes stackFloatTwo {
+@keyframes techTrailRun {
   0%,
   100% {
-    transform: translateX(-50%) translateX(0);
+    left: -12%;
+    opacity: 0.6;
   }
   50% {
-    transform: translateX(-50%) translateX(5px);
-  }
-}
-
-@keyframes stackFloatThree {
-  0%,
-  100% {
-    transform: translateX(-50%) scaleX(1);
-  }
-  50% {
-    transform: translateX(-50%) scaleX(0.92);
+    left: 94%;
+    opacity: 1;
   }
 }
 
 @media (max-width: 560px) {
   .head {
     gap: 0.6rem;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .grid {
@@ -195,25 +212,13 @@
   }
 
   .stackGlyph {
-    width: 78px;
-    height: 48px;
+    width: 84px;
+    height: 42px;
+    transform: none;
   }
 
-  .stackLayer {
-    height: 14px;
-  }
-
-  .stackLayer:nth-child(1) {
-    width: 50px;
-  }
-
-  .stackLayer:nth-child(2) {
-    top: 17px;
-    width: 44px;
-  }
-
-  .stackLayer:nth-child(3) {
-    top: 32px;
-    width: 38px;
+  .techOrb {
+    width: 11px;
+    height: 11px;
   }
 }

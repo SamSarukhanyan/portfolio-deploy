@@ -190,8 +190,8 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
-  min-height: clamp(150px, 26vw, 186px);
-  padding: clamp(0.48rem, 1.5vw, 0.65rem);
+  min-height: clamp(212px, 31vw, 276px);
+  padding: clamp(0.52rem, 1.6vw, 0.75rem);
 }
 
 .heroSnakeCell,
@@ -204,32 +204,46 @@
 
 .heroSnakeCell {
   position: relative;
-  min-height: 76px;
+  min-height: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Копия змеи со страницы Art, чуть крупнее базовой 44px */
 .heroSnake {
   position: relative;
-  width: 52px;
-  height: 52px;
+  width: 104px;
+  height: 104px;
   flex-shrink: 0;
   box-sizing: border-box;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(40, 56, 78, 0.35), transparent 62%);
-  box-shadow: inset 0 0 0 1px rgba(100, 124, 154, 0.12);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.2), rgba(146, 178, 218, 0.12) 38%, transparent 72%),
+    radial-gradient(circle at 20% 84%, rgba(120, 213, 189, 0.12), transparent 56%),
+    rgba(18, 30, 49, 0.48);
+  box-shadow:
+    inset 0 0 0 1px rgba(159, 185, 219, 0.2),
+    0 0 36px rgba(120, 160, 208, 0.22);
 }
 
 .heroSnake::before {
   content: "";
   position: absolute;
-  inset: 3px;
+  inset: 6px;
   border-radius: 50%;
-  border: 1px dashed rgba(140, 162, 188, 0.28);
-  opacity: 0.85;
+  border: 1px dashed rgba(197, 221, 255, 0.35);
+  opacity: 0.92;
   animation: heroSnakeRingDrift 14s linear infinite;
+}
+
+.heroSnake::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.38), rgba(173, 198, 245, 0.22) 38%, rgba(113, 203, 178, 0.2) 60%, transparent 76%);
+  filter: blur(1px);
 }
 
 .snakeSegRing {
@@ -244,59 +258,78 @@
 
 .snakeSegDot {
   position: absolute;
-  left: -3.5px;
-  top: -20px;
-  width: 7px;
-  height: 7px;
+  left: -4px;
+  top: -40px;
+  width: 9px;
+  height: 9px;
   margin: 0;
-  border-radius: 2px;
-  background: linear-gradient(155deg, rgba(232, 240, 250, 0.95), rgba(118, 138, 164, 0.55));
-  box-shadow: 0 0 8px rgba(160, 188, 220, 0.38);
+  border-radius: 46% 54% 58% 42%;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.88), rgba(150, 183, 232, 0.72) 55%, rgba(128, 220, 194, 0.6));
+  box-shadow: 0 0 14px rgba(167, 197, 236, 0.46);
   animation: heroSnakeBitTrail 2.2s linear infinite;
   animation-delay: calc(var(--i) * -183.333ms);
 }
 
 .devCore {
-  min-height: 76px;
+  min-height: 132px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
-.codeTag {
+.coreBloom {
+  position: relative;
+  width: 122px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.bloomRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 41% 59% 53% 47% / 45% 56% 44% 55%;
+  border: 1px solid rgba(156, 190, 234, 0.34);
+  background: radial-gradient(circle at 30% 28%, rgba(190, 215, 255, 0.18), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+.bloomRing:nth-child(1) {
+  animation: bloomOrbitOne 7.4s ease-in-out infinite;
+}
+
+.bloomRing:nth-child(2) {
+  inset: 10%;
+  animation: bloomOrbitTwo 5.8s linear infinite;
+  border-color: rgba(138, 222, 194, 0.34);
+}
+
+.bloomRing:nth-child(3) {
+  inset: 20%;
+  animation: bloomOrbitThree 4.8s ease-in-out infinite;
+  border-color: rgba(196, 170, 247, 0.32);
+}
+
+.bloomCenter {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 66px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(85, 199, 255, 0.15);
-  border: 1px solid rgba(85, 199, 255, 0.4);
-  color: #c7d8e8;
-  font-size: 1rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 15px 11px 17px 10px;
+  border: 1px solid rgba(190, 212, 242, 0.38);
+  background: linear-gradient(145deg, rgba(34, 50, 76, 0.9), rgba(34, 64, 71, 0.88));
+  color: #d9e6f6;
+  font-size: 0.86rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.devRing {
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 1px dashed rgba(113, 231, 193, 0.35);
-  animation: spinOrbit 9s linear infinite;
-}
-
-.devDot {
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  background: #b9ffe9;
+  letter-spacing: 0.08em;
+  box-shadow:
+    0 0 18px rgba(131, 172, 230, 0.25),
+    inset 0 0 14px rgba(203, 222, 251, 0.1);
 }
 
 .sectionGlyphs {
@@ -435,6 +468,39 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes bloomOrbitOne {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(0.96);
+    border-radius: 41% 59% 53% 47% / 45% 56% 44% 55%;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.03);
+    border-radius: 57% 43% 41% 59% / 52% 44% 56% 48%;
+  }
+}
+
+@keyframes bloomOrbitTwo {
+  from {
+    transform: rotate(0deg) scale(0.94);
+  }
+  to {
+    transform: rotate(-360deg) scale(1.05);
+  }
+}
+
+@keyframes bloomOrbitThree {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.08);
+    opacity: 1;
   }
 }
 
@@ -790,6 +856,7 @@
   .orbit {
     width: 100%;
     margin-bottom: 0.15rem;
+    margin-inline: auto;
   }
 
   .orbitMobile {
@@ -803,6 +870,7 @@
   .codeStreamMobile {
     display: block;
     margin-bottom: 0.58rem;
+    margin-inline: auto;
   }
 
   .codeStreamDesktop {
@@ -810,21 +878,33 @@
   }
 
   .motionDock {
-    min-height: 128px;
-    gap: 0.45rem;
-    padding: 0.38rem;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: 312px;
+    gap: 0.62rem;
+    padding: 0.5rem;
   }
 
   .heroSnake {
-    width: 48px;
-    height: 48px;
+    width: 94px;
+    height: 94px;
   }
 
   .snakeSegDot {
-    left: -3px;
-    top: -18px;
-    width: 6px;
-    height: 6px;
+    left: -3.5px;
+    top: -36px;
+    width: 8px;
+    height: 8px;
+  }
+
+  .heroSnakeCell,
+  .devCore {
+    width: min(100%, 250px);
+    min-height: 138px;
+  }
+
+  .coreBloom {
+    width: 128px;
   }
 
   .sectionGlyphs {
@@ -873,26 +953,23 @@
 
 @media (max-width: 420px) {
   .motionDock {
-    min-height: 116px;
+    min-height: 292px;
   }
 
   .heroSnakeCell,
   .devCore {
-    min-height: 66px;
+    min-height: 126px;
   }
 
   .heroSnake {
-    width: 46px;
-    height: 46px;
+    width: 86px;
+    height: 86px;
   }
 
   .snakeSegDot {
-    top: -17px;
-  }
-
-  .devRing {
-    width: 74px;
-    height: 74px;
+    top: -33px;
+    width: 7px;
+    height: 7px;
   }
 }
 

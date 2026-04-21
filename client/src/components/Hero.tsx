@@ -45,9 +45,11 @@ export function Hero() {
                 <div className={styles.motionDock}>
                   <MotionDockSnake />
                   <div className={styles.devCore}>
-                    <span className={styles.codeTag}>&lt;/&gt;</span>
-                    <span className={styles.devRing}>
-                      <span className={styles.devDot} />
+                    <span className={styles.coreBloom}>
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomCenter}>AI</span>
                     </span>
                   </div>
                 </div>
@@ -103,9 +105,11 @@ export function Hero() {
                 <div className={styles.motionDock}>
                   <MotionDockSnake />
                   <div className={styles.devCore}>
-                    <span className={styles.codeTag}>&lt;/&gt;</span>
-                    <span className={styles.devRing}>
-                      <span className={styles.devDot} />
+                    <span className={styles.coreBloom}>
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomRing} />
+                      <span className={styles.bloomCenter}>AI</span>
                     </span>
                   </div>
                 </div>

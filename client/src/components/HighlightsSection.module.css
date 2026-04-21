@@ -14,53 +14,57 @@
   flex: 0 0 auto;
   width: 112px;
   height: 52px;
-  border-radius: 14px;
-  border: 1px solid rgba(85, 199, 255, 0.34);
-  background: rgba(9, 18, 30, 0.62);
+  border-radius: 18px 9px 16px 10px;
+  border: 1px solid rgba(156, 187, 224, 0.32);
+  background: linear-gradient(145deg, rgba(16, 27, 46, 0.64), rgba(13, 30, 35, 0.58));
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  gap: 0.42rem;
-  padding: 0.55rem 0.55rem 0.5rem;
+  gap: 0;
+  padding: 0.4rem 0.55rem;
   position: relative;
   overflow: hidden;
   transform: translateY(1px);
 }
 
-.signalBar {
-  width: 9px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #8ff6d9, #55c7ff);
-  transform-origin: bottom;
-  animation: highlightBarPulse 1.8s ease-in-out infinite;
-}
-
-.signalBar:nth-child(1) {
-  height: 18px;
-  animation-delay: 0ms;
-}
-
-.signalBar:nth-child(2) {
-  height: 26px;
-  animation-delay: 180ms;
-}
-
-.signalBar:nth-child(3) {
-  height: 14px;
-  animation-delay: 340ms;
-}
-
-.signalDot {
+.signalWave {
   position: absolute;
-  top: 12px;
-  right: 14px;
-  width: 7px;
-  height: 7px;
+  inset: auto;
+  width: 66%;
+  height: 42%;
+  border: 1px solid rgba(171, 198, 232, 0.34);
   border-radius: 50%;
-  background: #c9f8ff;
-  box-shadow: 0 0 0 0 rgba(116, 235, 255, 0.55);
-  animation: highlightPing 2.1s ease-out infinite;
+  --wave-shift: -10%;
+  --wave-rot: -10deg;
+  transform: translateX(var(--wave-shift)) rotate(var(--wave-rot));
+  opacity: 0.78;
 }
+
+.signalWave:nth-child(1) {
+  animation: outcomesWavePulse 3.5s ease-in-out infinite;
+}
+
+.signalWave:nth-child(2) {
+  width: 52%;
+  height: 30%;
+  border-color: rgba(133, 210, 188, 0.32);
+  --wave-shift: 10%;
+  --wave-rot: 11deg;
+  animation: outcomesWavePulse 3.5s ease-in-out infinite 460ms;
+}
+
+.signalComet {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(210, 226, 255, 0.95), rgba(147, 210, 194, 0.74));
+  box-shadow:
+    0 0 0 0 rgba(165, 199, 238, 0.4),
+    -10px 0 16px rgba(146, 205, 192, 0.2);
+  animation: outcomesCometDrift 2.9s ease-in-out infinite;
+}
+
 
 .grid {
   list-style: none;
@@ -72,6 +76,15 @@
 
 .artPortalWrap {
   margin: 0 0 1rem;
+}
+
+.artPortalLabel {
+  margin: 0 0 0.35rem;
+  color: #aeb9cd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .artPortal {
@@ -151,27 +164,31 @@
   line-height: 1.55;
 }
 
-@keyframes highlightBarPulse {
+@keyframes outcomesWavePulse {
   0%,
   100% {
-    transform: scaleY(0.65);
+    transform: translateX(var(--wave-shift)) rotate(var(--wave-rot)) scale(0.92);
     opacity: 0.7;
   }
   50% {
-    transform: scaleY(1.2);
+    transform: translateX(var(--wave-shift)) rotate(var(--wave-rot)) scale(1.06);
     opacity: 1;
   }
 }
 
-@keyframes highlightPing {
-  0% {
-    box-shadow: 0 0 0 0 rgba(116, 235, 255, 0.55);
-  }
-  75% {
-    box-shadow: 0 0 0 14px rgba(116, 235, 255, 0);
-  }
+@keyframes outcomesCometDrift {
+  0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(116, 235, 255, 0);
+    transform: translateX(-26px);
+    box-shadow:
+      0 0 0 0 rgba(165, 199, 238, 0.32),
+      -10px 0 16px rgba(146, 205, 192, 0.16);
+  }
+  50% {
+    transform: translateX(24px);
+    box-shadow:
+      0 0 0 7px rgba(165, 199, 238, 0),
+      10px 0 18px rgba(146, 205, 192, 0.22);
   }
 }
 
@@ -192,6 +209,12 @@
 
   .artPortalWrap {
     margin-bottom: 0.75rem;
+  }
+
+  .artPortalLabel {
+    margin-bottom: 0.3rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
   }
 
   .artPortal {
@@ -245,16 +268,16 @@
   .signal {
     width: 88px;
     height: 44px;
-    padding: 0.4rem 0.4rem 0.36rem;
-    gap: 0.28rem;
+    padding: 0.34rem 0.4rem;
   }
 
-  .signalBar {
+  .signalWave {
+    width: 62%;
+    height: 40%;
+  }
+
+  .signalComet {
     width: 7px;
-  }
-
-  .signalDot {
-    top: 10px;
-    right: 10px;
+    height: 7px;
   }
 }

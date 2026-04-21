@@ -23,7 +23,7 @@ export default function App() {
   const isArtPage = pathname.startsWith("/art");
 
   return (
-    <div className={isArtPage ? "app-shell" : "app-shell app-shell--mono"}>
+    <div className={isArtPage ? "app-shell app-shell--art" : "app-shell app-shell--mono"}>
       <div className="page-bg" aria-hidden />
       <Navigation />
       <main className="app-main">

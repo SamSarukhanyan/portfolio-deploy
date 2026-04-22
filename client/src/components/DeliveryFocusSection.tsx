@@ -25,6 +25,7 @@ export function DeliveryFocusSection() {
               direction={focusRevealPlan[idx]?.direction ?? "up"}
               delayMs={focusRevealPlan[idx]?.delayMs ?? 80 + idx * 40}
               style={{ ["--reveal-distance" as string]: `${focusRevealPlan[idx]?.distancePx ?? 16}px` }}
+              skipInitialVisibilityCheck
             >
               <span className={styles.marker} aria-hidden />
               <p>{t(key)}</p>

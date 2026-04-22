@@ -17,6 +17,7 @@ type RevealProps<T extends ElementType = "div"> = {
   className?: string;
   direction?: Direction;
   delayMs?: number;
+  skipInitialVisibilityCheck?: boolean;
 } & Omit<ComponentPropsWithoutRef<T>, "as" | "children" | "className">;
 
 export function Reveal<T extends ElementType = "div">({
@@ -25,6 +26,7 @@ export function Reveal<T extends ElementType = "div">({
   className,
   direction = "up",
   delayMs = 0,
+  skipInitialVisibilityCheck = false,
   style: userStyle,
   ...rest
 }: RevealProps<T>) {
@@ -43,12 +45,14 @@ export function Reveal<T extends ElementType = "div">({
 
     const initialRect = target.getBoundingClientRect();
     const viewportHeight = window.innerHeight || 0;
-    const shouldStartVisible =
-      initialRect.top < viewportHeight * 0.98 && initialRect.bottom > viewportHeight * 0.02;
+    if (!skipInitialVisibilityCheck) {
+      const shouldStartVisible =
+        initialRect.top < viewportHeight * 0.98 && initialRect.bottom > viewportHeight * 0.02;
 
-    if (shouldStartVisible) {
-      inViewRef.current = true;
-      setInView(true);
+      if (shouldStartVisible) {
+        inViewRef.current = true;
+        setInView(true);
+      }
     }
 
     const observer = new IntersectionObserver(
@@ -73,7 +77,7 @@ export function Reveal<T extends ElementType = "div">({
 
     observer.observe(target);
     return () => observer.disconnect();
-  }, []);
+  }, [skipInitialVisibilityCheck]);
 
   const mergedClassName = useMemo(
     () => [className, "reveal-item"].filter(Boolean).join(" "),

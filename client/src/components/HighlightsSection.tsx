@@ -27,16 +27,16 @@ export function HighlightsSection() {
     <section id="highlights" className={`section ${styles.section}`}>
       <div className="shell">
         <div className={styles.head}>
-          <Reveal as="h2" className="section-title" direction="left" delayMs={24}>
+          <Reveal as="h2" className="section-title" direction="left" delayMs={24} skipInitialVisibilityCheck>
             {t("highlights.title")}
           </Reveal>
-          <Reveal className={styles.signal} direction="right" delayMs={92} aria-hidden>
+          <Reveal className={styles.signal} direction="right" delayMs={92} aria-hidden skipInitialVisibilityCheck>
             <span className={styles.signalWave} />
             <span className={styles.signalWave} />
             <span className={styles.signalComet} />
           </Reveal>
         </div>
-        <Reveal as="p" className="section-lead" direction="up" delayMs={56}>
+        <Reveal as="p" className="section-lead" direction="up" delayMs={56} skipInitialVisibilityCheck>
           {t("highlights.lead")}
         </Reveal>
         <ul className={styles.grid}>
@@ -48,6 +48,7 @@ export function HighlightsSection() {
               direction={revealPlan[idx]?.direction ?? "up"}
               delayMs={revealPlan[idx]?.delayMs ?? 100 + idx * 40}
               style={{ ["--reveal-distance" as string]: `${revealPlan[idx]?.distancePx ?? 16}px` }}
+              skipInitialVisibilityCheck
             >
               <p className={styles.cardKicker}>{t("highlights.kicker")}</p>
               <h3 className={styles.cardTitle}>{t(h.titleKey)}</h3>

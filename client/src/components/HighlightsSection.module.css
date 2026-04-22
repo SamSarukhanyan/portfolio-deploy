@@ -175,6 +175,8 @@
     radial-gradient(circle at 0% 0%, rgba(179, 179, 179, 0.12), transparent 48%),
     rgba(22, 22, 22, 0.6);
   transition:
+    opacity 0.62s var(--ease-out) var(--reveal-delay),
+    transform 0.62s var(--ease-out) var(--reveal-delay),
     border-color 0.2s ease,
     box-shadow 0.2s ease,
     background-color 0.2s ease;

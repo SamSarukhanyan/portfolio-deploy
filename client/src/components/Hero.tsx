@@ -109,7 +109,7 @@ export function Hero() {
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}
               </Reveal>
-              <Reveal className={styles.actions} direction="up" delayMs={260}>
+              <Reveal className={styles.actions} direction="up" delayMs={260} data-reveal-mobile-instant="true">
                 <a className="btn-primary" href="#contact">
                   {t("hero.ctaContact")}
                 </a>

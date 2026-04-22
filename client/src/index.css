@@ -631,6 +631,13 @@ section#top.section > .shell {
     line-height: 1.55;
     margin-bottom: 0.78rem;
   }
+
+  .reveal-item[data-reveal-mobile-instant="true"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

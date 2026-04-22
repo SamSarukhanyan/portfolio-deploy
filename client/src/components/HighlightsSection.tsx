@@ -11,6 +11,15 @@ const cards = [
   { titleKey: "highlights.6.title" as const, bodyKey: "highlights.6.body" as const },
 ];
 
+const revealPlan = [
+  { direction: "left" as const, delayMs: 84, distancePx: 14 },
+  { direction: "right" as const, delayMs: 152, distancePx: 22 },
+  { direction: "up" as const, delayMs: 116, distancePx: 16 },
+  { direction: "left" as const, delayMs: 214, distancePx: 19 },
+  { direction: "up" as const, delayMs: 178, distancePx: 20 },
+  { direction: "right" as const, delayMs: 246, distancePx: 15 },
+];
+
 export function HighlightsSection() {
   const { t } = useI18n();
 
@@ -18,16 +27,16 @@ export function HighlightsSection() {
     <section id="highlights" className={`section ${styles.section}`}>
       <div className="shell">
         <div className={styles.head}>
-          <Reveal as="h2" className="section-title" direction="left">
+          <Reveal as="h2" className="section-title" direction="left" delayMs={24}>
             {t("highlights.title")}
           </Reveal>
-          <Reveal className={styles.signal} direction="right" delayMs={70} aria-hidden>
+          <Reveal className={styles.signal} direction="right" delayMs={92} aria-hidden>
             <span className={styles.signalWave} />
             <span className={styles.signalWave} />
             <span className={styles.signalComet} />
           </Reveal>
         </div>
-        <Reveal as="p" className="section-lead" direction="up" delayMs={60}>
+        <Reveal as="p" className="section-lead" direction="up" delayMs={56}>
           {t("highlights.lead")}
         </Reveal>
         <ul className={styles.grid}>
@@ -36,8 +45,9 @@ export function HighlightsSection() {
               key={h.titleKey}
               as="li"
               className={`glass ${styles.card}`}
-              direction={idx % 3 === 0 ? "left" : idx % 3 === 1 ? "up" : "right"}
-              delayMs={80 + idx * 45}
+              direction={revealPlan[idx]?.direction ?? "up"}
+              delayMs={revealPlan[idx]?.delayMs ?? 100 + idx * 40}
+              style={{ ["--reveal-distance" as string]: `${revealPlan[idx]?.distancePx ?? 16}px` }}
             >
               <p className={styles.cardKicker}>{t("highlights.kicker")}</p>
               <h3 className={styles.cardTitle}>{t(h.titleKey)}</h3>

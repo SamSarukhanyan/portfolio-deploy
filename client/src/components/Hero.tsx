@@ -88,6 +88,24 @@ export function Hero() {
                 </a>
                 <span className={styles.heroArtLabel}>Explore selected works</span>
               </Reveal>
+              <Reveal className={styles.backendMicroBlock} direction="up" delayMs={108}>
+                <p className={styles.backendMicroHeader}>Backend architecture highlight</p>
+                <p className={styles.backendMicroText}>
+                  I build backend services with a layered microservice-style module flow, where each endpoint maps to its
+                  own router, controller, service, and model responsibilities.
+                </p>
+                <p className={styles.backendMicroText}>
+                  This fullstack project ships coordinated web and mobile clients over the same production API platform.
+                </p>
+                <a
+                  className={styles.backendMicroLink}
+                  href="https://github.com/SamSarukhanyan/my-fullstack-app"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  github.com/SamSarukhanyan/my-fullstack-app
+                </a>
+              </Reveal>
               <Reveal as="p" className={styles.summary} direction="up" delayMs={110}>
                 {t("hero.summary")}
               </Reveal>

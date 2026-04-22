@@ -100,6 +100,7 @@
   }
 
   .summary,
+  .backendMicroBlock,
   .focusList,
   .actions {
     margin-inline: auto;
@@ -504,6 +505,78 @@
   padding-left: 0.48rem;
   border-left: 1px solid rgba(170, 170, 170, 0.4);
   line-height: 1.2;
+}
+
+.backendMicroBlock {
+  width: min(100%, 580px);
+  margin: 0.18rem 0 0;
+  padding: 0.72rem 0.88rem 0.78rem;
+  border-radius: 17px 10px 19px 9px;
+  border: 1px solid rgba(245, 197, 66, 0.28);
+  background:
+    radial-gradient(circle at 85% 18%, rgba(245, 197, 66, 0.14), transparent 46%),
+    radial-gradient(circle at 10% 80%, rgba(172, 172, 172, 0.13), transparent 52%),
+    linear-gradient(155deg, rgba(43, 43, 46, 0.82), rgba(21, 21, 24, 0.86));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    inset 0 0 0 1px rgba(245, 197, 66, 0.08),
+    0 12px 22px rgba(0, 0, 0, 0.34);
+  display: grid;
+  gap: 0.4rem;
+  position: relative;
+}
+
+.backendMicroBlock::before {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  top: 0.36rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 197, 66, 0.62), transparent);
+}
+
+.backendMicroHeader {
+  margin: 0;
+  color: #dbdbdb;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.backendMicroText {
+  margin: 0;
+  color: #bebebe;
+  font-size: 0.82rem;
+  line-height: 1.38;
+}
+
+.backendMicroLink {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 0.1rem;
+  padding: 0.28rem 0.52rem;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 197, 66, 0.35);
+  color: rgba(255, 193, 89, 0.98);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+  background: rgba(245, 197, 66, 0.08);
+  transition:
+    border-color var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out);
+}
+
+.backendMicroLink:hover {
+  border-color: rgba(245, 197, 66, 0.6);
+  color: #ffd694;
+  box-shadow: 0 0 16px rgba(245, 197, 66, 0.16);
 }
 
 .heroArtLink {
@@ -1362,6 +1435,28 @@
     line-height: 1.45;
   }
 
+  .backendMicroBlock {
+    width: 100%;
+    margin-top: 0.2rem;
+    padding: 0.62rem 0.64rem 0.68rem;
+    gap: 0.34rem;
+  }
+
+  .backendMicroHeader {
+    font-size: 0.72rem;
+    letter-spacing: 0.045em;
+  }
+
+  .backendMicroText {
+    font-size: 0.78rem;
+    line-height: 1.34;
+  }
+
+  .backendMicroLink {
+    font-size: 0.68rem;
+    padding: 0.24rem 0.46rem;
+  }
+
   .focusList li,
   .signalList li {
     font-size: 1rem;
@@ -1655,6 +1750,7 @@
   }
 
   .summary,
+  .backendMicroBlock,
   .focusList,
   .actions {
     margin-inline: auto;

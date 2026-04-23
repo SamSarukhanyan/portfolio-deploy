@@ -41,6 +41,7 @@
   z-index: 2;
   display: flex;
   justify-content: flex-end;
+  transition: opacity 0.18s ease;
 }
 
 .closeBtn {
@@ -109,6 +110,7 @@
   color: #acacac;
   text-align: center;
   font-size: 0.86rem;
+  transition: opacity 0.18s ease;
 }
 
 .dots {
@@ -122,6 +124,12 @@
   background: rgba(17, 17, 18, 0.62);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.18s ease;
+}
+
+.zoomUiHidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .dot {
@@ -138,6 +146,27 @@
   background: linear-gradient(140deg, var(--accent-main), var(--accent-warm));
   border-color: rgba(255, 214, 140, 0.8);
   transform: scale(1.18);
+}
+
+.zoomLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 5005;
+  display: grid;
+  place-items: center;
+  background: rgba(6, 6, 7, 0.98);
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.zoomImg {
+  width: 100vw;
+  height: 100dvh;
+  object-fit: contain;
+  transform-origin: center center;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 @media (max-width: 759px) {

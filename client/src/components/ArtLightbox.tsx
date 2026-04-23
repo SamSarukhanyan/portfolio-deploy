@@ -524,21 +524,6 @@ export function ArtLightbox({
     return Math.max(0, Math.min(artworks.length - 1, index));
   }
 
-  function getSingleStepTarget(fromIndex: number, rawTarget: number) {
-    const direction = Math.sign(rawTarget - fromIndex);
-    if (direction === 0) return fromIndex;
-    return clampIndex(fromIndex + direction);
-  }
-
-  function enforceSingleStep(swiper: SwiperType) {
-    const fromIndex = gestureStartIndexRef.current;
-    const rawTarget = clampIndex(swiper.activeIndex);
-    const forcedTarget = getSingleStepTarget(fromIndex, rawTarget);
-    if (forcedTarget === rawTarget) return forcedTarget;
-    swiper.slideTo(forcedTarget, Number(swiper.params.speed) || 260);
-    return forcedTarget;
-  }
-
   const overlayStyle = useMemo(
     () =>
       ({
@@ -605,20 +590,15 @@ export function ArtLightbox({
               swiper.allowTouchMove = true;
               gestureStartIndexRef.current = settledIndexRef.current;
             }}
-            onSlideChangeTransitionStart={(swiper: SwiperType) => {
+            onSlideChangeTransitionStart={() => {
               if (isTransitioningRef.current) return;
               lockTransition();
-              const nextIndex = enforceSingleStep(swiper);
-              if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
             }}
             onSlideChangeTransitionEnd={(swiper: SwiperType) => {
               const nextIndex = clampIndex(swiper.activeIndex);
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
-              console.log({
-                activeIndex: nextIndex,
-              });
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {

@@ -77,6 +77,26 @@
   padding: 0;
 }
 
+.viewport::before,
+.viewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #060607;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.viewport::before {
+  left: 0;
+}
+
+.viewport::after {
+  right: 0;
+}
+
 .swiper {
   width: 100%;
   height: 100%;

@@ -123,14 +123,6 @@ export function ArtLightbox({
     window.visualViewport?.addEventListener("resize", onResize);
     window.visualViewport?.addEventListener("scroll", onResize);
 
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (zoomActive) return;
-      if (event.key === "ArrowLeft" && canGoPrev) onChangeIndex(activeIndex - 1);
-      if (event.key === "ArrowRight" && canGoNext) onChangeIndex(activeIndex + 1);
-    };
-    window.addEventListener("keydown", onKeyDown);
-
     return () => {
       document.body.classList.remove("art-modal-open");
       document.body.style.position = prevPosition;
@@ -141,9 +133,25 @@ export function ArtLightbox({
       window.removeEventListener("resize", onResize);
       window.visualViewport?.removeEventListener("resize", onResize);
       window.visualViewport?.removeEventListener("scroll", onResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (zoomActiveRef.current) return;
+      const index = activeIndexRef.current;
+      if (event.key === "ArrowLeft" && index > 0) onChangeIndex(index - 1);
+      if (event.key === "ArrowRight" && index < artworks.length - 1) onChangeIndex(index + 1);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [activeIndex, canGoNext, canGoPrev, onChangeIndex, onClose, zoomActive]);
+  }, [artworks.length, onChangeIndex, onClose]);
 
   useEffect(() => {
     return () => {

@@ -38,7 +38,8 @@ export function ArtLightbox({
   titleLabel,
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
-  const [viewportSize, setViewportSize] = useState({ width: 1, height: 0 });
+  const [sliderWidth, setSliderWidth] = useState(1);
+  const [viewportHeight, setViewportHeight] = useState(0);
 
   const [zoomActive, setZoomActive] = useState(false);
   const [zoomScale, setZoomScale] = useState(1);
@@ -110,11 +111,12 @@ export function ArtLightbox({
     document.body.style.overflow = "hidden";
 
     const onResize = () => {
-      const visualW = window.visualViewport?.width;
+      const containerW = viewportRef.current?.clientWidth;
       const visualH = window.visualViewport?.height;
-      const width = Math.max(1, Math.round(visualW ?? viewportRef.current?.clientWidth ?? window.innerWidth));
+      const width = Math.max(1, Math.round(containerW ?? window.innerWidth));
       const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
-      setViewportSize({ width, height });
+      setSliderWidth(width);
+      setViewportHeight(height);
     };
     onResize();
     window.addEventListener("resize", onResize);
@@ -162,14 +164,14 @@ export function ArtLightbox({
   }
 
   function getBaseTranslate(index = activeIndexRef.current) {
-    return -index * viewportSize.width;
+    return -index * sliderWidth;
   }
 
   useEffect(() => {
     if (modeRef.current !== "drag") {
       applyTrackOffset(getBaseTranslate(activeIndex), false);
     }
-  }, [activeIndex, viewportSize.width]);
+  }, [activeIndex, sliderWidth]);
 
   function stopSliderAnimation() {
     if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
@@ -228,7 +230,7 @@ export function ArtLightbox({
   }
 
   function finishSwipe() {
-    const width = viewportSize.width;
+    const width = sliderWidth;
     const velocity = clamp(computeVelocity(), -1.8, 1.8);
     const projectedDrag = dragDeltaRef.current + velocity * 180;
     const progressFromCurrent = projectedDrag / width;
@@ -479,9 +481,8 @@ export function ArtLightbox({
   }
 
   const overlayStyle = {
-    width: `${viewportSize.width}px`,
-    height: viewportSize.height > 0 ? `${viewportSize.height}px` : "100dvh",
-    ["--lightbox-vh" as string]: viewportSize.height > 0 ? `${viewportSize.height}px` : "100dvh",
+    height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+    ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
   } as CSSProperties;
 
   if (!portalHost) return null;

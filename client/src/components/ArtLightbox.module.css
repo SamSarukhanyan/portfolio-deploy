@@ -159,7 +159,7 @@
   overflow: hidden;
   background: #060607;
   box-sizing: border-box;
-  padding: 0 2px;
+  padding: 0 0 0 1px;
 }
 
 .slide {

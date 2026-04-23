@@ -168,7 +168,7 @@ export function ArtLightbox({
   }
 
   useEffect(() => {
-    if (modeRef.current !== "drag") {
+    if (modeRef.current === "idle" && !isDraggingRef.current) {
       applyTrackOffset(getBaseTranslate(activeIndex), false);
     }
   }, [activeIndex, sliderWidth]);
@@ -208,12 +208,13 @@ export function ArtLightbox({
         snapRafRef.current = null;
         applyTrackOffset(to, false);
         dragDeltaRef.current = 0;
-        modeRef.current = "idle";
         const lockedTarget = lockedTargetRef.current;
-        lockedTargetRef.current = null;
         if (lockedTarget !== null && lockedTarget !== activeIndexRef.current) {
+          activeIndexRef.current = lockedTarget;
           onChangeIndex(lockedTarget);
         }
+        lockedTargetRef.current = null;
+        modeRef.current = "idle";
       }
     };
     snapRafRef.current = requestAnimationFrame(frame);

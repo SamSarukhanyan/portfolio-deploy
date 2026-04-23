@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
 import styles from "./ArtLightbox.module.css";
 import type { Artwork } from "../content/artworks";
 
@@ -454,16 +454,12 @@ export function ArtLightbox({
     onClose();
   }
 
-  if (!portalHost) return null;
+  const overlayStyle = {
+    height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+    ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+  } as CSSProperties;
 
-  const overlayStyle = useMemo(
-    () =>
-      ({
-        height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
-        ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
-      }) as CSSProperties,
-    [viewportHeight],
-  );
+  if (!portalHost) return null;
 
   return createPortal(
     <div className={styles.overlay} style={overlayStyle} role="dialog" aria-modal="true">

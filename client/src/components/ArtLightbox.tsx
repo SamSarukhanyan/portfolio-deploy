@@ -38,8 +38,7 @@ export function ArtLightbox({
   titleLabel,
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
-  const [viewportWidth, setViewportWidth] = useState(1);
-  const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportSize, setViewportSize] = useState({ width: 1, height: 0 });
 
   const [zoomActive, setZoomActive] = useState(false);
   const [zoomScale, setZoomScale] = useState(1);
@@ -100,14 +99,22 @@ export function ArtLightbox({
 
   useEffect(() => {
     document.body.classList.add("art-modal-open");
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const prevPosition = document.body.style.position;
+    const prevTop = document.body.style.top;
+    const prevWidth = document.body.style.width;
     const prevOverflow = document.body.style.overflow;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
 
     const onResize = () => {
-      const w = viewportRef.current?.clientWidth ?? window.innerWidth;
-      setViewportWidth(Math.max(1, w));
+      const visualW = window.visualViewport?.width;
       const visualH = window.visualViewport?.height;
-      setViewportHeight(Math.max(1, Math.round(visualH ?? window.innerHeight)));
+      const width = Math.max(1, Math.round(visualW ?? viewportRef.current?.clientWidth ?? window.innerWidth));
+      const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
+      setViewportSize({ width, height });
     };
     onResize();
     window.addEventListener("resize", onResize);
@@ -124,7 +131,11 @@ export function ArtLightbox({
 
     return () => {
       document.body.classList.remove("art-modal-open");
+      document.body.style.position = prevPosition;
+      document.body.style.top = prevTop;
+      document.body.style.width = prevWidth;
       document.body.style.overflow = prevOverflow;
+      window.scrollTo(0, scrollY);
       window.removeEventListener("resize", onResize);
       window.visualViewport?.removeEventListener("resize", onResize);
       window.visualViewport?.removeEventListener("scroll", onResize);
@@ -149,9 +160,9 @@ export function ArtLightbox({
 
   useEffect(() => {
     if (modeRef.current !== "drag") {
-      applyTrackOffset(-activeIndex * viewportWidth, false);
+      applyTrackOffset(-activeIndex * viewportSize.width, false);
     }
-  }, [activeIndex, viewportWidth]);
+  }, [activeIndex, viewportSize.width]);
 
   function stopSliderAnimation() {
     if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
@@ -175,7 +186,7 @@ export function ArtLightbox({
     modeRef.current = "snap";
     lockedTargetRef.current = targetIndex;
     const from = sliderOffsetRef.current;
-    const to = -targetIndex * viewportWidth;
+    const to = -targetIndex * viewportSize.width;
     const start = performance.now();
     const duration = 240;
     const frame = (now: number) => {
@@ -209,7 +220,7 @@ export function ArtLightbox({
   }
 
   function finishSwipe() {
-    const width = viewportWidth;
+    const width = viewportSize.width;
     const velocity = clamp(computeVelocity(), -1.8, 1.8);
     const projected = sliderOffsetRef.current + velocity * 180;
     const progressFromCurrent = (projected + activeIndexRef.current * width) / width;
@@ -274,7 +285,7 @@ export function ArtLightbox({
     if (!dragStartRef.current) return;
     dragStartRef.current = null;
     if (!isDraggingRef.current) {
-      applyTrackOffset(-activeIndexRef.current * viewportWidth, false);
+      applyTrackOffset(-activeIndexRef.current * viewportSize.width, false);
       gestureStateRef.current = "idle";
       return;
     }
@@ -325,7 +336,7 @@ export function ArtLightbox({
     setZoomScale(1);
     setZoomX(0);
     setZoomY(0);
-    applyTrackOffset(-activeIndexRef.current * viewportWidth, false);
+    applyTrackOffset(-activeIndexRef.current * viewportSize.width, false);
     isDraggingRef.current = false;
   }
 
@@ -455,8 +466,9 @@ export function ArtLightbox({
   }
 
   const overlayStyle = {
-    height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
-    ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+    width: `${viewportSize.width}px`,
+    height: viewportSize.height > 0 ? `${viewportSize.height}px` : "100dvh",
+    ["--lightbox-vh" as string]: viewportSize.height > 0 ? `${viewportSize.height}px` : "100dvh",
   } as CSSProperties;
 
   if (!portalHost) return null;

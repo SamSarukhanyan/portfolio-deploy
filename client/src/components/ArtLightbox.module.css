@@ -5,13 +5,12 @@
   inset: 0;
   z-index: 4000;
   isolation: isolate;
-  background: rgba(11, 11, 12, 0.58);
-  backdrop-filter: blur(10px) saturate(90%);
-  -webkit-backdrop-filter: blur(10px) saturate(90%);
+  background: #070708;
   width: 100vw;
   height: var(--lightbox-vh, 100dvh);
   min-height: var(--lightbox-vh, 100dvh);
   min-height: -webkit-fill-available;
+  overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 0.28rem;
@@ -26,8 +25,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 46%, rgba(10, 10, 11, 0.42), rgba(8, 8, 9, 0.7) 56%, rgba(6, 6, 7, 0.86)),
-    linear-gradient(180deg, rgba(10, 10, 11, 0.54), rgba(7, 7, 8, 0.72));
+    radial-gradient(circle at 50% 46%, rgba(14, 14, 15, 0.68), rgba(8, 8, 9, 0.86) 56%, rgba(6, 6, 7, 0.96)),
+    linear-gradient(180deg, rgba(9, 9, 10, 0.9), rgba(7, 7, 8, 1));
   pointer-events: none;
 }
 

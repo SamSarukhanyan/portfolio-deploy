@@ -32,6 +32,7 @@ const SNAKE_SEGMENTS = 12;
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [slideDirection, setSlideDirection] = useState<"next" | "prev" | "none">("none");
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [settling, setSettling] = useState(false);
@@ -91,6 +92,7 @@ export function ArtPage() {
 
   function closeModal() {
     setActiveIndex(null);
+    setSlideDirection("none");
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -101,6 +103,17 @@ export function ArtPage() {
 
   function openAt(index: number) {
     setActiveIndex(index);
+    setSlideDirection("none");
+    setScale(1);
+    setOffset({ x: 0, y: 0 });
+    scaleRef.current = 1;
+    offsetRef.current = { x: 0, y: 0 };
+    setGestureActive(false);
+  }
+
+  function goToIndex(nextIndex: number, direction: "next" | "prev" | "none") {
+    setSlideDirection(direction);
+    setActiveIndex(nextIndex);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -109,21 +122,20 @@ export function ArtPage() {
   }
 
   function showNext() {
-    setActiveIndex((v) => (v === null ? null : (v + 1) % artworks.length));
-    setScale(1);
-    setOffset({ x: 0, y: 0 });
-    scaleRef.current = 1;
-    offsetRef.current = { x: 0, y: 0 };
-    setGestureActive(false);
+    if (activeIndex === null) return;
+    const next = (activeIndex + 1) % artworks.length;
+    goToIndex(next, "next");
   }
 
   function showPrev() {
-    setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
-    setScale(1);
-    setOffset({ x: 0, y: 0 });
-    scaleRef.current = 1;
-    offsetRef.current = { x: 0, y: 0 };
-    setGestureActive(false);
+    if (activeIndex === null) return;
+    const prev = (activeIndex - 1 + artworks.length) % artworks.length;
+    goToIndex(prev, "prev");
+  }
+
+  function goToDot(index: number) {
+    if (activeIndex === null || activeIndex === index) return;
+    goToIndex(index, index > activeIndex ? "next" : "prev");
   }
 
   function applyTransform(nextScale: number, nextOffset: { x: number; y: number }) {
@@ -317,36 +329,41 @@ export function ArtPage() {
             onPointerCancel={onPointerUp}
           >
             <figure className={styles.figure}>
-              <img
-                src={getArtworkSrc(activeArtwork.filename)}
-                alt={activeArtwork.title}
-                style={imageStyle}
-                onError={(event) => {
-                  event.currentTarget.src = fallbackImage;
-                }}
-              />
+              <div
+                key={`${activeArtwork.id}-${slideDirection}`}
+                className={`${styles.figureMedia} ${
+                  slideDirection === "next"
+                    ? styles.figureMediaNext
+                    : slideDirection === "prev"
+                      ? styles.figureMediaPrev
+                      : ""
+                }`}
+              >
+                <img
+                  src={getArtworkSrc(activeArtwork.filename)}
+                  alt={activeArtwork.title}
+                  style={imageStyle}
+                  onError={(event) => {
+                    event.currentTarget.src = fallbackImage;
+                  }}
+                />
+              </div>
               <figcaption data-hidden={hideUi ? "true" : "false"}>
                 {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
               </figcaption>
             </figure>
-            <button
-              type="button"
-              className={`${styles.navBtn} ${styles.navPrev}`}
-              data-hidden={hideUi ? "true" : "false"}
-              onClick={showPrev}
-              aria-label={t("art.prev")}
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className={`${styles.navBtn} ${styles.navNext}`}
-              data-hidden={hideUi ? "true" : "false"}
-              onClick={showNext}
-              aria-label={t("art.next")}
-            >
-              ›
-            </button>
+            <div className={styles.dots} data-hidden={hideUi ? "true" : "false"} aria-label={t("art.title")}>
+              {artworks.map((art, index) => (
+                <button
+                  key={art.id}
+                  type="button"
+                  className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
+                  onClick={() => goToDot(index)}
+                  aria-label={`${index + 1}`}
+                  aria-current={index === activeIndex ? "true" : "false"}
+                />
+              ))}
+            </div>
           </div>
         </div>
       ) : null}

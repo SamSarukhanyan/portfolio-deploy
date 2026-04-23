@@ -81,9 +81,30 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  position: relative;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.swiper::before,
+.swiper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #060607;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.swiper::before {
+  left: 0;
+}
+
+.swiper::after {
+  right: 0;
 }
 
 .swiper :global(.swiper-wrapper) {

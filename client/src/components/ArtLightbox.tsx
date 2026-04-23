@@ -539,6 +539,31 @@ export function ArtLightbox({
     return forcedTarget;
   }
 
+  function applyPixelAlignedSlides(swiper: SwiperType) {
+    const containerWidth = Math.round(swiper.el.clientWidth || 0);
+    if (containerWidth <= 0) return;
+    swiper.slides.forEach((slideEl) => {
+      slideEl.style.width = `${containerWidth}px`;
+      slideEl.style.flexBasis = `${containerWidth}px`;
+      slideEl.style.minWidth = `${containerWidth}px`;
+      slideEl.style.maxWidth = `${containerWidth}px`;
+    });
+  }
+
+  function applyRoundedWrapperTranslate(swiper: SwiperType, rawTranslate: number) {
+    const roundedTranslate = Math.round(rawTranslate);
+    const wrapper = swiper.wrapperEl;
+    wrapper.style.transform = `translate3d(${roundedTranslate}px, 0, 0)`;
+    const slideWidth = swiper.slides[swiper.activeIndex]?.clientWidth ?? 0;
+    const fractionalRemainder = Math.abs(rawTranslate - roundedTranslate);
+    console.log({
+      wrapperTranslateX: rawTranslate,
+      containerWidth: swiper.el.clientWidth,
+      slideWidth,
+      fractionalRemainder,
+    });
+  }
+
   const overlayStyle = useMemo(
     () =>
       ({
@@ -593,6 +618,16 @@ export function ArtLightbox({
               swiperRef.current = swiper;
               settledIndexRef.current = activeIndexRef.current;
               gestureStartIndexRef.current = activeIndexRef.current;
+              applyPixelAlignedSlides(swiper);
+            }}
+            onBeforeResize={(swiper: SwiperType) => {
+              applyPixelAlignedSlides(swiper);
+            }}
+            onResize={(swiper: SwiperType) => {
+              applyPixelAlignedSlides(swiper);
+            }}
+            onSetTranslate={(swiper: SwiperType, translate: number) => {
+              applyRoundedWrapperTranslate(swiper, translate);
             }}
             onTouchStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) {

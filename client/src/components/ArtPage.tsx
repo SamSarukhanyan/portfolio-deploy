@@ -23,6 +23,49 @@ const fallbackImage =
 
 const SNAKE_SEGMENTS = 12;
 
+type ArtworkCardProps = {
+  art: (typeof artworks)[number];
+  index: number;
+  onOpen: (index: number) => void;
+  getArtworkSrc: (filename: string) => string;
+  fallbackImage: string;
+};
+
+function ArtworkCard({ art, index, onOpen, getArtworkSrc, fallbackImage }: ArtworkCardProps) {
+  const [imageReady, setImageReady] = useState(false);
+
+  return (
+    <article className={`glass ${styles.card}`}>
+      <button type="button" className={styles.imageBtn} onClick={() => onOpen(index)}>
+        <span className={styles.imageFrame}>
+          <span className={imageReady ? styles.skeletonOut : styles.skeleton} aria-hidden />
+          <img
+            className={imageReady ? styles.imageVisible : styles.imagePending}
+            src={getArtworkSrc(art.filename)}
+            alt={art.title}
+            loading="lazy"
+            decoding="async"
+            onLoad={() => {
+              setImageReady(true);
+            }}
+            onError={(event) => {
+              event.currentTarget.src = fallbackImage;
+              setImageReady(true);
+            }}
+          />
+        </span>
+      </button>
+      <div className={styles.meta}>
+        <h2>{art.title}</h2>
+        <p>
+          <span>{art.size}</span>
+          <span>{art.medium}</span>
+        </p>
+      </div>
+    </article>
+  );
+}
+
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -66,25 +109,14 @@ export function ArtPage() {
 
         <div className={styles.grid}>
           {artworks.map((art, index) => (
-            <article key={art.id} className={`glass ${styles.card}`}>
-              <button type="button" className={styles.imageBtn} onClick={() => openAt(index)}>
-                <img
-                  src={getArtworkSrc(art.filename)}
-                  alt={art.title}
-                  loading="lazy"
-                  onError={(event) => {
-                    event.currentTarget.src = fallbackImage;
-                  }}
-                />
-              </button>
-              <div className={styles.meta}>
-                <h2>{art.title}</h2>
-                <p>
-                  <span>{art.size}</span>
-                  <span>{art.medium}</span>
-                </p>
-              </div>
-            </article>
+            <ArtworkCard
+              key={art.id}
+              art={art}
+              index={index}
+              onOpen={openAt}
+              getArtworkSrc={getArtworkSrc}
+              fallbackImage={fallbackImage}
+            />
           ))}
         </div>
       </div>

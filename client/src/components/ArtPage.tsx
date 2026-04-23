@@ -152,11 +152,21 @@ export function ArtPage() {
   function settleSlideTo(direction: "next" | "prev") {
     if (activeIndex === null || isSlideSettling) return;
     const stageWidth = stageRef.current?.clientWidth ?? window.innerWidth;
+    const progressRatio = Math.min(1, Math.abs(slideDragX) / Math.max(stageWidth, 1));
     const targetDrag = direction === "next" ? -stageWidth : stageWidth;
     const nextIndex =
       direction === "next"
         ? Math.min(activeIndex + 1, artworks.length - 1)
         : Math.max(activeIndex - 1, 0);
+
+    // If user already dragged almost full-width, don't add extra auto-push animation.
+    if (progressRatio >= 0.88) {
+      goToIndex(nextIndex);
+      setSlideDragX(0);
+      setIsSlideDragging(false);
+      setIsSlideSettling(false);
+      return;
+    }
 
     setIsSlideDragging(false);
     setIsSlideSettling(true);
@@ -445,7 +455,7 @@ export function ArtPage() {
                     <div
                       className={styles.carouselSlide}
                       key={key}
-                      style={{ transform: `translate3d(calc(${slot * 102}% + ${slideDragX}px), 0, 0)` }}
+                      style={{ transform: `translate3d(calc(${slot * 112}% + ${slideDragX}px), 0, 0)` }}
                       aria-hidden={art?.id !== activeArtwork.id}
                     >
                       {art ? (

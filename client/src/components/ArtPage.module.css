@@ -494,14 +494,15 @@
   justify-items: center;
   align-items: center;
   padding: 0;
+  overflow: hidden;
   backface-visibility: hidden;
   will-change: transform;
 }
 
 .figure img {
-  max-width: min(100vw, 1200px);
+  width: 100%;
+  max-width: 100%;
   max-height: min(68vh, 78dvh);
-  width: auto;
   height: auto;
   object-fit: contain;
   transition: transform 0.2s ease-out;
@@ -669,6 +670,7 @@
 
   .figure img {
     max-height: min(62vh, 68dvh);
+    width: 100%;
   }
 
   .figure figcaption {

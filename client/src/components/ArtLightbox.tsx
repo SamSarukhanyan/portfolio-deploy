@@ -1,10 +1,8 @@
 import { createPortal } from "react-dom";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { Zoom } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/zoom";
 import styles from "./ArtLightbox.module.css";
 import type { Artwork } from "../content/artworks";
 
@@ -20,6 +18,34 @@ type Props = {
 };
 
 const ROOT_ID = "art-lightbox-root";
+const MAX_ZOOM_SCALE = 4;
+const RESET_ANIMATION_MS = 220;
+
+type Point = { x: number; y: number };
+type TouchPoint = { clientX: number; clientY: number };
+
+type ZoomLayer = {
+  src: string;
+  alt: string;
+};
+
+type ZoomMetrics = {
+  viewportWidth: number;
+  viewportHeight: number;
+  baseWidth: number;
+  baseHeight: number;
+};
+
+type ZoomRuntime = {
+  mode: "pinch" | "pan";
+  metrics: ZoomMetrics;
+  startScale: number;
+  startX: number;
+  startY: number;
+  startDistance: number;
+  startCenter: Point;
+  panStartTouch: Point;
+};
 
 export function ArtLightbox({
   artworks,
@@ -34,12 +60,26 @@ export function ArtLightbox({
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isZooming, setIsZooming] = useState(false);
+  const [zoomLayer, setZoomLayer] = useState<ZoomLayer | null>(null);
   const swiperRef = useRef<SwiperType | null>(null);
+  const slideImageRefs = useRef<Array<HTMLImageElement | null>>([]);
+  const zoomImgRef = useRef<HTMLImageElement | null>(null);
+  const zoomRuntimeRef = useRef<ZoomRuntime | null>(null);
+  const zoomRafRef = useRef<number | null>(null);
+  const resetRafRef = useRef<number | null>(null);
   const isTransitioningRef = useRef(false);
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
   const activeIndexRef = useRef(activeIndex);
+  const zoomMotionRef = useRef({
+    scale: 1,
+    x: 0,
+    y: 0,
+    targetScale: 1,
+    targetX: 0,
+    targetY: 0,
+  });
+  const isZooming = zoomLayer !== null;
 
   const activeArtwork = artworks[activeIndex];
 
@@ -47,14 +87,250 @@ export function ArtLightbox({
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
 
-  function resetZoom(swiper: SwiperType | null) {
-    if (!swiper || !swiper.zoom) return;
-    if (swiper.zoom.scale <= 1) {
-      setIsZooming(false);
+  function setBackgroundLock(isLocked: boolean) {
+    const swiper = swiperRef.current;
+    if (swiper) {
+      swiper.allowTouchMove = !isLocked;
+    }
+    if (isLocked) {
+      document.body.classList.add("art-zoom-active");
       return;
     }
-    swiper.zoom.out();
-    setIsZooming(false);
+    document.body.classList.remove("art-zoom-active");
+  }
+
+  function clampZoomPan(x: number, y: number, scale: number, metrics: ZoomMetrics) {
+    const maxX = Math.max(0, (metrics.baseWidth * scale - metrics.viewportWidth) / 2);
+    const maxY = Math.max(0, (metrics.baseHeight * scale - metrics.viewportHeight) / 2);
+    return {
+      x: Math.max(-maxX, Math.min(maxX, x)),
+      y: Math.max(-maxY, Math.min(maxY, y)),
+    };
+  }
+
+  function applyZoomTransform() {
+    zoomRafRef.current = null;
+    const zoomImg = zoomImgRef.current;
+    if (!zoomImg) return;
+    const motion = zoomMotionRef.current;
+    motion.scale = motion.targetScale;
+    motion.x = motion.targetX;
+    motion.y = motion.targetY;
+    zoomImg.style.transform = `translate3d(${motion.x}px, ${motion.y}px, 0) scale(${motion.scale})`;
+  }
+
+  function scheduleTransformFrame() {
+    if (zoomRafRef.current !== null) return;
+    zoomRafRef.current = window.requestAnimationFrame(applyZoomTransform);
+  }
+
+  function cancelZoomFrames() {
+    if (zoomRafRef.current !== null) {
+      window.cancelAnimationFrame(zoomRafRef.current);
+      zoomRafRef.current = null;
+    }
+    if (resetRafRef.current !== null) {
+      window.cancelAnimationFrame(resetRafRef.current);
+      resetRafRef.current = null;
+    }
+  }
+
+  function resetZoomState() {
+    cancelZoomFrames();
+    zoomRuntimeRef.current = null;
+    zoomMotionRef.current = {
+      scale: 1,
+      x: 0,
+      y: 0,
+      targetScale: 1,
+      targetX: 0,
+      targetY: 0,
+    };
+  }
+
+  function distanceBetweenTouches(touchA: TouchPoint, touchB: TouchPoint) {
+    const dx = touchB.clientX - touchA.clientX;
+    const dy = touchB.clientY - touchA.clientY;
+    return Math.hypot(dx, dy);
+  }
+
+  function centerBetweenTouches(touchA: TouchPoint, touchB: TouchPoint): Point {
+    return {
+      x: (touchA.clientX + touchB.clientX) * 0.5,
+      y: (touchA.clientY + touchB.clientY) * 0.5,
+    };
+  }
+
+  function setZoomTargets(scale: number, x: number, y: number, metrics: ZoomMetrics) {
+    const clampedScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, scale));
+    const clampedPan = clampZoomPan(x, y, clampedScale, metrics);
+    const motion = zoomMotionRef.current;
+    motion.targetScale = clampedScale;
+    motion.targetX = clampedPan.x;
+    motion.targetY = clampedPan.y;
+    scheduleTransformFrame();
+  }
+
+  function animateResetAndCloseLayer() {
+    const metrics = zoomRuntimeRef.current?.metrics;
+    const start = performance.now();
+    const from = { ...zoomMotionRef.current };
+    const animate = (now: number) => {
+      const progress = Math.min(1, (now - start) / RESET_ANIMATION_MS);
+      const eased = 1 - (1 - progress) ** 3;
+      zoomMotionRef.current.targetScale = from.scale + (1 - from.scale) * eased;
+      zoomMotionRef.current.targetX = from.x + (0 - from.x) * eased;
+      zoomMotionRef.current.targetY = from.y + (0 - from.y) * eased;
+      if (metrics) {
+        const clamped = clampZoomPan(
+          zoomMotionRef.current.targetX,
+          zoomMotionRef.current.targetY,
+          zoomMotionRef.current.targetScale,
+          metrics,
+        );
+        zoomMotionRef.current.targetX = clamped.x;
+        zoomMotionRef.current.targetY = clamped.y;
+      }
+      applyZoomTransform();
+      if (progress < 1) {
+        resetRafRef.current = window.requestAnimationFrame(animate);
+        return;
+      }
+      setBackgroundLock(false);
+      setZoomLayer(null);
+      resetZoomState();
+    };
+    if (Math.abs(from.scale - 1) < 0.001 && Math.abs(from.x) < 0.01 && Math.abs(from.y) < 0.01) {
+      setBackgroundLock(false);
+      setZoomLayer(null);
+      resetZoomState();
+      return;
+    }
+    resetRafRef.current = window.requestAnimationFrame(animate);
+  }
+
+  function beginPan(touch: TouchPoint, runtime: ZoomRuntime) {
+    runtime.mode = "pan";
+    runtime.startScale = zoomMotionRef.current.scale;
+    runtime.startX = zoomMotionRef.current.x;
+    runtime.startY = zoomMotionRef.current.y;
+    runtime.panStartTouch = { x: touch.clientX, y: touch.clientY };
+  }
+
+  function beginPinch(touchA: TouchPoint, touchB: TouchPoint) {
+    const runtime = zoomRuntimeRef.current;
+    if (!runtime) return;
+    runtime.mode = "pinch";
+    runtime.startScale = zoomMotionRef.current.scale;
+    runtime.startX = zoomMotionRef.current.x;
+    runtime.startY = zoomMotionRef.current.y;
+    runtime.startDistance = distanceBetweenTouches(touchA, touchB);
+    runtime.startCenter = centerBetweenTouches(touchA, touchB);
+  }
+
+  function startZoomLayerFromImage(image: HTMLImageElement) {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    const naturalWidth = Math.max(1, image.naturalWidth || image.clientWidth);
+    const naturalHeight = Math.max(1, image.naturalHeight || image.clientHeight);
+    const fitRatio = Math.min(viewportWidth / naturalWidth, viewportHeight / naturalHeight);
+    const baseWidth = naturalWidth * fitRatio;
+    const baseHeight = naturalHeight * fitRatio;
+    resetZoomState();
+    zoomRuntimeRef.current = {
+      mode: "pinch",
+      metrics: {
+        viewportWidth,
+        viewportHeight,
+        baseWidth,
+        baseHeight,
+      },
+      startScale: 1,
+      startX: 0,
+      startY: 0,
+      startDistance: 1,
+      startCenter: { x: viewportWidth * 0.5, y: viewportHeight * 0.5 },
+      panStartTouch: { x: viewportWidth * 0.5, y: viewportHeight * 0.5 },
+    };
+    setZoomLayer({
+      src: image.currentSrc || image.src,
+      alt: image.alt,
+    });
+    setBackgroundLock(true);
+  }
+
+  function handleViewportTouchStart(event: TouchEvent<HTMLDivElement>) {
+    if (event.touches.length < 2 || zoomLayer) return;
+    const activeImage = slideImageRefs.current[activeIndexRef.current];
+    if (!activeImage) return;
+    const target = event.target as Node | null;
+    if (!target || !activeImage.contains(target)) return;
+    event.preventDefault();
+    startZoomLayerFromImage(activeImage);
+    beginPinch(event.touches[0], event.touches[1]);
+  }
+
+  function handleZoomTouchStart(event: TouchEvent<HTMLDivElement>) {
+    const runtime = zoomRuntimeRef.current;
+    if (!runtime) return;
+    if (event.touches.length >= 2) {
+      event.preventDefault();
+      beginPinch(event.touches[0], event.touches[1]);
+      return;
+    }
+    if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001) {
+      event.preventDefault();
+      beginPan(event.touches[0], runtime);
+    }
+  }
+
+  function handleZoomTouchMove(event: TouchEvent<HTMLDivElement>) {
+    const runtime = zoomRuntimeRef.current;
+    if (!runtime) return;
+    if (event.touches.length >= 2) {
+      event.preventDefault();
+      const touchA = event.touches[0];
+      const touchB = event.touches[1];
+      const center = centerBetweenTouches(touchA, touchB);
+      const distance = distanceBetweenTouches(touchA, touchB);
+      const pinchRatio = runtime.startDistance > 0 ? distance / runtime.startDistance : 1;
+      const nextScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, runtime.startScale * pinchRatio));
+      const viewportCenterX = runtime.metrics.viewportWidth * 0.5;
+      const viewportCenterY = runtime.metrics.viewportHeight * 0.5;
+      const scaleRatio = runtime.startScale > 0 ? nextScale / runtime.startScale : 1;
+      const nextX =
+        runtime.startX + (center.x - runtime.startCenter.x) + (runtime.startCenter.x - viewportCenterX) * (1 - scaleRatio);
+      const nextY =
+        runtime.startY + (center.y - runtime.startCenter.y) + (runtime.startCenter.y - viewportCenterY) * (1 - scaleRatio);
+      setZoomTargets(nextScale, nextX, nextY, runtime.metrics);
+      return;
+    }
+    if (event.touches.length === 1 && runtime.mode === "pan" && zoomMotionRef.current.scale > 1.001) {
+      event.preventDefault();
+      const touch = event.touches[0];
+      const nextX = runtime.startX + (touch.clientX - runtime.panStartTouch.x);
+      const nextY = runtime.startY + (touch.clientY - runtime.panStartTouch.y);
+      setZoomTargets(zoomMotionRef.current.scale, nextX, nextY, runtime.metrics);
+    }
+  }
+
+  function handleZoomTouchEnd(event: TouchEvent<HTMLDivElement>) {
+    const runtime = zoomRuntimeRef.current;
+    if (!runtime) return;
+    if (event.touches.length >= 2) {
+      beginPinch(event.touches[0], event.touches[1]);
+      return;
+    }
+    if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001) {
+      beginPan(event.touches[0], runtime);
+      return;
+    }
+    animateResetAndCloseLayer();
+  }
+
+  function handleZoomTouchCancel() {
+    if (!zoomRuntimeRef.current) return;
+    animateResetAndCloseLayer();
   }
 
   useEffect(() => {
@@ -91,6 +367,8 @@ export function ArtLightbox({
     window.visualViewport?.addEventListener("scroll", onResize);
 
     return () => {
+      setBackgroundLock(false);
+      resetZoomState();
       document.body.classList.remove("art-modal-open");
       document.body.style.position = prevPosition;
       document.body.style.top = prevTop;
@@ -105,13 +383,18 @@ export function ArtLightbox({
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      if (zoomLayer) {
+        animateResetAndCloseLayer();
+        return;
+      }
+      onClose();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onClose]);
+  }, [onClose, zoomLayer]);
 
   useEffect(() => {
     const swiper = swiperRef.current;
@@ -167,20 +450,15 @@ export function ArtLightbox({
       <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
 
       <div className={styles.stage} onClick={(event) => event.stopPropagation()}>
-        <div className={styles.viewport}>
+        <div className={styles.viewport} onTouchStartCapture={handleViewportTouchStart}>
           <Swiper
             className={styles.swiper}
-            modules={[Zoom]}
-            zoom={{
-              maxRatio: 4,
-              minRatio: 1,
-              toggle: false,
-            }}
             slidesPerView={1}
             slidesPerGroup={1}
             slidesPerGroupSkip={0}
             spaceBetween={0}
             centeredSlides
+            roundLengths
             loop={false}
             freeMode={false}
             allowSlideNext
@@ -196,19 +474,20 @@ export function ArtLightbox({
             speed={260}
             watchOverflow
             preventInteractionOnTransition
-            allowTouchMove={!isTransitioning}
+            allowTouchMove={!isTransitioning && !isZooming}
             touchMoveStopPropagation
             initialSlide={activeIndex}
             onSwiper={(swiper: SwiperType) => {
               swiperRef.current = swiper;
               settledIndexRef.current = activeIndexRef.current;
               gestureStartIndexRef.current = activeIndexRef.current;
-              swiper.on("zoomChange", (_swiper, scale) => {
-                setIsZooming(scale > 1.01);
-              });
             }}
             onTouchStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) {
+                swiper.allowTouchMove = false;
+                return;
+              }
+              if (isZooming) {
                 swiper.allowTouchMove = false;
                 return;
               }
@@ -217,7 +496,6 @@ export function ArtLightbox({
             }}
             onSlideChangeTransitionStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) return;
-              resetZoom(swiper);
               lockTransition();
               const nextIndex = enforceSingleStep(swiper);
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
@@ -234,21 +512,14 @@ export function ArtLightbox({
               unlockTransition();
             }}
           >
-            {artworks.map((art) => (
+            {artworks.map((art, index) => (
               <SwiperSlide className={styles.slide} key={art.id}>
-                <div
-                  className={`${styles.zoomContainer} swiper-zoom-container`}
-                  onTouchEndCapture={(event) => {
-                    if (event.touches.length === 0) {
-                      resetZoom(swiperRef.current);
-                    }
-                  }}
-                  onTouchCancel={() => {
-                    resetZoom(swiperRef.current);
-                  }}
-                >
+                <div className={styles.slideMedia}>
                   <img
-                    className={styles.slideImg}
+                    className={`${styles.slideImg} ${isZooming && activeIndex === index ? styles.slideImgHidden : ""}`}
+                    ref={(node) => {
+                      slideImageRefs.current[index] = node;
+                    }}
                     src={getArtworkSrc(art.filename)}
                     alt={art.title}
                     onError={(event) => {
@@ -291,6 +562,18 @@ export function ArtLightbox({
           </div>
         </div>
       </div>
+
+      {zoomLayer ? (
+        <div
+          className={styles.zoomLayer}
+          onTouchStart={handleZoomTouchStart}
+          onTouchMove={handleZoomTouchMove}
+          onTouchEnd={handleZoomTouchEnd}
+          onTouchCancel={handleZoomTouchCancel}
+        >
+          <img ref={zoomImgRef} className={styles.zoomLayerImage} src={zoomLayer.src} alt={zoomLayer.alt} draggable={false} />
+        </div>
+      ) : null}
     </div>,
     portalHost,
   );

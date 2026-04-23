@@ -1,14 +1,7 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { createPortal } from "react-dom";
-import type { Artwork } from "../content/artworks";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
 import styles from "./ArtLightbox.module.css";
-
-type Point = { x: number; y: number; t: number };
-type PointerPoint = { x: number; y: number };
-
-const ROOT_ID = "art-lightbox-root";
-const MAX_SCALE = 4;
-const MIN_SCALE = 1;
+import type { Artwork } from "../content/artworks";
 
 type Props = {
   artworks: Artwork[];
@@ -21,12 +14,16 @@ type Props = {
   titleLabel: string;
 };
 
-function easeOutCubic(t: number) {
-  return 1 - (1 - t) ** 3;
-}
+type TouchPoint = { x: number; y: number; t: number };
+
+const ROOT_ID = "art-lightbox-root";
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
+}
+
+function easeOutCubic(t: number) {
+  return 1 - (1 - t) ** 3;
 }
 
 export function ArtLightbox({
@@ -39,24 +36,25 @@ export function ArtLightbox({
   closeLabel,
   titleLabel,
 }: Props) {
-  const stageRef = useRef<HTMLDivElement | null>(null);
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
-
-  const [stageSize, setStageSize] = useState({ w: 1, h: 1 });
-  const [offsetX, setOffsetX] = useState(0);
-  const [isDraggingSlide, setIsDraggingSlide] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(1);
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const [isSnapping, setIsSnapping] = useState(false);
 
+  const [zoomActive, setZoomActive] = useState(false);
   const [zoomScale, setZoomScale] = useState(1);
   const [zoomX, setZoomX] = useState(0);
   const [zoomY, setZoomY] = useState(0);
-  const [isZoomResetting, setIsZoomResetting] = useState(false);
+  const [zoomUiHidden, setZoomUiHidden] = useState(false);
 
-  const pointersRef = useRef<Map<number, PointerPoint>>(new Map());
-  const slideStartRef = useRef<Point | null>(null);
-  const slideSamplesRef = useRef<Point[]>([]);
-  const panStartRef = useRef<{ x: number; y: number; baseX: number; baseY: number } | null>(null);
-  const pinchStartRef = useRef<{
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const naturalSizeRef = useRef<Record<string, { w: number; h: number }>>({});
+  const touchSamplesRef = useRef<TouchPoint[]>([]);
+  const dragStartRef = useRef<{ x: number; y: number; t: number } | null>(null);
+
+  const pinchRef = useRef<{
     distance: number;
     centerX: number;
     centerY: number;
@@ -64,45 +62,24 @@ export function ArtLightbox({
     baseX: number;
     baseY: number;
   } | null>(null);
+  const panRef = useRef<{ x: number; y: number; baseX: number; baseY: number } | null>(null);
 
-  const rafInertiaRef = useRef<number | null>(null);
-  const rafSnapRef = useRef<number | null>(null);
-  const rafZoomResetRef = useRef<number | null>(null);
-
-  const zoomScaleRef = useRef(1);
-  const zoomXRef = useRef(0);
-  const zoomYRef = useRef(0);
-  const offsetXRef = useRef(0);
-  const naturalSizeRef = useRef<Record<string, { w: number; h: number }>>({});
+  const inertiaRafRef = useRef<number | null>(null);
+  const snapRafRef = useRef<number | null>(null);
+  const zoomResetRafRef = useRef<number | null>(null);
 
   const activeArtwork = artworks[activeIndex];
-
   const canGoPrev = activeIndex > 0;
   const canGoNext = activeIndex < artworks.length - 1;
-  const isZoomed = zoomScale > 1.001;
 
-  const viewItems = useMemo(() => {
-    const prev = canGoPrev ? artworks[activeIndex - 1] : null;
-    const next = canGoNext ? artworks[activeIndex + 1] : null;
-    return [
-      { key: prev ? `p-${prev.id}` : "p-empty", art: prev, slot: -1 },
-      { key: `c-${activeArtwork.id}`, art: activeArtwork, slot: 0 },
-      { key: next ? `n-${next.id}` : "n-empty", art: next, slot: 1 },
-    ];
-  }, [activeArtwork, activeIndex, artworks, canGoNext, canGoPrev]);
-
-  useEffect(() => {
-    zoomScaleRef.current = zoomScale;
-  }, [zoomScale]);
-  useEffect(() => {
-    zoomXRef.current = zoomX;
-  }, [zoomX]);
-  useEffect(() => {
-    zoomYRef.current = zoomY;
-  }, [zoomY]);
-  useEffect(() => {
-    offsetXRef.current = offsetX;
-  }, [offsetX]);
+  const trackStyle = useMemo(
+    () =>
+      ({
+        transform: `translate3d(calc(${-activeIndex * 100}% + ${dragX}px), 0, 0)`,
+        transition: isDragging ? "none" : isSnapping ? "transform 260ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
+      }) as CSSProperties,
+    [activeIndex, dragX, isDragging, isSnapping],
+  );
 
   useEffect(() => {
     let root = document.getElementById(ROOT_ID);
@@ -119,363 +96,327 @@ export function ArtLightbox({
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-      if (event.key === "ArrowLeft" && canGoPrev && !isZoomed) onChangeIndex(activeIndex - 1);
-      if (event.key === "ArrowRight" && canGoNext && !isZoomed) onChangeIndex(activeIndex + 1);
+    const onResize = () => {
+      const w = viewportRef.current?.clientWidth ?? window.innerWidth;
+      setViewportWidth(Math.max(1, w));
     };
-    window.addEventListener("keydown", onKey);
+    onResize();
+    window.addEventListener("resize", onResize);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+      if (zoomActive) return;
+      if (event.key === "ArrowLeft" && canGoPrev) onChangeIndex(activeIndex - 1);
+      if (event.key === "ArrowRight" && canGoNext) onChangeIndex(activeIndex + 1);
+    };
+    window.addEventListener("keydown", onKeyDown);
 
     return () => {
       document.body.classList.remove("art-modal-open");
       document.body.style.overflow = prevOverflow;
-      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("keydown", onKeyDown);
     };
-  }, [activeIndex, canGoNext, canGoPrev, isZoomed, onChangeIndex, onClose]);
-
-  useEffect(() => {
-    const node = stageRef.current;
-    if (!node) return;
-    const update = () => setStageSize({ w: Math.max(1, node.clientWidth), h: Math.max(1, node.clientHeight) });
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(node);
-    return () => ro.disconnect();
-  }, []);
+  }, [activeIndex, canGoNext, canGoPrev, onChangeIndex, onClose, zoomActive]);
 
   useEffect(() => {
     return () => {
-      if (rafInertiaRef.current !== null) cancelAnimationFrame(rafInertiaRef.current);
-      if (rafSnapRef.current !== null) cancelAnimationFrame(rafSnapRef.current);
-      if (rafZoomResetRef.current !== null) cancelAnimationFrame(rafZoomResetRef.current);
+      if (inertiaRafRef.current !== null) cancelAnimationFrame(inertiaRafRef.current);
+      if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
+      if (zoomResetRafRef.current !== null) cancelAnimationFrame(zoomResetRafRef.current);
     };
   }, []);
 
-  function stopSlideAnimations() {
-    if (rafInertiaRef.current !== null) cancelAnimationFrame(rafInertiaRef.current);
-    if (rafSnapRef.current !== null) cancelAnimationFrame(rafSnapRef.current);
-    rafInertiaRef.current = null;
-    rafSnapRef.current = null;
+  function stopSliderAnimation() {
+    if (inertiaRafRef.current !== null) cancelAnimationFrame(inertiaRafRef.current);
+    if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
+    inertiaRafRef.current = null;
+    snapRafRef.current = null;
   }
 
-  function stopZoomReset() {
-    if (rafZoomResetRef.current !== null) cancelAnimationFrame(rafZoomResetRef.current);
-    rafZoomResetRef.current = null;
-  }
-
-  function calcBaseSize() {
-    const natural = naturalSizeRef.current[activeArtwork.id];
-    if (!natural) {
-      const fallbackW = stageSize.w;
-      const fallbackH = Math.min(stageSize.h, stageSize.w * 0.75);
-      return { w: fallbackW, h: fallbackH };
-    }
-    const fit = Math.min(stageSize.w / natural.w, stageSize.h / natural.h);
-    return { w: natural.w * fit, h: natural.h * fit };
-  }
-
-  function applySoftBound(value: number, limit: number) {
-    if (limit <= 0) return 0;
-    if (Math.abs(value) <= limit) return value;
-    const over = Math.abs(value) - limit;
-    return Math.sign(value) * (limit + over * 0.24);
-  }
-
-  function clampZoomTranslation(nextX: number, nextY: number, nextScale: number, withRubber: boolean) {
-    const base = calcBaseSize();
-    const maxX = Math.max(0, (base.w * nextScale - stageSize.w) / 2);
-    const maxY = Math.max(0, (base.h * nextScale - stageSize.h) / 2);
-    if (withRubber) {
-      return {
-        x: applySoftBound(nextX, maxX),
-        y: applySoftBound(nextY, maxY),
-      };
-    }
-    return {
-      x: clamp(nextX, -maxX, maxX),
-      y: clamp(nextY, -maxY, maxY),
-    };
-  }
-
-  function resetZoomSmooth() {
-    stopZoomReset();
-    const startScale = zoomScaleRef.current;
-    const startX = zoomXRef.current;
-    const startY = zoomYRef.current;
-    if (startScale <= 1.001 && Math.abs(startX) < 0.5 && Math.abs(startY) < 0.5) {
-      setZoomScale(1);
-      setZoomX(0);
-      setZoomY(0);
-      setIsZoomResetting(false);
-      return;
-    }
-    setIsZoomResetting(true);
-    const duration = 300;
-    const start = performance.now();
-    const frame = (now: number) => {
-      const p = clamp((now - start) / duration, 0, 1);
-      const e = easeOutCubic(p);
-      setZoomScale(startScale + (1 - startScale) * e);
-      setZoomX(startX + (0 - startX) * e);
-      setZoomY(startY + (0 - startY) * e);
-      if (p < 1) {
-        rafZoomResetRef.current = requestAnimationFrame(frame);
-      } else {
-        setZoomScale(1);
-        setZoomX(0);
-        setZoomY(0);
-        setIsZoomResetting(false);
-        rafZoomResetRef.current = null;
-      }
-    };
-    rafZoomResetRef.current = requestAnimationFrame(frame);
-  }
-
-  function snapSlide(targetOffset: number, targetIndex: number) {
-    stopSlideAnimations();
+  function animateSnap(targetDrag: number, targetIndex: number) {
+    stopSliderAnimation();
+    setIsSnapping(true);
+    const from = dragX;
     const start = performance.now();
     const duration = 260;
-    const from = offsetXRef.current;
-    setIsSnapping(true);
     const frame = (now: number) => {
       const p = clamp((now - start) / duration, 0, 1);
       const e = easeOutCubic(p);
-      setOffsetX(from + (targetOffset - from) * e);
+      setDragX(from + (targetDrag - from) * e);
       if (p < 1) {
-        rafSnapRef.current = requestAnimationFrame(frame);
+        snapRafRef.current = requestAnimationFrame(frame);
       } else {
-        setOffsetX(0);
+        snapRafRef.current = null;
+        setDragX(0);
         setIsSnapping(false);
-        rafSnapRef.current = null;
         if (targetIndex !== activeIndex) onChangeIndex(targetIndex);
       }
     };
-    rafSnapRef.current = requestAnimationFrame(frame);
+    snapRafRef.current = requestAnimationFrame(frame);
   }
 
   function computeVelocity() {
     const now = performance.now();
-    const points = slideSamplesRef.current.filter((p) => now - p.t < 90);
-    if (points.length < 2) return 0;
-    const first = points[0];
-    const last = points[points.length - 1];
+    const recent = touchSamplesRef.current.filter((p) => now - p.t <= 90);
+    if (recent.length < 2) return 0;
+    const first = recent[0];
+    const last = recent[recent.length - 1];
     const dt = Math.max(1, last.t - first.t);
-    return (last.x - first.x) / dt; // px/ms
+    return (last.x - first.x) / dt;
   }
 
-  function finishSlide() {
-    const width = stageSize.w;
-    const x0 = offsetXRef.current;
-    const v0 = computeVelocity();
+  function finishSwipe() {
+    const width = viewportWidth;
+    const startX = dragX;
+    const startV = computeVelocity();
+    let x = startX;
+    let v = startV;
+    let prev = performance.now();
 
-    let x = x0;
-    let v = v0;
-    let last = performance.now();
-
-    const step = (now: number) => {
-      const dt = Math.max(8, now - last);
-      last = now;
-
+    const inertia = (now: number) => {
+      const dt = Math.max(8, now - prev);
+      prev = now;
       x += v * dt;
       v *= Math.pow(0.92, dt / 16);
 
       if ((!canGoPrev && x > 0) || (!canGoNext && x < 0)) {
-        x *= 0.72;
-        v *= 0.55;
+        x *= 0.68;
+        v *= 0.54;
       }
-
-      setOffsetX(x);
+      setDragX(x);
 
       if (Math.abs(v) > 0.03 && Math.abs(x) < width * 1.2) {
-        rafInertiaRef.current = requestAnimationFrame(step);
+        inertiaRafRef.current = requestAnimationFrame(inertia);
         return;
       }
+      inertiaRafRef.current = null;
 
-      rafInertiaRef.current = null;
-
-      let targetIndex = activeIndex;
-      if ((x <= -width * 0.24 || v0 <= -0.42) && canGoNext) targetIndex = activeIndex + 1;
-      if ((x >= width * 0.24 || v0 >= 0.42) && canGoPrev) targetIndex = activeIndex - 1;
-
-      const targetOffset =
-        targetIndex > activeIndex ? -width : targetIndex < activeIndex ? width : 0;
-      snapSlide(targetOffset, targetIndex);
+      let target = activeIndex;
+      if ((x <= -width * 0.22 || startV <= -0.42) && canGoNext) target = activeIndex + 1;
+      if ((x >= width * 0.22 || startV >= 0.42) && canGoPrev) target = activeIndex - 1;
+      const targetDrag = target > activeIndex ? -width : target < activeIndex ? width : 0;
+      animateSnap(targetDrag, target);
     };
 
-    stopSlideAnimations();
-    rafInertiaRef.current = requestAnimationFrame(step);
+    stopSliderAnimation();
+    inertiaRafRef.current = requestAnimationFrame(inertia);
   }
 
-  function onPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
-    if (event.pointerType === "touch") {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
-    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-
-    stopSlideAnimations();
-    stopZoomReset();
-
-    const points = Array.from(pointersRef.current.values());
-    if (points.length === 2) {
-      const [a, b] = points;
-      pinchStartRef.current = {
-        distance: Math.hypot(a.x - b.x, a.y - b.y),
-        centerX: (a.x + b.x) / 2,
-        centerY: (a.y + b.y) / 2,
-        baseScale: zoomScaleRef.current,
-        baseX: zoomXRef.current,
-        baseY: zoomYRef.current,
-      };
-      panStartRef.current = null;
-      slideStartRef.current = null;
-      setIsDraggingSlide(false);
-      return;
-    }
-
-    if (zoomScaleRef.current > 1.001) {
-      panStartRef.current = {
-        x: event.clientX,
-        y: event.clientY,
-        baseX: zoomXRef.current,
-        baseY: zoomYRef.current,
-      };
-      slideStartRef.current = null;
-      setIsDraggingSlide(false);
-      return;
-    }
-
-    slideStartRef.current = { x: event.clientX, y: event.clientY, t: performance.now() };
-    slideSamplesRef.current = [{ x: event.clientX, y: event.clientY, t: performance.now() }];
-    setIsDraggingSlide(false);
+  function handleSliderTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
+    if (zoomActive) return;
+    if (event.touches.length !== 1) return;
+    stopSliderAnimation();
+    const t = event.touches[0];
+    dragStartRef.current = { x: t.clientX, y: t.clientY, t: performance.now() };
+    touchSamplesRef.current = [{ x: t.clientX, y: t.clientY, t: performance.now() }];
+    setIsDragging(false);
   }
 
-  function onPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
-    if (!pointersRef.current.has(event.pointerId)) return;
-    pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    const points = Array.from(pointersRef.current.values());
+  function handleSliderTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
+    if (zoomActive) return;
+    if (event.touches.length !== 1 || !dragStartRef.current) return;
+    const t = event.touches[0];
+    const dx = t.clientX - dragStartRef.current.x;
+    const dy = t.clientY - dragStartRef.current.y;
 
-    if (points.length === 2 && pinchStartRef.current) {
-      const [a, b] = points;
-      const nextDistance = Math.hypot(a.x - b.x, a.y - b.y);
-      const start = pinchStartRef.current;
-      const rawScale = start.baseScale * (nextDistance / Math.max(1, start.distance));
-      const nextScale = clamp(rawScale, MIN_SCALE, MAX_SCALE);
+    if (!isDragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+      setIsDragging(true);
+    }
+    if (!isDragging) return;
 
-      const centerX = (a.x + b.x) / 2;
-      const centerY = (a.y + b.y) / 2;
-      const deltaX = centerX - start.centerX;
-      const deltaY = centerY - start.centerY;
-      const bounded = clampZoomTranslation(start.baseX + deltaX, start.baseY + deltaY, nextScale, true);
+    event.preventDefault();
+    if ((!canGoPrev && dx > 0) || (!canGoNext && dx < 0)) {
+      setDragX(dx * 0.2);
+    } else {
+      setDragX(dx);
+    }
+    touchSamplesRef.current.push({ x: t.clientX, y: t.clientY, t: performance.now() });
+    if (touchSamplesRef.current.length > 14) touchSamplesRef.current.shift();
+  }
+
+  function handleSliderTouchEnd() {
+    if (zoomActive) return;
+    if (!dragStartRef.current) return;
+    dragStartRef.current = null;
+    if (!isDragging) {
+      setDragX(0);
+      return;
+    }
+    setIsDragging(false);
+    finishSwipe();
+  }
+
+  function baseImageSize() {
+    const nat = naturalSizeRef.current[activeArtwork.id];
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    if (!nat) return { w: vw, h: vh * 0.7 };
+    const fit = Math.min(vw / nat.w, (vh * 0.78) / nat.h);
+    return { w: nat.w * fit, h: nat.h * fit };
+  }
+
+  function clampZoom(nextScale: number, nextX: number, nextY: number, soft: boolean) {
+    const base = baseImageSize();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const maxX = Math.max(0, (base.w * nextScale - vw) / 2);
+    const maxY = Math.max(0, (base.h * nextScale - vh) / 2);
+    if (!soft) {
+      return { x: clamp(nextX, -maxX, maxX), y: clamp(nextY, -maxY, maxY) };
+    }
+    const damp = (value: number, lim: number) => {
+      if (lim <= 0) return 0;
+      if (Math.abs(value) <= lim) return value;
+      return Math.sign(value) * (lim + (Math.abs(value) - lim) * 0.22);
+    };
+    return { x: damp(nextX, maxX), y: damp(nextY, maxY) };
+  }
+
+  function startZoomFromTouches(t1: { clientX: number; clientY: number }, t2: { clientX: number; clientY: number }) {
+    setZoomActive(true);
+    setZoomUiHidden(true);
+    const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    pinchRef.current = {
+      distance,
+      centerX: (t1.clientX + t2.clientX) / 2,
+      centerY: (t1.clientY + t2.clientY) / 2,
+      baseScale: 1,
+      baseX: 0,
+      baseY: 0,
+    };
+    setZoomScale(1);
+    setZoomX(0);
+    setZoomY(0);
+    setDragX(0);
+    setIsDragging(false);
+  }
+
+  function resetZoomAndClose() {
+    if (zoomResetRafRef.current !== null) cancelAnimationFrame(zoomResetRafRef.current);
+    const s0 = zoomScale;
+    const x0 = zoomX;
+    const y0 = zoomY;
+    const start = performance.now();
+    const duration = 290;
+    const frame = (now: number) => {
+      const p = clamp((now - start) / duration, 0, 1);
+      const e = easeOutCubic(p);
+      setZoomScale(s0 + (1 - s0) * e);
+      setZoomX(x0 + (0 - x0) * e);
+      setZoomY(y0 + (0 - y0) * e);
+      if (p < 1) {
+        zoomResetRafRef.current = requestAnimationFrame(frame);
+      } else {
+        zoomResetRafRef.current = null;
+        setZoomScale(1);
+        setZoomX(0);
+        setZoomY(0);
+        setZoomUiHidden(false);
+        setZoomActive(false);
+      }
+    };
+    zoomResetRafRef.current = requestAnimationFrame(frame);
+  }
+
+  function handleZoomTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
+    if (!zoomActive) return;
+    if (event.touches.length === 2) {
+      const [a, b] = [event.touches[0], event.touches[1]];
+      pinchRef.current = {
+        distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        centerX: (a.clientX + b.clientX) / 2,
+        centerY: (a.clientY + b.clientY) / 2,
+        baseScale: zoomScale,
+        baseX: zoomX,
+        baseY: zoomY,
+      };
+      panRef.current = null;
+    } else if (event.touches.length === 1) {
+      const t = event.touches[0];
+      panRef.current = { x: t.clientX, y: t.clientY, baseX: zoomX, baseY: zoomY };
+      pinchRef.current = null;
+    }
+  }
+
+  function handleZoomTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
+    if (!zoomActive) return;
+    event.preventDefault();
+    if (event.touches.length === 2 && pinchRef.current) {
+      const [a, b] = [event.touches[0], event.touches[1]];
+      const curDistance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      const p = pinchRef.current;
+      const nextScale = clamp(p.baseScale * (curDistance / Math.max(1, p.distance)), 1, 4);
+      const cx = (a.clientX + b.clientX) / 2;
+      const cy = (a.clientY + b.clientY) / 2;
+      const tx = p.baseX + (cx - p.centerX);
+      const ty = p.baseY + (cy - p.centerY);
+      const bounded = clampZoom(nextScale, tx, ty, true);
       setZoomScale(nextScale);
       setZoomX(bounded.x);
       setZoomY(bounded.y);
       return;
     }
-
-    if (zoomScaleRef.current > 1.001 && panStartRef.current && points.length === 1) {
-      const pan = panStartRef.current;
-      const dx = event.clientX - pan.x;
-      const dy = event.clientY - pan.y;
-      const bounded = clampZoomTranslation(pan.baseX + dx, pan.baseY + dy, zoomScaleRef.current, true);
+    if (event.touches.length === 1 && panRef.current) {
+      const t = event.touches[0];
+      const dx = t.clientX - panRef.current.x;
+      const dy = t.clientY - panRef.current.y;
+      const bounded = clampZoom(zoomScale, panRef.current.baseX + dx, panRef.current.baseY + dy, true);
       setZoomX(bounded.x);
       setZoomY(bounded.y);
-      return;
-    }
-
-    if (!slideStartRef.current || points.length !== 1) return;
-    const dx = event.clientX - slideStartRef.current.x;
-    const dy = event.clientY - slideStartRef.current.y;
-
-    if (!isDraggingSlide && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
-      setIsDraggingSlide(true);
-    }
-    if (!isDraggingSlide) return;
-
-    if ((!canGoPrev && dx > 0) || (!canGoNext && dx < 0)) {
-      setOffsetX(0);
-      return;
-    }
-    setOffsetX(dx);
-    slideSamplesRef.current.push({ x: event.clientX, y: event.clientY, t: performance.now() });
-    if (slideSamplesRef.current.length > 12) slideSamplesRef.current.shift();
-  }
-
-  function onPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
-    pointersRef.current.delete(event.pointerId);
-    const remaining = pointersRef.current.size;
-
-    if (remaining === 0) {
-      pinchStartRef.current = null;
-      panStartRef.current = null;
-      slideStartRef.current = null;
-
-      if (zoomScaleRef.current > 1.001 || isZoomResetting) {
-        resetZoomSmooth();
-        return;
-      }
-
-      if (isDraggingSlide) {
-        setIsDraggingSlide(false);
-        finishSlide();
-      } else {
-        setOffsetX(0);
-      }
-      return;
-    }
-
-    if (remaining === 1 && zoomScaleRef.current > 1.001) {
-      const [point] = Array.from(pointersRef.current.values());
-      panStartRef.current = {
-        x: point.x,
-        y: point.y,
-        baseX: zoomXRef.current,
-        baseY: zoomYRef.current,
-      };
-      pinchStartRef.current = null;
     }
   }
 
-  const uiHiddenClass = isZoomed ? styles.zoomUiHidden : "";
-  const trackTransition = isDraggingSlide ? "none" : isSnapping ? "transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)" : "none";
+  function handleZoomTouchEnd(event: ReactTouchEvent<HTMLDivElement>) {
+    if (!zoomActive) return;
+    if (event.touches.length === 0) {
+      resetZoomAndClose();
+      panRef.current = null;
+      pinchRef.current = null;
+      return;
+    }
+    if (event.touches.length === 1) {
+      const t = event.touches[0];
+      panRef.current = { x: t.clientX, y: t.clientY, baseX: zoomX, baseY: zoomY };
+      pinchRef.current = null;
+    }
+  }
+
+  function onViewportTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
+    if (!zoomActive && event.touches.length === 2) {
+      startZoomFromTouches(event.touches[0], event.touches[1]);
+      return;
+    }
+    handleSliderTouchStart(event);
+  }
 
   if (!portalHost) return null;
 
   return createPortal(
     <div className={styles.overlay} role="dialog" aria-modal="true" onClick={onClose}>
-      <div className={`${styles.topBar} ${uiHiddenClass}`}>
+      <div className={`${styles.topBar} ${zoomUiHidden ? styles.zoomUiHidden : ""}`}>
         <button className={styles.closeBtn} type="button" onClick={onClose}>
           {closeLabel}
         </button>
       </div>
-      <div
-        ref={stageRef}
-        className={styles.stage}
-        onClick={(event) => event.stopPropagation()}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
-        <div className={styles.viewport}>
-          {viewItems.map((item) => (
-            <div
-              key={item.key}
-              className={styles.slide}
-              style={
-                {
-                  transform: `translate3d(${item.slot * stageSize.w + offsetX}px, 0, 0)`,
-                  transition: trackTransition,
-                } as CSSProperties
-              }
-              aria-hidden={item.art?.id !== activeArtwork.id}
-            >
-              {item.art ? (
+      <div className={styles.stage} ref={stageRef} onClick={(event) => event.stopPropagation()}>
+        <div
+          className={styles.viewport}
+          ref={viewportRef}
+          onTouchStart={onViewportTouchStart}
+          onTouchMove={handleSliderTouchMove}
+          onTouchEnd={handleSliderTouchEnd}
+          onTouchCancel={handleSliderTouchEnd}
+        >
+          <div className={styles.track} style={trackStyle}>
+            {artworks.map((art) => (
+              <div className={styles.slide} key={art.id}>
                 <img
                   className={styles.slideImg}
-                  src={getArtworkSrc(item.art.filename)}
-                  alt={item.art.title}
+                  src={getArtworkSrc(art.filename)}
+                  alt={art.title}
                   onLoad={(event) => {
-                    naturalSizeRef.current[item.art!.id] = {
+                    naturalSizeRef.current[art.id] = {
                       w: event.currentTarget.naturalWidth || 1,
                       h: event.currentTarget.naturalHeight || 1,
                     };
@@ -484,14 +425,16 @@ export function ArtLightbox({
                     event.currentTarget.src = fallbackSrc;
                   }}
                 />
-              ) : null}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
-        <p className={`${styles.caption} ${uiHiddenClass}`}>
+
+        <p className={`${styles.caption} ${zoomUiHidden ? styles.zoomUiHidden : ""}`}>
           {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
         </p>
-        <div className={`${styles.dots} ${uiHiddenClass}`} aria-label={titleLabel}>
+
+        <div className={`${styles.dots} ${zoomUiHidden ? styles.zoomUiHidden : ""}`} aria-label={titleLabel}>
           {artworks.map((art, index) => (
             <button
               key={art.id}
@@ -504,8 +447,14 @@ export function ArtLightbox({
           ))}
         </div>
 
-        {isZoomed ? (
-          <div className={styles.zoomLayer} aria-hidden>
+        {zoomActive ? (
+          <div
+            className={styles.zoomLayer}
+            onTouchStart={handleZoomTouchStart}
+            onTouchMove={handleZoomTouchMove}
+            onTouchEnd={handleZoomTouchEnd}
+            onTouchCancel={handleZoomTouchEnd}
+          >
             <img
               className={styles.zoomImg}
               src={getArtworkSrc(activeArtwork.filename)}

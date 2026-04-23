@@ -15,6 +15,7 @@ type Props = {
 };
 
 type TouchPoint = { x: number; y: number; t: number };
+type GestureState = "idle" | "dragging-horizontal" | "dragging-vertical" | "zooming";
 
 const ROOT_ID = "art-lightbox-root";
 
@@ -69,6 +70,10 @@ export function ArtLightbox({
   const isDraggingRef = useRef(false);
   const modeRef = useRef<"idle" | "drag" | "snap">("idle");
   const lockedTargetRef = useRef<number | null>(null);
+  const gestureStateRef = useRef<GestureState>("idle");
+  const backdropTapRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
+  const zoomActiveRef = useRef(false);
+  const zoomResettingRef = useRef(false);
 
   const activeArtwork = artworks[activeIndex];
   const canGoPrev = activeIndex > 0;
@@ -77,6 +82,10 @@ export function ArtLightbox({
   useEffect(() => {
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
+
+  useEffect(() => {
+    zoomActiveRef.current = zoomActive;
+  }, [zoomActive]);
 
   useEffect(() => {
     let root = document.getElementById(ROOT_ID);
@@ -144,6 +153,16 @@ export function ArtLightbox({
     lockedTargetRef.current = null;
   }
 
+  function shouldBlockClose() {
+    return (
+      isDraggingRef.current ||
+      modeRef.current !== "idle" ||
+      zoomActiveRef.current ||
+      zoomResettingRef.current ||
+      gestureStateRef.current !== "idle"
+    );
+  }
+
   function animateSnapToIndex(targetIndex: number) {
     stopSliderAnimation();
     modeRef.current = "snap";
@@ -207,6 +226,7 @@ export function ArtLightbox({
     touchSamplesRef.current = [{ x: t.clientX, y: t.clientY, t: performance.now() }];
     isDraggingRef.current = false;
     modeRef.current = "idle";
+    gestureStateRef.current = "idle";
   }
 
   function handleSliderTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
@@ -216,7 +236,16 @@ export function ArtLightbox({
     const dx = t.clientX - dragStartRef.current.x;
     const dy = t.clientY - dragStartRef.current.y;
 
-    if (!isDraggingRef.current && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+    if (gestureStateRef.current === "idle" && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+      gestureStateRef.current = Math.abs(dx) > Math.abs(dy) ? "dragging-horizontal" : "dragging-vertical";
+    }
+
+    if (gestureStateRef.current === "dragging-vertical") {
+      event.preventDefault();
+      return;
+    }
+
+    if (!isDraggingRef.current && gestureStateRef.current === "dragging-horizontal") {
       isDraggingRef.current = true;
       modeRef.current = "drag";
     }
@@ -239,9 +268,11 @@ export function ArtLightbox({
     dragStartRef.current = null;
     if (!isDraggingRef.current) {
       applyTrackOffset(-activeIndexRef.current * viewportWidth, false);
+      gestureStateRef.current = "idle";
       return;
     }
     isDraggingRef.current = false;
+    gestureStateRef.current = "idle";
     finishSwipe();
   }
 
@@ -274,6 +305,7 @@ export function ArtLightbox({
   function startZoomFromTouches(t1: { clientX: number; clientY: number }, t2: { clientX: number; clientY: number }) {
     setZoomActive(true);
     setZoomUiHidden(true);
+    gestureStateRef.current = "zooming";
     const distance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
     pinchRef.current = {
       distance,
@@ -292,6 +324,7 @@ export function ArtLightbox({
 
   function resetZoomAndClose() {
     if (zoomResetRafRef.current !== null) cancelAnimationFrame(zoomResetRafRef.current);
+    zoomResettingRef.current = true;
     const s0 = zoomScale;
     const x0 = zoomX;
     const y0 = zoomY;
@@ -312,6 +345,8 @@ export function ArtLightbox({
         setZoomY(0);
         setZoomUiHidden(false);
         setZoomActive(false);
+        zoomResettingRef.current = false;
+        gestureStateRef.current = "idle";
       }
     };
     zoomResetRafRef.current = requestAnimationFrame(frame);
@@ -388,10 +423,43 @@ export function ArtLightbox({
     handleSliderTouchStart(event);
   }
 
+  function onBackdropPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (shouldBlockClose()) return;
+    backdropTapRef.current = { x: event.clientX, y: event.clientY, moved: false };
+  }
+
+  function onBackdropPointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    const tap = backdropTapRef.current;
+    if (!tap) return;
+    const dx = event.clientX - tap.x;
+    const dy = event.clientY - tap.y;
+    if (Math.hypot(dx, dy) > 8) {
+      tap.moved = true;
+    }
+  }
+
+  function onBackdropPointerUp() {
+    const tap = backdropTapRef.current;
+    backdropTapRef.current = null;
+    if (!tap) return;
+    if (tap.moved) return;
+    if (shouldBlockClose()) return;
+    onClose();
+  }
+
   if (!portalHost) return null;
 
   return createPortal(
-    <div className={styles.overlay} role="dialog" aria-modal="true" onClick={onClose}>
+    <div className={styles.overlay} role="dialog" aria-modal="true">
+      <div
+        className={styles.backdrop}
+        onPointerDown={onBackdropPointerDown}
+        onPointerMove={onBackdropPointerMove}
+        onPointerUp={onBackdropPointerUp}
+        onPointerCancel={() => {
+          backdropTapRef.current = null;
+        }}
+      />
       <div className={`${styles.topBar} ${zoomUiHidden ? styles.zoomUiHidden : ""}`}>
         <button className={styles.closeBtn} type="button" onClick={onClose}>
           {closeLabel}
@@ -448,6 +516,7 @@ export function ArtLightbox({
         {zoomActive ? (
           <div
             className={styles.zoomLayer}
+            onClick={(event) => event.stopPropagation()}
             onTouchStart={handleZoomTouchStart}
             onTouchMove={handleZoomTouchMove}
             onTouchEnd={handleZoomTouchEnd}

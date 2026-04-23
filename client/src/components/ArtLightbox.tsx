@@ -550,27 +550,6 @@ export function ArtLightbox({
     });
   }
 
-  function snapTranslateWithSwiper(swiper: SwiperType) {
-    const activeIndex = clampIndex(swiper.activeIndex);
-    const containerWidth = Math.round(swiper.el.clientWidth || 0);
-    if (containerWidth <= 0) return;
-    const slideWidth = Math.round(swiper.slides[activeIndex]?.clientWidth ?? containerWidth);
-    if (slideWidth <= 0) return;
-    const snapPoint = swiper.snapGrid?.[activeIndex] ?? swiper.slidesGrid?.[activeIndex] ?? activeIndex * slideWidth;
-    if (!Number.isFinite(snapPoint)) return;
-    const targetTranslate = Math.round(-snapPoint);
-    swiper.wrapperEl.style.transitionDuration = "0ms";
-    swiper.setTranslate(targetTranslate);
-    console.log({
-      activeIndex,
-      containerWidth,
-      slideWidth,
-      snapPoint,
-      translateX: targetTranslate,
-      fractional: targetTranslate % 1,
-    });
-  }
-
   const overlayStyle = useMemo(
     () =>
       ({
@@ -656,7 +635,6 @@ export function ArtLightbox({
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
-              snapTranslateWithSwiper(swiper);
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {

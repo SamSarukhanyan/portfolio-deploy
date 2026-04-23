@@ -119,26 +119,6 @@
   -webkit-user-drag: none;
 }
 
-.viewport::before,
-.viewport::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #060607;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.viewport::before {
-  left: 0;
-}
-
-.viewport::after {
-  right: 0;
-}
-
 .caption {
   margin: 0;
   color: #acacac;

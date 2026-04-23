@@ -111,9 +111,9 @@ export function ArtLightbox({
     document.body.style.overflow = "hidden";
 
     const onResize = () => {
-      const containerW = viewportRef.current?.clientWidth;
+      const containerW = viewportRef.current?.getBoundingClientRect().width;
       const visualH = window.visualViewport?.height;
-      const width = Math.max(1, Math.round(containerW ?? window.innerWidth));
+      const width = Math.max(1, containerW ?? window.innerWidth);
       const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
       setSliderWidth(width);
       setViewportHeight(height);
@@ -153,13 +153,13 @@ export function ArtLightbox({
   }, []);
 
   function applyTrackOffset(px: number, withTransition: boolean) {
-    const roundedPx = Math.round(px);
+    const precisePx = Number.isFinite(px) ? px : 0;
     const track = trackRef.current;
     if (!track) return;
     track.style.transition = withTransition ? "transform 240ms cubic-bezier(0.16, 1, 0.3, 1)" : "none";
-    track.style.transform = `translate3d(${roundedPx}px, 0, 0)`;
+    track.style.transform = `translate3d(${precisePx}px, 0, 0)`;
     if (import.meta.env.DEV) {
-      console.debug("[LightboxSlider]", { currentIndex: activeIndexRef.current, translateX: roundedPx });
+      console.debug("[LightboxSlider]", { currentIndex: activeIndexRef.current, translateX: precisePx });
     }
   }
 

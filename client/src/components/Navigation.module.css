@@ -521,6 +521,10 @@
   background: var(--text-primary);
 }
 
+:global(.app-shell--art) .burger[data-open="true"] {
+  background: transparent;
+}
+
 :global(.app-shell--art) .drawerPanel {
   border-color: rgba(47, 47, 53, 0.95);
   background: rgba(26, 26, 29, 0.95);

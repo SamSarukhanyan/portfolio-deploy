@@ -540,10 +540,8 @@ export function ArtLightbox({
   }
 
   function applyPixelAlignedSlides(swiper: SwiperType) {
-    const rawContainerWidth = swiper.el.clientWidth || swiper.el.getBoundingClientRect().width || 0;
-    const containerWidth = Math.floor(rawContainerWidth);
+    const containerWidth = Math.round(swiper.el.clientWidth || 0);
     if (containerWidth <= 0) return;
-    swiper.wrapperEl.style.width = `${containerWidth * swiper.slides.length}px`;
     swiper.slides.forEach((slideEl) => {
       slideEl.style.width = `${containerWidth}px`;
       slideEl.style.flexBasis = `${containerWidth}px`;
@@ -556,20 +554,13 @@ export function ArtLightbox({
     const roundedTranslate = Math.round(rawTranslate);
     const wrapper = swiper.wrapperEl;
     wrapper.style.transform = `translate3d(${roundedTranslate}px, 0, 0)`;
-    const slideWidth = swiper.slides[swiper.activeIndex]?.clientWidth ?? Math.floor(swiper.el.clientWidth || 0);
+    const slideWidth = swiper.slides[swiper.activeIndex]?.clientWidth ?? 0;
+    const fractionalRemainder = Math.abs(rawTranslate - roundedTranslate);
     console.log({
-      translateX: rawTranslate,
+      wrapperTranslateX: rawTranslate,
       containerWidth: swiper.el.clientWidth,
       slideWidth,
-      devicePixelRatio: window.devicePixelRatio,
-      remainder: rawTranslate % 1,
-    });
-  }
-
-  function forceWrapperSnapOnNextFrame(swiper: SwiperType) {
-    window.requestAnimationFrame(() => {
-      applyPixelAlignedSlides(swiper);
-      applyRoundedWrapperTranslate(swiper, swiper.translate);
+      fractionalRemainder,
     });
   }
 
@@ -661,12 +652,10 @@ export function ArtLightbox({
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
-              forceWrapperSnapOnNextFrame(swiper);
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {
               settledIndexRef.current = clampIndex(swiper.activeIndex);
-              forceWrapperSnapOnNextFrame(swiper);
               unlockTransition();
             }}
           >

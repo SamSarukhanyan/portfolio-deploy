@@ -76,8 +76,6 @@ export function ArtLightbox({
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
   const activeIndexRef = useRef(activeIndex);
-  const slideWidthRef = useRef(0);
-  const containerWidthRef = useRef(0);
   const zoomMotionRef = useRef({
     scale: 1,
     x: 0,
@@ -544,8 +542,6 @@ export function ArtLightbox({
   function applyPixelAlignedSlides(swiper: SwiperType) {
     const containerWidth = Math.round(swiper.el.clientWidth || 0);
     if (containerWidth <= 0) return;
-    containerWidthRef.current = containerWidth;
-    slideWidthRef.current = containerWidth;
     swiper.slides.forEach((slideEl) => {
       slideEl.style.width = `${containerWidth}px`;
       slideEl.style.flexBasis = `${containerWidth}px`;
@@ -554,24 +550,18 @@ export function ArtLightbox({
     });
   }
 
-  function snapWrapperToActiveIndex(swiper: SwiperType) {
-    const activeIndex = clampIndex(swiper.activeIndex);
-    const containerWidth = containerWidthRef.current || Math.round(swiper.el.clientWidth || 0);
-    const slideWidth = slideWidthRef.current || containerWidth;
+  function snapTranslateWithSwiper(swiper: SwiperType) {
+    const slideWidth = Math.round(swiper.slides[clampIndex(swiper.activeIndex)]?.clientWidth ?? swiper.el.clientWidth ?? 0);
     if (slideWidth <= 0) return;
-    const translateX = -(activeIndex * slideWidth);
-    const wrapper = swiper.wrapperEl;
-    wrapper.style.transform = `translate3d(${translateX}px, 0, 0)`;
+    const activeIndex = clampIndex(swiper.activeIndex);
+    const targetTranslate = Math.round(-(activeIndex * slideWidth));
+    swiper.wrapperEl.style.transitionDuration = "0ms";
+    swiper.setTranslate(targetTranslate);
     console.log({
-      dpr: window.devicePixelRatio,
       activeIndex,
-      translateX,
       slideWidth,
-      containerWidth,
-      computedTransform: translateX,
-      translateMod: slideWidth > 0 ? Math.abs(translateX) % slideWidth : 0,
-      fractionalCheck: translateX % 1,
-      isFractional: Math.abs(translateX % 1) > 0,
+      translateX: targetTranslate,
+      fractional: targetTranslate % 1,
     });
   }
 
@@ -660,16 +650,12 @@ export function ArtLightbox({
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
-              window.requestAnimationFrame(() => {
-                snapWrapperToActiveIndex(swiper);
-              });
+              snapTranslateWithSwiper(swiper);
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {
               settledIndexRef.current = clampIndex(swiper.activeIndex);
-              window.requestAnimationFrame(() => {
-                snapWrapperToActiveIndex(swiper);
-              });
+              snapTranslateWithSwiper(swiper);
               unlockTransition();
             }}
           >

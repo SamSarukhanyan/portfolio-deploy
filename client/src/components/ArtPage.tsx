@@ -32,7 +32,8 @@ const SNAKE_SEGMENTS = 12;
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [slideDirection, setSlideDirection] = useState<"next" | "prev" | "none">("none");
+  const [slideDragX, setSlideDragX] = useState(0);
+  const [isSlideDragging, setIsSlideDragging] = useState(false);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [settling, setSettling] = useState(false);
@@ -48,6 +49,7 @@ export function ArtPage() {
   const pinchStartOffset = useRef({ x: 0, y: 0 });
   const panStart = useRef<{ x: number; y: number } | null>(null);
   const panOffsetStart = useRef({ x: 0, y: 0 });
+  const slideStart = useRef<{ x: number; y: number } | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const settleTimeoutRef = useRef<number | null>(null);
   const gestureTimeoutRef = useRef<number | null>(null);
@@ -61,8 +63,8 @@ export function ArtPage() {
     if (activeIndex === null) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setActiveIndex(null);
-      if (event.key === "ArrowRight") setActiveIndex((v) => (v === null ? null : (v + 1) % artworks.length));
-      if (event.key === "ArrowLeft") setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
+      if (event.key === "ArrowRight") setActiveIndex((v) => (v === null ? null : Math.min(v + 1, artworks.length - 1)));
+      if (event.key === "ArrowLeft") setActiveIndex((v) => (v === null ? null : Math.max(v - 1, 0)));
     };
 
     document.body.classList.add("art-modal-open");
@@ -92,7 +94,8 @@ export function ArtPage() {
 
   function closeModal() {
     setActiveIndex(null);
-    setSlideDirection("none");
+    setSlideDragX(0);
+    setIsSlideDragging(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -103,7 +106,8 @@ export function ArtPage() {
 
   function openAt(index: number) {
     setActiveIndex(index);
-    setSlideDirection("none");
+    setSlideDragX(0);
+    setIsSlideDragging(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -111,9 +115,10 @@ export function ArtPage() {
     setGestureActive(false);
   }
 
-  function goToIndex(nextIndex: number, direction: "next" | "prev" | "none") {
-    setSlideDirection(direction);
+  function goToIndex(nextIndex: number) {
     setActiveIndex(nextIndex);
+    setSlideDragX(0);
+    setIsSlideDragging(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -123,19 +128,19 @@ export function ArtPage() {
 
   function showNext() {
     if (activeIndex === null) return;
-    const next = (activeIndex + 1) % artworks.length;
-    goToIndex(next, "next");
+    const next = Math.min(activeIndex + 1, artworks.length - 1);
+    goToIndex(next);
   }
 
   function showPrev() {
     if (activeIndex === null) return;
-    const prev = (activeIndex - 1 + artworks.length) % artworks.length;
-    goToIndex(prev, "prev");
+    const prev = Math.max(activeIndex - 1, 0);
+    goToIndex(prev);
   }
 
   function goToDot(index: number) {
     if (activeIndex === null || activeIndex === index) return;
-    goToIndex(index, index > activeIndex ? "next" : "prev");
+    goToIndex(index);
   }
 
   function applyTransform(nextScale: number, nextOffset: { x: number; y: number }) {
@@ -158,11 +163,21 @@ export function ArtPage() {
       pinchStartCenter.current = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
       pinchStartOffset.current = offsetRef.current;
       panStart.current = null;
+      slideStart.current = null;
+      setSlideDragX(0);
+      setIsSlideDragging(false);
       setGestureActive(true);
-    } else if (pointersRef.current.size === 1 && scaleRef.current > 1.01) {
-      panStart.current = { x: event.clientX, y: event.clientY };
-      panOffsetStart.current = offsetRef.current;
-      setGestureActive(true);
+    } else if (pointersRef.current.size === 1) {
+      if (scaleRef.current > 1.01) {
+        panStart.current = { x: event.clientX, y: event.clientY };
+        panOffsetStart.current = offsetRef.current;
+        setGestureActive(true);
+      } else {
+        slideStart.current = { x: event.clientX, y: event.clientY };
+        setSlideDragX(0);
+        setIsSlideDragging(false);
+        setGestureActive(false);
+      }
     }
 
     touchStartX.current = event.clientX;
@@ -218,6 +233,25 @@ export function ArtPage() {
       const nextOffset = clampOffset({ x: panOffsetStart.current.x + dx, y: panOffsetStart.current.y + dy }, scaleRef.current);
       applyTransform(scaleRef.current, nextOffset);
       setGestureActive(true);
+      return;
+    }
+
+    if (pointersRef.current.size === 1 && scaleRef.current <= 1.01 && slideStart.current && activeIndex !== null) {
+      const dx = event.clientX - slideStart.current.x;
+      const dy = event.clientY - slideStart.current.y;
+
+      if (!isSlideDragging && Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy)) {
+        setIsSlideDragging(true);
+      }
+      if (!isSlideDragging) return;
+
+      const atFirst = activeIndex === 0;
+      const atLast = activeIndex === artworks.length - 1;
+      const withResistance =
+        (atFirst && dx > 0) || (atLast && dx < 0)
+          ? dx * 0.35
+          : dx;
+      setSlideDragX(withResistance);
     }
   }
 
@@ -225,10 +259,13 @@ export function ArtPage() {
     pointersRef.current.delete(event.pointerId);
 
     if (pointersRef.current.size === 0) {
-      settleTransform();
+      if (scaleRef.current > 1.01) {
+        settleTransform();
+      }
       panStart.current = null;
       pinchStartDistance.current = null;
       pinchStartCenter.current = null;
+      slideStart.current = null;
     } else if (pointersRef.current.size === 1 && scaleRef.current > 1.01) {
       const [point] = Array.from(pointersRef.current.values());
       panStart.current = { x: point.x, y: point.y };
@@ -242,6 +279,20 @@ export function ArtPage() {
     touchStartY.current = null;
 
     if (scaleRef.current > 1.01 || gestureActive) return;
+
+    const stageWidth = stageRef.current?.clientWidth ?? window.innerWidth;
+    const threshold = Math.max(42, stageWidth * 0.18);
+
+    if (isSlideDragging) {
+      const canGoNext = activeIndex !== null && activeIndex < artworks.length - 1;
+      const canGoPrev = activeIndex !== null && activeIndex > 0;
+      if (slideDragX <= -threshold && canGoNext) showNext();
+      else if (slideDragX >= threshold && canGoPrev) showPrev();
+      setSlideDragX(0);
+      setIsSlideDragging(false);
+      return;
+    }
+
     if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) showNext();
     else showPrev();
@@ -254,6 +305,15 @@ export function ArtPage() {
         transition: settling ? "transform 0.18s cubic-bezier(0.2, 0.9, 0.35, 1)" : "none",
       }) as CSSProperties,
     [offset.x, offset.y, scale, settling],
+  );
+
+  const trackStyle = useMemo(
+    () =>
+      ({
+        transform: `translate3d(calc(${-100 * (activeIndex ?? 0)}% + ${slideDragX}px), 0, 0)`,
+        transition: isSlideDragging ? "none" : "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
+      }) as CSSProperties,
+    [activeIndex, isSlideDragging, slideDragX],
   );
 
   const hideUi = gestureActive || scale > 1.01;
@@ -329,41 +389,38 @@ export function ArtPage() {
             onPointerCancel={onPointerUp}
           >
             <figure className={styles.figure}>
-              <div
-                key={`${activeArtwork.id}-${slideDirection}`}
-                className={`${styles.figureMedia} ${
-                  slideDirection === "next"
-                    ? styles.figureMediaNext
-                    : slideDirection === "prev"
-                      ? styles.figureMediaPrev
-                      : ""
-                }`}
-              >
-                <img
-                  src={getArtworkSrc(activeArtwork.filename)}
-                  alt={activeArtwork.title}
-                  style={imageStyle}
-                  onError={(event) => {
-                    event.currentTarget.src = fallbackImage;
-                  }}
-                />
+              <div className={styles.carouselViewport}>
+                <div className={styles.carouselTrack} style={trackStyle}>
+                  {artworks.map((art, index) => (
+                    <div className={styles.carouselSlide} key={art.id} aria-hidden={index !== activeIndex}>
+                      <img
+                        src={getArtworkSrc(art.filename)}
+                        alt={art.title}
+                        style={index === activeIndex ? imageStyle : undefined}
+                        onError={(event) => {
+                          event.currentTarget.src = fallbackImage;
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
               <figcaption data-hidden={hideUi ? "true" : "false"}>
                 {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
               </figcaption>
+              <div className={styles.dots} data-hidden={hideUi ? "true" : "false"} aria-label={t("art.title")}>
+                {artworks.map((art, index) => (
+                  <button
+                    key={art.id}
+                    type="button"
+                    className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
+                    onClick={() => goToDot(index)}
+                    aria-label={`${index + 1}`}
+                    aria-current={index === activeIndex ? "true" : "false"}
+                  />
+                ))}
+              </div>
             </figure>
-            <div className={styles.dots} data-hidden={hideUi ? "true" : "false"} aria-label={t("art.title")}>
-              {artworks.map((art, index) => (
-                <button
-                  key={art.id}
-                  type="button"
-                  className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
-                  onClick={() => goToDot(index)}
-                  aria-label={`${index + 1}`}
-                  aria-current={index === activeIndex ? "true" : "false"}
-                />
-              ))}
-            </div>
           </div>
         </div>
       ) : null}

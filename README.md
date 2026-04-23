@@ -63,7 +63,7 @@ If the API or database is unavailable, the frontend continues to work using loca
 - Graceful backend fallback: frontend remains usable if DB/API is down
 - Domain-ready static deployment support (`docs/nginx-portfolio.conf.example`)
 
-## Getting Started
+### Getting Started
 
 ## 1) Prerequisites
 

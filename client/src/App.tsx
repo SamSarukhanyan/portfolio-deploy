@@ -1,9 +1,10 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Navigation } from "./components/Navigation";
 import { Hero } from "./components/Hero";
 import { Footer } from "./components/Footer";
 import { ArtPage } from "./components/ArtPage";
 import { usePathname } from "./utils/spaRouter";
+import { trackPageView } from "./lib/analytics";
 
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
@@ -24,6 +25,10 @@ const ContactSection = lazy(() =>
 export default function App() {
   const pathname = usePathname();
   const isArtPage = pathname.startsWith("/art");
+
+  useEffect(() => {
+    trackPageView();
+  }, [pathname]);
 
   return (
     <div className={`app-shell${isArtPage ? " app-shell--art" : ""}`}>

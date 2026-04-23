@@ -4,6 +4,7 @@ import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 import { onSpaLinkClick } from "../utils/spaRouter";
+import { trackEvent } from "../lib/analytics";
 
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 
@@ -83,7 +84,14 @@ export function Hero() {
                 </div>
               </Reveal>
               <Reveal className={styles.heroArtRow} direction="up" delayMs={102}>
-                <a className={styles.heroArtLink} href="/art" onClick={(event) => onSpaLinkClick(event, "/art")}>
+                <a
+                  className={styles.heroArtLink}
+                  href="/art"
+                  onClick={(event) => {
+                    trackEvent("open_art_page", { source: "hero" });
+                    onSpaLinkClick(event, "/art");
+                  }}
+                >
                   {t("hero.ctaArt")}
                 </a>
                 <span className={styles.heroArtLabel}>Explore selected works</span>
@@ -102,6 +110,7 @@ export function Hero() {
                   href="https://github.com/SamSarukhanyan/my-fullstack-app"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackEvent("open_project_repository", { source: "hero_backend_block" })}
                 >
                   github.com/SamSarukhanyan/my-fullstack-app
                 </a>
@@ -110,10 +119,18 @@ export function Hero() {
                 {t("hero.summary")}
               </Reveal>
               <Reveal className={styles.actions} direction="up" delayMs={260} data-reveal-mobile-instant="true">
-                <a className="btn-primary" href="#contact">
+                <a
+                  className="btn-primary"
+                  href="#contact"
+                  onClick={() => trackEvent("cta_get_in_touch_click", { source: "hero" })}
+                >
                   {t("hero.ctaContact")}
                 </a>
-                <a className="btn-ghost" href="#highlights">
+                <a
+                  className="btn-ghost"
+                  href="#highlights"
+                  onClick={() => trackEvent("cta_view_project_impact_click", { source: "hero" })}
+                >
                   {t("hero.ctaHighlights")}
                 </a>
               </Reveal>

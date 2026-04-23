@@ -22,7 +22,8 @@ const MAX_ZOOM_SCALE = 4;
 const RESET_ANIMATION_MS = 220;
 
 type Point = { x: number; y: number };
-type TouchPoint = { clientX: number; clientY: number };
+type TouchPoint = { identifier: number; clientX: number; clientY: number };
+type TouchCollection = { length: number; [index: number]: TouchPoint };
 
 type ZoomLayer = {
   src: string;
@@ -67,6 +68,9 @@ export function ArtLightbox({
   const zoomRuntimeRef = useRef<ZoomRuntime | null>(null);
   const zoomRafRef = useRef<number | null>(null);
   const resetRafRef = useRef<number | null>(null);
+  const pinchTouchIdsRef = useRef<[number, number] | null>(null);
+  const hasMovedYetRef = useRef(false);
+  const isClosingZoomRef = useRef(false);
   const isTransitioningRef = useRef(false);
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
@@ -138,6 +142,9 @@ export function ArtLightbox({
   function resetZoomState() {
     cancelZoomFrames();
     zoomRuntimeRef.current = null;
+    pinchTouchIdsRef.current = null;
+    hasMovedYetRef.current = false;
+    isClosingZoomRef.current = false;
     zoomMotionRef.current = {
       scale: 1,
       x: 0,
@@ -172,6 +179,9 @@ export function ArtLightbox({
   }
 
   function animateResetAndCloseLayer() {
+    if (isClosingZoomRef.current) return;
+    isClosingZoomRef.current = true;
+    cancelZoomFrames();
     const metrics = zoomRuntimeRef.current?.metrics;
     const start = performance.now();
     const from = { ...zoomMotionRef.current };
@@ -217,18 +227,54 @@ export function ArtLightbox({
     runtime.panStartTouch = { x: touch.clientX, y: touch.clientY };
   }
 
-  function beginPinch(touchA: TouchPoint, touchB: TouchPoint) {
+  function beginPinch(touchA: TouchPoint, touchB: TouchPoint, resetMotion = false) {
     const runtime = zoomRuntimeRef.current;
     if (!runtime) return;
+    const initialDistance = distanceBetweenTouches(touchA, touchB);
+    if (initialDistance <= 0) return;
+    const initialCenter = centerBetweenTouches(touchA, touchB);
+    pinchTouchIdsRef.current = [touchA.identifier, touchB.identifier];
+    hasMovedYetRef.current = false;
     runtime.mode = "pinch";
-    runtime.startScale = zoomMotionRef.current.scale;
-    runtime.startX = zoomMotionRef.current.x;
-    runtime.startY = zoomMotionRef.current.y;
-    runtime.startDistance = distanceBetweenTouches(touchA, touchB);
-    runtime.startCenter = centerBetweenTouches(touchA, touchB);
+    if (resetMotion) {
+      zoomMotionRef.current.scale = 1;
+      zoomMotionRef.current.x = 0;
+      zoomMotionRef.current.y = 0;
+      zoomMotionRef.current.targetScale = 1;
+      zoomMotionRef.current.targetX = 0;
+      zoomMotionRef.current.targetY = 0;
+      runtime.startScale = 1;
+      runtime.startX = 0;
+      runtime.startY = 0;
+    } else {
+      runtime.startScale = zoomMotionRef.current.scale;
+      runtime.startX = zoomMotionRef.current.x;
+      runtime.startY = zoomMotionRef.current.y;
+    }
+    runtime.startDistance = initialDistance;
+    runtime.startCenter = initialCenter;
   }
 
-  function startZoomLayerFromImage(image: HTMLImageElement) {
+  function getTrackedTouchPair(touches: TouchCollection): [TouchPoint, TouchPoint] | null {
+    const trackedIds = pinchTouchIdsRef.current;
+    if (!trackedIds) return null;
+    let touchA: TouchPoint | null = null;
+    let touchB: TouchPoint | null = null;
+    for (let i = 0; i < touches.length; i += 1) {
+      const touch = touches[i];
+      if (touch.identifier === trackedIds[0]) {
+        touchA = touch;
+      } else if (touch.identifier === trackedIds[1]) {
+        touchB = touch;
+      }
+    }
+    if (!touchA || !touchB) return null;
+    return [touchA, touchB];
+  }
+
+  function startZoomLayerFromImage(image: HTMLImageElement, touchA: TouchPoint, touchB: TouchPoint) {
+    const initialDistance = distanceBetweenTouches(touchA, touchB);
+    if (initialDistance <= 0) return false;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
     const naturalWidth = Math.max(1, image.naturalWidth || image.clientWidth);
@@ -248,15 +294,18 @@ export function ArtLightbox({
       startScale: 1,
       startX: 0,
       startY: 0,
-      startDistance: 1,
-      startCenter: { x: viewportWidth * 0.5, y: viewportHeight * 0.5 },
+      startDistance: initialDistance,
+      startCenter: centerBetweenTouches(touchA, touchB),
       panStartTouch: { x: viewportWidth * 0.5, y: viewportHeight * 0.5 },
     };
+    pinchTouchIdsRef.current = [touchA.identifier, touchB.identifier];
+    hasMovedYetRef.current = false;
     setZoomLayer({
       src: image.currentSrc || image.src,
       alt: image.alt,
     });
     setBackgroundLock(true);
+    return true;
   }
 
   function handleViewportTouchStart(event: TouchEvent<HTMLDivElement>) {
@@ -265,9 +314,14 @@ export function ArtLightbox({
     if (!activeImage) return;
     const target = event.target as Node | null;
     if (!target || !activeImage.contains(target)) return;
+    const touchA = event.touches[0];
+    const touchB = event.touches[1];
+    const initialDistance = distanceBetweenTouches(touchA, touchB);
+    if (initialDistance <= 0) return;
     event.preventDefault();
-    startZoomLayerFromImage(activeImage);
-    beginPinch(event.touches[0], event.touches[1]);
+    const started = startZoomLayerFromImage(activeImage, touchA, touchB);
+    if (!started) return;
+    beginPinch(touchA, touchB, true);
   }
 
   function handleZoomTouchStart(event: TouchEvent<HTMLDivElement>) {
@@ -287,14 +341,23 @@ export function ArtLightbox({
   function handleZoomTouchMove(event: TouchEvent<HTMLDivElement>) {
     const runtime = zoomRuntimeRef.current;
     if (!runtime) return;
-    if (event.touches.length >= 2) {
+    const trackedPair = getTrackedTouchPair(event.touches);
+    if (trackedPair) {
       event.preventDefault();
-      const touchA = event.touches[0];
-      const touchB = event.touches[1];
+      const [touchA, touchB] = trackedPair;
+      if (!hasMovedYetRef.current) {
+        hasMovedYetRef.current = true;
+        return;
+      }
       const center = centerBetweenTouches(touchA, touchB);
       const distance = distanceBetweenTouches(touchA, touchB);
       const pinchRatio = runtime.startDistance > 0 ? distance / runtime.startDistance : 1;
       const nextScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, runtime.startScale * pinchRatio));
+      console.log({
+        initialDistance: runtime.startDistance,
+        newDistance: distance,
+        scale: nextScale,
+      });
       const viewportCenterX = runtime.metrics.viewportWidth * 0.5;
       const viewportCenterY = runtime.metrics.viewportHeight * 0.5;
       const scaleRatio = runtime.startScale > 0 ? nextScale / runtime.startScale : 1;
@@ -315,14 +378,11 @@ export function ArtLightbox({
   }
 
   function handleZoomTouchEnd(event: TouchEvent<HTMLDivElement>) {
-    const runtime = zoomRuntimeRef.current;
-    if (!runtime) return;
+    if (!zoomRuntimeRef.current) return;
     if (event.touches.length >= 2) {
-      beginPinch(event.touches[0], event.touches[1]);
-      return;
-    }
-    if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001) {
-      beginPan(event.touches[0], runtime);
+      const touchA = event.touches[0];
+      const touchB = event.touches[1];
+      beginPinch(touchA, touchB);
       return;
     }
     animateResetAndCloseLayer();

@@ -59,12 +59,16 @@ export function ArtLightbox({
   const [zoomScale, setZoomScale] = useState(1);
   const [zoomX, setZoomX] = useState(0);
   const [zoomY, setZoomY] = useState(0);
+  const [zoomEnabled, setZoomEnabled] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const isTransitioningRef = useRef(false);
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
   const activeIndexRef = useRef(activeIndex);
   const zoomActiveRef = useRef(false);
+  const zoomScaleRef = useRef(1);
+  const zoomXRef = useRef(0);
+  const zoomYRef = useRef(0);
   const zoomResettingRef = useRef(false);
   const zoomResetRafRef = useRef<number | null>(null);
   const pinchRef = useRef<PinchState | null>(null);
@@ -82,6 +86,18 @@ export function ArtLightbox({
   }, [zoomActive]);
 
   useEffect(() => {
+    zoomScaleRef.current = zoomScale;
+  }, [zoomScale]);
+
+  useEffect(() => {
+    zoomXRef.current = zoomX;
+  }, [zoomX]);
+
+  useEffect(() => {
+    zoomYRef.current = zoomY;
+  }, [zoomY]);
+
+  useEffect(() => {
     let root = document.getElementById(ROOT_ID);
     if (!root) {
       root = document.createElement("div");
@@ -90,6 +106,32 @@ export function ArtLightbox({
     }
     setPortalHost(root);
   }, []);
+
+  useEffect(() => {
+    const detectZoomCapability = () => {
+      const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+      const touchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      const tabletOrPhoneWidth = window.innerWidth <= 1024;
+      setZoomEnabled((coarsePointer || touchDevice) && tabletOrPhoneWidth);
+    };
+    detectZoomCapability();
+    window.addEventListener("resize", detectZoomCapability);
+    return () => {
+      window.removeEventListener("resize", detectZoomCapability);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (zoomEnabled) return;
+    if (!zoomActiveRef.current) return;
+    setZoomScale(1);
+    setZoomX(0);
+    setZoomY(0);
+    setZoomUiHidden(false);
+    setZoomActive(false);
+    pinchRef.current = null;
+    panRef.current = null;
+  }, [zoomEnabled]);
 
   useEffect(() => {
     document.body.classList.add("art-modal-open");
@@ -220,6 +262,7 @@ export function ArtLightbox({
   }
 
   function openZoomLayer() {
+    if (!zoomEnabled) return;
     if (zoomActiveRef.current || zoomResettingRef.current) return;
     setZoomActive(true);
     setZoomUiHidden(true);
@@ -233,9 +276,9 @@ export function ArtLightbox({
     if (zoomResetRafRef.current !== null) cancelAnimationFrame(zoomResetRafRef.current);
     zoomResettingRef.current = true;
 
-    const scaleStart = zoomScale;
-    const xStart = zoomX;
-    const yStart = zoomY;
+    const scaleStart = zoomScaleRef.current;
+    const xStart = zoomXRef.current;
+    const yStart = zoomYRef.current;
     const start = performance.now();
     const duration = 220;
 
@@ -269,6 +312,7 @@ export function ArtLightbox({
   }
 
   function startZoomFromPinch(event: ReactTouchEvent<HTMLImageElement>) {
+    if (!zoomEnabled) return;
     if (event.touches.length !== 2) return;
     if (isTransitioningRef.current) return;
     event.preventDefault();
@@ -299,16 +343,16 @@ export function ArtLightbox({
         distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
         centerX: (a.clientX + b.clientX) / 2,
         centerY: (a.clientY + b.clientY) / 2,
-        baseScale: zoomScale,
-        baseX: zoomX,
-        baseY: zoomY,
+        baseScale: zoomScaleRef.current,
+        baseX: zoomXRef.current,
+        baseY: zoomYRef.current,
       };
       panRef.current = null;
     } else if (event.touches.length === 1) {
       const t = event.touches[0];
       panRef.current = {
         start: { x: t.clientX, y: t.clientY },
-        base: { x: zoomX, y: zoomY },
+        base: { x: zoomXRef.current, y: zoomYRef.current },
       };
       pinchRef.current = null;
     }
@@ -342,7 +386,7 @@ export function ArtLightbox({
       const dy = t.clientY - panRef.current.start.y;
       const nextX = panRef.current.base.x + dx;
       const nextY = panRef.current.base.y + dy;
-      const bounded = clampZoomPosition(zoomScale, nextX, nextY, true);
+      const bounded = clampZoomPosition(zoomScaleRef.current, nextX, nextY, true);
       setZoomX(bounded.x);
       setZoomY(bounded.y);
     }
@@ -362,11 +406,101 @@ export function ArtLightbox({
       const t = event.touches[0];
       panRef.current = {
         start: { x: t.clientX, y: t.clientY },
-        base: { x: zoomX, y: zoomY },
+        base: { x: zoomXRef.current, y: zoomYRef.current },
       };
       pinchRef.current = null;
     }
   }
+
+  useEffect(() => {
+    if (!zoomActive) return;
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (!zoomActiveRef.current) return;
+      if (event.touches.length === 2) {
+        event.preventDefault();
+        const a = event.touches[0];
+        const b = event.touches[1];
+        pinchRef.current = {
+          distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+          centerX: (a.clientX + b.clientX) / 2,
+          centerY: (a.clientY + b.clientY) / 2,
+          baseScale: zoomScaleRef.current,
+          baseX: zoomXRef.current,
+          baseY: zoomYRef.current,
+        };
+        panRef.current = null;
+      } else if (event.touches.length === 1) {
+        const t = event.touches[0];
+        panRef.current = {
+          start: { x: t.clientX, y: t.clientY },
+          base: { x: zoomXRef.current, y: zoomYRef.current },
+        };
+        pinchRef.current = null;
+      }
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (!zoomActiveRef.current) return;
+      event.preventDefault();
+      if (event.touches.length === 2 && pinchRef.current) {
+        const a = event.touches[0];
+        const b = event.touches[1];
+        const currentDistance = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+        const p = pinchRef.current;
+        const nextScale = clamp(p.baseScale * (currentDistance / Math.max(1, p.distance)), 1, 4);
+        const centerX = (a.clientX + b.clientX) / 2;
+        const centerY = (a.clientY + b.clientY) / 2;
+        const offsetX = p.baseX + (centerX - p.centerX);
+        const offsetY = p.baseY + (centerY - p.centerY);
+        const bounded = clampZoomPosition(nextScale, offsetX, offsetY, true);
+        setZoomScale(nextScale);
+        setZoomX(bounded.x);
+        setZoomY(bounded.y);
+        return;
+      }
+
+      if (event.touches.length === 1 && panRef.current) {
+        const t = event.touches[0];
+        const dx = t.clientX - panRef.current.start.x;
+        const dy = t.clientY - panRef.current.start.y;
+        const nextX = panRef.current.base.x + dx;
+        const nextY = panRef.current.base.y + dy;
+        const bounded = clampZoomPosition(zoomScaleRef.current, nextX, nextY, true);
+        setZoomX(bounded.x);
+        setZoomY(bounded.y);
+      }
+    };
+
+    const onTouchEnd = (event: TouchEvent) => {
+      if (!zoomActiveRef.current) return;
+      event.preventDefault();
+      if (event.touches.length === 0) {
+        resetZoomAndClose();
+        return;
+      }
+      if (event.touches.length === 1) {
+        const t = event.touches[0];
+        panRef.current = {
+          start: { x: t.clientX, y: t.clientY },
+          base: { x: zoomXRef.current, y: zoomYRef.current },
+        };
+        pinchRef.current = null;
+      }
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd, { passive: false });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: false });
+
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, [zoomActive]);
 
   const overlayStyle = useMemo(
     () =>
@@ -413,7 +547,7 @@ export function ArtLightbox({
             speed={260}
             watchOverflow
             preventInteractionOnTransition
-            allowTouchMove={!isTransitioning && !zoomActive}
+            allowTouchMove={!isTransitioning && !(zoomEnabled && zoomActive)}
             touchMoveStopPropagation
             initialSlide={activeIndex}
             onSwiper={(swiper) => {
@@ -447,10 +581,10 @@ export function ArtLightbox({
               unlockTransition();
             }}
           >
-            {artworks.map((art) => (
+            {artworks.map((art, index) => (
               <SwiperSlide className={styles.slide} key={art.id}>
                 <img
-                  className={styles.slideImg}
+                  className={`${styles.slideImg} ${zoomActive && index === activeIndex ? styles.slideImgHidden : ""}`}
                   src={getArtworkSrc(art.filename)}
                   alt={art.title}
                   onTouchStartCapture={startZoomFromPinch}
@@ -490,7 +624,7 @@ export function ArtLightbox({
         </div>
       </div>
 
-      {zoomActive ? (
+      {zoomEnabled && zoomActive ? (
         <div
           className={styles.zoomLayer}
           onTouchStart={handleZoomTouchStart}

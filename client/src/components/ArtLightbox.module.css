@@ -103,6 +103,11 @@
   display: block;
   user-select: none;
   -webkit-user-drag: none;
+  transition: opacity 0.12s linear;
+}
+
+.slideImgHidden {
+  opacity: 0;
 }
 
 .caption {

@@ -40,7 +40,7 @@ export function ArtLightbox({
   titleLabel,
 }: Props) {
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const rootRef = useRef<HTMLElement | null>(null);
+  const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
 
   const [stageSize, setStageSize] = useState({ w: 1, h: 1 });
   const [offsetX, setOffsetX] = useState(0);
@@ -111,7 +111,7 @@ export function ArtLightbox({
       root.id = ROOT_ID;
       document.body.appendChild(root);
     }
-    rootRef.current = root;
+    setPortalHost(root);
   }, []);
 
   useEffect(() => {
@@ -438,7 +438,7 @@ export function ArtLightbox({
   const uiHiddenClass = isZoomed ? styles.zoomUiHidden : "";
   const trackTransition = isDraggingSlide ? "none" : isSnapping ? "transform 0.26s cubic-bezier(0.16, 1, 0.3, 1)" : "none";
 
-  if (!rootRef.current) return null;
+  if (!portalHost) return null;
 
   return createPortal(
     <div className={styles.overlay} role="dialog" aria-modal="true" onClick={onClose}>
@@ -519,6 +519,6 @@ export function ArtLightbox({
         ) : null}
       </div>
     </div>,
-    rootRef.current,
+    portalHost,
   );
 }

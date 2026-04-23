@@ -167,7 +167,7 @@ export function ArtPage() {
       goToIndex(nextIndex);
       setSlideDragX(0);
       setIsSlideSettling(false);
-    }, 230);
+    }, 320);
   }
 
   function applyTransform(nextScale: number, nextOffset: { x: number; y: number }) {
@@ -274,11 +274,11 @@ export function ArtPage() {
 
       const atFirst = activeIndex === 0;
       const atLast = activeIndex === artworks.length - 1;
-      const withResistance =
-        (atFirst && dx > 0) || (atLast && dx < 0)
-          ? dx * 0.35
-          : dx;
-      setSlideDragX(withResistance);
+      if ((atFirst && dx > 0) || (atLast && dx < 0)) {
+        setSlideDragX(0);
+        return;
+      }
+      setSlideDragX(dx);
     }
   }
 
@@ -332,8 +332,10 @@ export function ArtPage() {
     }
 
     if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy)) return;
-    if (dx < 0) showNext();
-    else showPrev();
+    const canGoNext = activeIndex !== null && activeIndex < artworks.length - 1;
+    const canGoPrev = activeIndex !== null && activeIndex > 0;
+    if (dx < 0 && canGoNext) showNext();
+    if (dx > 0 && canGoPrev) showPrev();
   }
 
   const imageStyle = useMemo(
@@ -348,19 +350,19 @@ export function ArtPage() {
   const trackStyle = useMemo(
     () =>
       ({
-        transition: isSlideDragging ? "none" : "transform 230ms cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: isSlideDragging ? "none" : "transform 320ms cubic-bezier(0.16, 1, 0.3, 1)",
       }) as CSSProperties,
     [isSlideDragging],
   );
 
   const carouselItems = useMemo(() => {
     if (activeIndex === null) return [];
-    const prevIndex = Math.max(activeIndex - 1, 0);
-    const nextIndex = Math.min(activeIndex + 1, artworks.length - 1);
+    const prevIndex = activeIndex > 0 ? activeIndex - 1 : null;
+    const nextIndex = activeIndex < artworks.length - 1 ? activeIndex + 1 : null;
     return [
-      { key: `prev-${artworks[prevIndex].id}`, art: artworks[prevIndex], slot: -1 },
+      { key: prevIndex === null ? "prev-empty" : `prev-${artworks[prevIndex].id}`, art: prevIndex === null ? null : artworks[prevIndex], slot: -1 },
       { key: `current-${artworks[activeIndex].id}`, art: artworks[activeIndex], slot: 0 },
-      { key: `next-${artworks[nextIndex].id}`, art: artworks[nextIndex], slot: 1 },
+      { key: nextIndex === null ? "next-empty" : `next-${artworks[nextIndex].id}`, art: nextIndex === null ? null : artworks[nextIndex], slot: 1 },
     ];
   }, [activeIndex]);
 
@@ -443,17 +445,19 @@ export function ArtPage() {
                     <div
                       className={styles.carouselSlide}
                       key={key}
-                      style={{ transform: `translate3d(calc(${slot * 100}% + ${slideDragX}px), 0, 0)` }}
-                      aria-hidden={art.id !== activeArtwork.id}
+                      style={{ transform: `translate3d(calc(${slot * 102}% + ${slideDragX}px), 0, 0)` }}
+                      aria-hidden={art?.id !== activeArtwork.id}
                     >
-                      <img
-                        src={getArtworkSrc(art.filename)}
-                        alt={art.title}
-                        style={art.id === activeArtwork.id ? imageStyle : undefined}
-                        onError={(event) => {
-                          event.currentTarget.src = fallbackImage;
-                        }}
-                      />
+                      {art ? (
+                        <img
+                          src={getArtworkSrc(art.filename)}
+                          alt={art.title}
+                          style={art.id === activeArtwork.id ? imageStyle : undefined}
+                          onError={(event) => {
+                            event.currentTarget.src = fallbackImage;
+                          }}
+                        />
+                      ) : null}
                     </div>
                   ))}
                 </div>

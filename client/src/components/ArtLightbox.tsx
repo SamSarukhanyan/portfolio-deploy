@@ -69,8 +69,8 @@ export function ArtLightbox({
   const zoomRafRef = useRef<number | null>(null);
   const resetRafRef = useRef<number | null>(null);
   const pinchTouchIdsRef = useRef<[number, number] | null>(null);
-  const hasMovedYetRef = useRef(false);
   const isClosingZoomRef = useRef(false);
+  const isZoomActiveRef = useRef(false);
   const isTransitioningRef = useRef(false);
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
@@ -93,6 +93,7 @@ export function ArtLightbox({
 
   function setBackgroundLock(isLocked: boolean) {
     const swiper = swiperRef.current;
+    console.log("swiper locked?", swiper ? !swiper.allowTouchMove : "no-swiper");
     if (swiper) {
       swiper.allowTouchMove = !isLocked;
     }
@@ -143,8 +144,8 @@ export function ArtLightbox({
     cancelZoomFrames();
     zoomRuntimeRef.current = null;
     pinchTouchIdsRef.current = null;
-    hasMovedYetRef.current = false;
     isClosingZoomRef.current = false;
+    isZoomActiveRef.current = false;
     zoomMotionRef.current = {
       scale: 1,
       x: 0,
@@ -181,6 +182,7 @@ export function ArtLightbox({
   function animateResetAndCloseLayer() {
     if (isClosingZoomRef.current) return;
     isClosingZoomRef.current = true;
+    isZoomActiveRef.current = false;
     cancelZoomFrames();
     const metrics = zoomRuntimeRef.current?.metrics;
     const start = performance.now();
@@ -234,7 +236,6 @@ export function ArtLightbox({
     if (initialDistance <= 0) return;
     const initialCenter = centerBetweenTouches(touchA, touchB);
     pinchTouchIdsRef.current = [touchA.identifier, touchB.identifier];
-    hasMovedYetRef.current = false;
     runtime.mode = "pinch";
     if (resetMotion) {
       zoomMotionRef.current.scale = 1;
@@ -273,8 +274,14 @@ export function ArtLightbox({
   }
 
   function startZoomLayerFromImage(image: HTMLImageElement, touchA: TouchPoint, touchB: TouchPoint) {
+    // Hard lock Swiper before any pinch baseline calculations.
+    setBackgroundLock(true);
+    resetZoomState();
     const initialDistance = distanceBetweenTouches(touchA, touchB);
-    if (initialDistance <= 0) return false;
+    if (initialDistance <= 0) {
+      setBackgroundLock(false);
+      return false;
+    }
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
     const naturalWidth = Math.max(1, image.naturalWidth || image.clientWidth);
@@ -282,7 +289,6 @@ export function ArtLightbox({
     const fitRatio = Math.min(viewportWidth / naturalWidth, viewportHeight / naturalHeight);
     const baseWidth = naturalWidth * fitRatio;
     const baseHeight = naturalHeight * fitRatio;
-    resetZoomState();
     zoomRuntimeRef.current = {
       mode: "pinch",
       metrics: {
@@ -299,17 +305,17 @@ export function ArtLightbox({
       panStartTouch: { x: viewportWidth * 0.5, y: viewportHeight * 0.5 },
     };
     pinchTouchIdsRef.current = [touchA.identifier, touchB.identifier];
-    hasMovedYetRef.current = false;
+    isZoomActiveRef.current = true;
     setZoomLayer({
       src: image.currentSrc || image.src,
       alt: image.alt,
     });
-    setBackgroundLock(true);
+    scheduleTransformFrame();
     return true;
   }
 
   function handleViewportTouchStart(event: TouchEvent<HTMLDivElement>) {
-    if (event.touches.length < 2 || zoomLayer) return;
+    if (event.touches.length < 2 || zoomLayer || isZoomActiveRef.current) return;
     const activeImage = slideImageRefs.current[activeIndexRef.current];
     if (!activeImage) return;
     const target = event.target as Node | null;
@@ -319,57 +325,89 @@ export function ArtLightbox({
     const initialDistance = distanceBetweenTouches(touchA, touchB);
     if (initialDistance <= 0) return;
     event.preventDefault();
+    event.stopPropagation();
     const started = startZoomLayerFromImage(activeImage, touchA, touchB);
     if (!started) return;
     beginPinch(touchA, touchB, true);
   }
 
+  function handlePinchTouchesMove(touches: TouchCollection) {
+    const runtime = zoomRuntimeRef.current;
+    if (!runtime || !isZoomActiveRef.current) return;
+    const trackedPair = getTrackedTouchPair(touches);
+    if (!trackedPair) return;
+    const [touchA, touchB] = trackedPair;
+    const center = centerBetweenTouches(touchA, touchB);
+    const distance = distanceBetweenTouches(touchA, touchB);
+    const pinchRatio = runtime.startDistance > 0 ? distance / runtime.startDistance : 1;
+    const nextScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, runtime.startScale * pinchRatio));
+    console.log({
+      initialDistance: runtime.startDistance,
+      newDistance: distance,
+      scale: nextScale,
+    });
+    const viewportCenterX = runtime.metrics.viewportWidth * 0.5;
+    const viewportCenterY = runtime.metrics.viewportHeight * 0.5;
+    const scaleRatio = runtime.startScale > 0 ? nextScale / runtime.startScale : 1;
+    const nextX = runtime.startX + (center.x - runtime.startCenter.x) + (runtime.startCenter.x - viewportCenterX) * (1 - scaleRatio);
+    const nextY = runtime.startY + (center.y - runtime.startCenter.y) + (runtime.startCenter.y - viewportCenterY) * (1 - scaleRatio);
+    setZoomTargets(nextScale, nextX, nextY, runtime.metrics);
+  }
+
+  function handleViewportTouchMoveCapture(event: TouchEvent<HTMLDivElement>) {
+    if (!isZoomActiveRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    handlePinchTouchesMove(event.touches);
+  }
+
+  function handleViewportTouchEndCapture(event: TouchEvent<HTMLDivElement>) {
+    if (!isZoomActiveRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.touches.length >= 2) {
+      beginPinch(event.touches[0], event.touches[1]);
+      return;
+    }
+    animateResetAndCloseLayer();
+  }
+
+  function handleViewportTouchCancelCapture(event: TouchEvent<HTMLDivElement>) {
+    if (!isZoomActiveRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    animateResetAndCloseLayer();
+  }
+
   function handleZoomTouchStart(event: TouchEvent<HTMLDivElement>) {
     const runtime = zoomRuntimeRef.current;
-    if (!runtime) return;
+    if (!runtime || !isZoomActiveRef.current) return;
     if (event.touches.length >= 2) {
       event.preventDefault();
+      event.stopPropagation();
       beginPinch(event.touches[0], event.touches[1]);
       return;
     }
     if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001) {
       event.preventDefault();
+      event.stopPropagation();
       beginPan(event.touches[0], runtime);
     }
   }
 
   function handleZoomTouchMove(event: TouchEvent<HTMLDivElement>) {
     const runtime = zoomRuntimeRef.current;
-    if (!runtime) return;
+    if (!runtime || !isZoomActiveRef.current) return;
     const trackedPair = getTrackedTouchPair(event.touches);
     if (trackedPair) {
       event.preventDefault();
-      const [touchA, touchB] = trackedPair;
-      if (!hasMovedYetRef.current) {
-        hasMovedYetRef.current = true;
-        return;
-      }
-      const center = centerBetweenTouches(touchA, touchB);
-      const distance = distanceBetweenTouches(touchA, touchB);
-      const pinchRatio = runtime.startDistance > 0 ? distance / runtime.startDistance : 1;
-      const nextScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, runtime.startScale * pinchRatio));
-      console.log({
-        initialDistance: runtime.startDistance,
-        newDistance: distance,
-        scale: nextScale,
-      });
-      const viewportCenterX = runtime.metrics.viewportWidth * 0.5;
-      const viewportCenterY = runtime.metrics.viewportHeight * 0.5;
-      const scaleRatio = runtime.startScale > 0 ? nextScale / runtime.startScale : 1;
-      const nextX =
-        runtime.startX + (center.x - runtime.startCenter.x) + (runtime.startCenter.x - viewportCenterX) * (1 - scaleRatio);
-      const nextY =
-        runtime.startY + (center.y - runtime.startCenter.y) + (runtime.startCenter.y - viewportCenterY) * (1 - scaleRatio);
-      setZoomTargets(nextScale, nextX, nextY, runtime.metrics);
+      event.stopPropagation();
+      handlePinchTouchesMove(event.touches);
       return;
     }
     if (event.touches.length === 1 && runtime.mode === "pan" && zoomMotionRef.current.scale > 1.001) {
       event.preventDefault();
+      event.stopPropagation();
       const touch = event.touches[0];
       const nextX = runtime.startX + (touch.clientX - runtime.panStartTouch.x);
       const nextY = runtime.startY + (touch.clientY - runtime.panStartTouch.y);
@@ -378,7 +416,9 @@ export function ArtLightbox({
   }
 
   function handleZoomTouchEnd(event: TouchEvent<HTMLDivElement>) {
-    if (!zoomRuntimeRef.current) return;
+    if (!zoomRuntimeRef.current || !isZoomActiveRef.current) return;
+    event.preventDefault();
+    event.stopPropagation();
     if (event.touches.length >= 2) {
       const touchA = event.touches[0];
       const touchB = event.touches[1];
@@ -389,7 +429,7 @@ export function ArtLightbox({
   }
 
   function handleZoomTouchCancel() {
-    if (!zoomRuntimeRef.current) return;
+    if (!zoomRuntimeRef.current || !isZoomActiveRef.current) return;
     animateResetAndCloseLayer();
   }
 
@@ -510,7 +550,13 @@ export function ArtLightbox({
       <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
 
       <div className={styles.stage} onClick={(event) => event.stopPropagation()}>
-        <div className={styles.viewport} onTouchStartCapture={handleViewportTouchStart}>
+        <div
+          className={styles.viewport}
+          onTouchStartCapture={handleViewportTouchStart}
+          onTouchMoveCapture={handleViewportTouchMoveCapture}
+          onTouchEndCapture={handleViewportTouchEndCapture}
+          onTouchCancelCapture={handleViewportTouchCancelCapture}
+        >
           <Swiper
             className={styles.swiper}
             slidesPerView={1}

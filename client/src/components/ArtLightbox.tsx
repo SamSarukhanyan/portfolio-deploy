@@ -76,6 +76,8 @@ export function ArtLightbox({
   const settledIndexRef = useRef(activeIndex);
   const gestureStartIndexRef = useRef(activeIndex);
   const activeIndexRef = useRef(activeIndex);
+  const slideWidthRef = useRef(0);
+  const containerWidthRef = useRef(0);
   const zoomMotionRef = useRef({
     scale: 1,
     x: 0,
@@ -542,6 +544,8 @@ export function ArtLightbox({
   function applyPixelAlignedSlides(swiper: SwiperType) {
     const containerWidth = Math.round(swiper.el.clientWidth || 0);
     if (containerWidth <= 0) return;
+    containerWidthRef.current = containerWidth;
+    slideWidthRef.current = containerWidth;
     swiper.slides.forEach((slideEl) => {
       slideEl.style.width = `${containerWidth}px`;
       slideEl.style.flexBasis = `${containerWidth}px`;
@@ -550,17 +554,21 @@ export function ArtLightbox({
     });
   }
 
-  function applyRoundedWrapperTranslate(swiper: SwiperType, rawTranslate: number) {
-    const roundedTranslate = Math.round(rawTranslate);
+  function snapWrapperToActiveIndex(swiper: SwiperType) {
+    const activeIndex = clampIndex(swiper.activeIndex);
+    const containerWidth = containerWidthRef.current || Math.round(swiper.el.clientWidth || 0);
+    const slideWidth = slideWidthRef.current || containerWidth;
+    if (slideWidth <= 0) return;
+    const translateX = -(activeIndex * slideWidth);
     const wrapper = swiper.wrapperEl;
-    wrapper.style.transform = `translate3d(${roundedTranslate}px, 0, 0)`;
-    const slideWidth = swiper.slides[swiper.activeIndex]?.clientWidth ?? 0;
-    const fractionalRemainder = Math.abs(rawTranslate - roundedTranslate);
+    wrapper.style.transform = `translate3d(${translateX}px, 0, 0)`;
     console.log({
-      wrapperTranslateX: rawTranslate,
-      containerWidth: swiper.el.clientWidth,
+      activeIndex,
+      translateX,
       slideWidth,
-      fractionalRemainder,
+      containerWidth,
+      translateMod: slideWidth > 0 ? Math.abs(translateX) % slideWidth : 0,
+      isFractional: Math.abs(translateX % 1) > 0,
     });
   }
 
@@ -626,9 +634,6 @@ export function ArtLightbox({
             onResize={(swiper: SwiperType) => {
               applyPixelAlignedSlides(swiper);
             }}
-            onSetTranslate={(swiper: SwiperType, translate: number) => {
-              applyRoundedWrapperTranslate(swiper, translate);
-            }}
             onTouchStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) {
                 swiper.allowTouchMove = false;
@@ -652,10 +657,16 @@ export function ArtLightbox({
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
+              window.requestAnimationFrame(() => {
+                snapWrapperToActiveIndex(swiper);
+              });
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {
               settledIndexRef.current = clampIndex(swiper.activeIndex);
+              window.requestAnimationFrame(() => {
+                snapWrapperToActiveIndex(swiper);
+              });
               unlockTransition();
             }}
           >

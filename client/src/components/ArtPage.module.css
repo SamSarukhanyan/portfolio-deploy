@@ -403,17 +403,32 @@
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 2200;
-  background: rgba(9, 9, 9, 0.92);
+  z-index: 2600;
+  isolation: isolate;
+  background: rgba(7, 7, 8, 0.74);
+  backdrop-filter: blur(10px) saturate(90%);
+  -webkit-backdrop-filter: blur(10px) saturate(90%);
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 0.25rem;
   padding: 0.6rem;
 }
 
+.modal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(8, 8, 9, 0.62) 0%, rgba(6, 6, 7, 0.84) 56%, rgba(4, 4, 5, 0.94) 100%),
+    rgba(4, 4, 5, 0.72);
+  pointer-events: none;
+}
+
 .modalTop {
   display: flex;
   justify-content: flex-end;
+  position: relative;
+  z-index: 1;
 }
 
 .modalTop button,
@@ -427,6 +442,7 @@
 
 .modalStage {
   position: relative;
+  z-index: 1;
   display: grid;
   align-items: center;
   justify-items: center;

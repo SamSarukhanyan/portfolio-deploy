@@ -71,30 +71,46 @@
   min-height: 0;
   overflow: hidden;
   isolation: isolate;
+  contain: layout paint size;
+  background: #060607;
 }
 
 .track {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: 100%;
+  min-width: 100%;
   height: 100%;
+  gap: 0;
   will-change: transform;
 }
 
 .slide {
   position: relative;
   flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  background: #060607;
 }
 
 .slideImg {
   width: 100%;
+  min-width: 100%;
   max-width: 100%;
+  height: 100%;
   max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
-  height: auto;
   object-fit: contain;
+  display: block;
+  box-sizing: border-box;
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -170,6 +186,15 @@
 .caption,
 .dots {
   transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+/* Debug helper: enable with `document.body.classList.add("lightbox-debug")` */
+:global(body.lightbox-debug) .viewport {
+  outline: 1px solid red;
+}
+
+:global(body.lightbox-debug) .slide {
+  outline: 1px solid blue;
 }
 
 @media (max-width: 759px) {

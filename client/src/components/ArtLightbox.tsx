@@ -151,11 +151,12 @@ export function ArtLightbox({
   }, []);
 
   function applyTrackOffset(px: number, withTransition: boolean) {
-    sliderOffsetRef.current = px;
+    const roundedPx = Math.round(px);
+    sliderOffsetRef.current = roundedPx;
     const track = trackRef.current;
     if (!track) return;
     track.style.transition = withTransition ? "transform 240ms cubic-bezier(0.16, 1, 0.3, 1)" : "none";
-    track.style.transform = `translate3d(${px}px, 0, 0)`;
+    track.style.transform = `translate3d(${roundedPx}px, 0, 0)`;
   }
 
   useEffect(() => {

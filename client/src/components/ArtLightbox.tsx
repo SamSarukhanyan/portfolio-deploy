@@ -551,14 +551,16 @@ export function ArtLightbox({
   }
 
   function snapTranslateWithSwiper(swiper: SwiperType) {
-    const slideWidth = Math.round(swiper.slides[clampIndex(swiper.activeIndex)]?.clientWidth ?? swiper.el.clientWidth ?? 0);
-    if (slideWidth <= 0) return;
     const activeIndex = clampIndex(swiper.activeIndex);
-    const targetTranslate = Math.round(-(activeIndex * slideWidth));
+    const containerWidth = Math.round(swiper.el.clientWidth || 0);
+    const slideWidth = Math.round(swiper.slides[activeIndex]?.clientWidth ?? containerWidth);
+    const snapPoint = swiper.snapGrid?.[activeIndex] ?? activeIndex * slideWidth;
+    const targetTranslate = Math.round(-snapPoint);
     swiper.wrapperEl.style.transitionDuration = "0ms";
     swiper.setTranslate(targetTranslate);
     console.log({
       activeIndex,
+      containerWidth,
       slideWidth,
       translateX: targetTranslate,
       fractional: targetTranslate % 1,

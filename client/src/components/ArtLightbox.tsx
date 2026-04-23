@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
+import { useEffect, useRef, useState, type TouchEvent as ReactTouchEvent } from "react";
 import styles from "./ArtLightbox.module.css";
 import type { Artwork } from "../content/artworks";
 
@@ -38,9 +38,6 @@ export function ArtLightbox({
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [viewportWidth, setViewportWidth] = useState(1);
-  const [dragX, setDragX] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isSnapping, setIsSnapping] = useState(false);
 
   const [zoomActive, setZoomActive] = useState(false);
   const [zoomScale, setZoomScale] = useState(1);
@@ -50,9 +47,10 @@ export function ArtLightbox({
 
   const stageRef = useRef<HTMLDivElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const naturalSizeRef = useRef<Record<string, { w: number; h: number }>>({});
   const touchSamplesRef = useRef<TouchPoint[]>([]);
-  const dragStartRef = useRef<{ x: number; y: number; t: number } | null>(null);
+  const dragStartRef = useRef<{ x: number; y: number; t: number; baseOffset: number } | null>(null);
 
   const pinchRef = useRef<{
     distance: number;
@@ -64,22 +62,21 @@ export function ArtLightbox({
   } | null>(null);
   const panRef = useRef<{ x: number; y: number; baseX: number; baseY: number } | null>(null);
 
-  const inertiaRafRef = useRef<number | null>(null);
   const snapRafRef = useRef<number | null>(null);
   const zoomResetRafRef = useRef<number | null>(null);
+  const sliderOffsetRef = useRef(0);
+  const activeIndexRef = useRef(activeIndex);
+  const isDraggingRef = useRef(false);
+  const modeRef = useRef<"idle" | "drag" | "snap">("idle");
+  const lockedTargetRef = useRef<number | null>(null);
 
   const activeArtwork = artworks[activeIndex];
   const canGoPrev = activeIndex > 0;
   const canGoNext = activeIndex < artworks.length - 1;
 
-  const trackStyle = useMemo(
-    () =>
-      ({
-        transform: `translate3d(calc(${-activeIndex * 100}% + ${dragX}px), 0, 0)`,
-        transition: isDragging ? "none" : isSnapping ? "transform 260ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
-      }) as CSSProperties,
-    [activeIndex, dragX, isDragging, isSnapping],
-  );
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   useEffect(() => {
     let root = document.getElementById(ROOT_ID);
@@ -121,36 +118,55 @@ export function ArtLightbox({
 
   useEffect(() => {
     return () => {
-      if (inertiaRafRef.current !== null) cancelAnimationFrame(inertiaRafRef.current);
       if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
       if (zoomResetRafRef.current !== null) cancelAnimationFrame(zoomResetRafRef.current);
     };
   }, []);
 
-  function stopSliderAnimation() {
-    if (inertiaRafRef.current !== null) cancelAnimationFrame(inertiaRafRef.current);
-    if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
-    inertiaRafRef.current = null;
-    snapRafRef.current = null;
+  function applyTrackOffset(px: number, withTransition: boolean) {
+    sliderOffsetRef.current = px;
+    const track = trackRef.current;
+    if (!track) return;
+    track.style.transition = withTransition ? "transform 240ms cubic-bezier(0.16, 1, 0.3, 1)" : "none";
+    track.style.transform = `translate3d(${px}px, 0, 0)`;
   }
 
-  function animateSnap(targetDrag: number, targetIndex: number) {
+  useEffect(() => {
+    if (modeRef.current !== "drag") {
+      applyTrackOffset(-activeIndex * viewportWidth, false);
+    }
+  }, [activeIndex, viewportWidth]);
+
+  function stopSliderAnimation() {
+    if (snapRafRef.current !== null) cancelAnimationFrame(snapRafRef.current);
+    snapRafRef.current = null;
+    modeRef.current = "idle";
+    lockedTargetRef.current = null;
+  }
+
+  function animateSnapToIndex(targetIndex: number) {
     stopSliderAnimation();
-    setIsSnapping(true);
-    const from = dragX;
+    modeRef.current = "snap";
+    lockedTargetRef.current = targetIndex;
+    const from = sliderOffsetRef.current;
+    const to = -targetIndex * viewportWidth;
     const start = performance.now();
-    const duration = 260;
+    const duration = 240;
     const frame = (now: number) => {
       const p = clamp((now - start) / duration, 0, 1);
       const e = easeOutCubic(p);
-      setDragX(from + (targetDrag - from) * e);
+      applyTrackOffset(from + (to - from) * e, false);
       if (p < 1) {
         snapRafRef.current = requestAnimationFrame(frame);
       } else {
         snapRafRef.current = null;
-        setDragX(0);
-        setIsSnapping(false);
-        if (targetIndex !== activeIndex) onChangeIndex(targetIndex);
+        applyTrackOffset(to, false);
+        modeRef.current = "idle";
+        const lockedTarget = lockedTargetRef.current;
+        lockedTargetRef.current = null;
+        if (lockedTarget !== null && lockedTarget !== activeIndexRef.current) {
+          onChangeIndex(lockedTarget);
+        }
       }
     };
     snapRafRef.current = requestAnimationFrame(frame);
@@ -168,39 +184,18 @@ export function ArtLightbox({
 
   function finishSwipe() {
     const width = viewportWidth;
-    const startX = dragX;
-    const startV = computeVelocity();
-    let x = startX;
-    let v = startV;
-    let prev = performance.now();
+    const velocity = clamp(computeVelocity(), -1.8, 1.8);
+    const projected = sliderOffsetRef.current + velocity * 180;
+    const progressFromCurrent = (projected + activeIndexRef.current * width) / width;
 
-    const inertia = (now: number) => {
-      const dt = Math.max(8, now - prev);
-      prev = now;
-      x += v * dt;
-      v *= Math.pow(0.92, dt / 16);
-
-      if ((!canGoPrev && x > 0) || (!canGoNext && x < 0)) {
-        x *= 0.68;
-        v *= 0.54;
-      }
-      setDragX(x);
-
-      if (Math.abs(v) > 0.03 && Math.abs(x) < width * 1.2) {
-        inertiaRafRef.current = requestAnimationFrame(inertia);
-        return;
-      }
-      inertiaRafRef.current = null;
-
-      let target = activeIndex;
-      if ((x <= -width * 0.22 || startV <= -0.42) && canGoNext) target = activeIndex + 1;
-      if ((x >= width * 0.22 || startV >= 0.42) && canGoPrev) target = activeIndex - 1;
-      const targetDrag = target > activeIndex ? -width : target < activeIndex ? width : 0;
-      animateSnap(targetDrag, target);
-    };
-
-    stopSliderAnimation();
-    inertiaRafRef.current = requestAnimationFrame(inertia);
+    let target = activeIndexRef.current;
+    if ((progressFromCurrent < -0.18 || velocity < -0.42) && canGoNext) {
+      target = activeIndexRef.current + 1;
+    } else if ((progressFromCurrent > 0.18 || velocity > 0.42) && canGoPrev) {
+      target = activeIndexRef.current - 1;
+    }
+    target = clamp(target, 0, artworks.length - 1);
+    animateSnapToIndex(target);
   }
 
   function handleSliderTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
@@ -208,9 +203,10 @@ export function ArtLightbox({
     if (event.touches.length !== 1) return;
     stopSliderAnimation();
     const t = event.touches[0];
-    dragStartRef.current = { x: t.clientX, y: t.clientY, t: performance.now() };
+    dragStartRef.current = { x: t.clientX, y: t.clientY, t: performance.now(), baseOffset: sliderOffsetRef.current };
     touchSamplesRef.current = [{ x: t.clientX, y: t.clientY, t: performance.now() }];
-    setIsDragging(false);
+    isDraggingRef.current = false;
+    modeRef.current = "idle";
   }
 
   function handleSliderTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
@@ -220,30 +216,32 @@ export function ArtLightbox({
     const dx = t.clientX - dragStartRef.current.x;
     const dy = t.clientY - dragStartRef.current.y;
 
-    if (!isDragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
-      setIsDragging(true);
+    if (!isDraggingRef.current && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+      isDraggingRef.current = true;
+      modeRef.current = "drag";
     }
-    if (!isDragging) return;
+    if (!isDraggingRef.current) return;
 
     event.preventDefault();
+    const base = dragStartRef.current.baseOffset;
     if ((!canGoPrev && dx > 0) || (!canGoNext && dx < 0)) {
-      setDragX(dx * 0.2);
+      applyTrackOffset(base + dx * 0.2, false);
     } else {
-      setDragX(dx);
+      applyTrackOffset(base + dx, false);
     }
     touchSamplesRef.current.push({ x: t.clientX, y: t.clientY, t: performance.now() });
-    if (touchSamplesRef.current.length > 14) touchSamplesRef.current.shift();
+    if (touchSamplesRef.current.length > 10) touchSamplesRef.current.shift();
   }
 
   function handleSliderTouchEnd() {
     if (zoomActive) return;
     if (!dragStartRef.current) return;
     dragStartRef.current = null;
-    if (!isDragging) {
-      setDragX(0);
+    if (!isDraggingRef.current) {
+      applyTrackOffset(-activeIndexRef.current * viewportWidth, false);
       return;
     }
-    setIsDragging(false);
+    isDraggingRef.current = false;
     finishSwipe();
   }
 
@@ -288,8 +286,8 @@ export function ArtLightbox({
     setZoomScale(1);
     setZoomX(0);
     setZoomY(0);
-    setDragX(0);
-    setIsDragging(false);
+    applyTrackOffset(-activeIndexRef.current * viewportWidth, false);
+    isDraggingRef.current = false;
   }
 
   function resetZoomAndClose() {
@@ -408,7 +406,7 @@ export function ArtLightbox({
           onTouchEnd={handleSliderTouchEnd}
           onTouchCancel={handleSliderTouchEnd}
         >
-          <div className={styles.track} style={trackStyle}>
+          <div className={styles.track} ref={trackRef}>
             {artworks.map((art) => (
               <div className={styles.slide} key={art.id}>
                 <img

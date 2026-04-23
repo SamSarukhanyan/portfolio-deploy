@@ -62,6 +62,7 @@ export function ArtLightbox({
   const [viewportHeight, setViewportHeight] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [zoomLayer, setZoomLayer] = useState<ZoomLayer | null>(null);
+  const [isUiHidden, setIsUiHidden] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const slideImageRefs = useRef<Array<HTMLImageElement | null>>([]);
   const zoomImgRef = useRef<HTMLImageElement | null>(null);
@@ -183,6 +184,8 @@ export function ArtLightbox({
     if (isClosingZoomRef.current) return;
     isClosingZoomRef.current = true;
     isZoomActiveRef.current = false;
+    // UI must return immediately when zoom reset starts.
+    setIsUiHidden(false);
     cancelZoomFrames();
     const metrics = zoomRuntimeRef.current?.metrics;
     const start = performance.now();
@@ -214,6 +217,7 @@ export function ArtLightbox({
     };
     if (Math.abs(from.scale - 1) < 0.001 && Math.abs(from.x) < 0.01 && Math.abs(from.y) < 0.01) {
       setBackgroundLock(false);
+      setIsUiHidden(false);
       setZoomLayer(null);
       resetZoomState();
       return;
@@ -306,6 +310,7 @@ export function ArtLightbox({
     };
     pinchTouchIdsRef.current = [touchA.identifier, touchB.identifier];
     isZoomActiveRef.current = true;
+    setIsUiHidden(true);
     setZoomLayer({
       src: image.currentSrc || image.src,
       alt: image.alt,
@@ -546,7 +551,7 @@ export function ArtLightbox({
   if (!portalHost || !activeArtwork) return null;
 
   return createPortal(
-    <div className={`${styles.overlay} ${isZooming ? styles.zooming : ""}`} style={overlayStyle} role="dialog" aria-modal="true">
+    <div className={`${styles.overlay} ${isUiHidden ? styles.zooming : ""}`} style={overlayStyle} role="dialog" aria-modal="true">
       <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
 
       <div className={styles.stage} onClick={(event) => event.stopPropagation()}>
@@ -563,21 +568,22 @@ export function ArtLightbox({
             slidesPerGroup={1}
             slidesPerGroupSkip={0}
             spaceBetween={0}
-            centeredSlides
+            centeredSlides={false}
             roundLengths
             loop={false}
             freeMode={false}
             allowSlideNext
             allowSlidePrev
             resistance
-            resistanceRatio={0.85}
+            resistanceRatio={0.6}
             followFinger
             longSwipes
-            longSwipesRatio={0.4}
+            longSwipesRatio={0.24}
             longSwipesMs={260}
             shortSwipes
-            threshold={12}
+            threshold={4}
             speed={260}
+            touchStartPreventDefault={false}
             watchOverflow
             preventInteractionOnTransition
             allowTouchMove={!isTransitioning && !isZooming}

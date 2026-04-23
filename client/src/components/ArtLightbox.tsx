@@ -1,4 +1,184 @@
 import { createPortal } from "react-dom";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import styles from "./ArtLightbox.module.css";
+import type { Artwork } from "../content/artworks";
+
+type Props = {
+  artworks: Artwork[];
+  activeIndex: number;
+  onChangeIndex: (index: number) => void;
+  onClose: () => void;
+  getArtworkSrc: (filename: string) => string;
+  fallbackSrc: string;
+  closeLabel: string;
+  titleLabel: string;
+};
+
+const ROOT_ID = "art-lightbox-root";
+
+export function ArtLightbox({
+  artworks,
+  activeIndex,
+  onChangeIndex,
+  onClose,
+  getArtworkSrc,
+  fallbackSrc,
+  closeLabel,
+  titleLabel,
+}: Props) {
+  const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
+  const [viewportHeight, setViewportHeight] = useState(0);
+  const swiperRef = useRef<SwiperType | null>(null);
+
+  const activeArtwork = artworks[activeIndex];
+
+  useEffect(() => {
+    let root = document.getElementById(ROOT_ID);
+    if (!root) {
+      root = document.createElement("div");
+      root.id = ROOT_ID;
+      document.body.appendChild(root);
+    }
+    setPortalHost(root);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.add("art-modal-open");
+    const scrollY = window.scrollY || window.pageYOffset || 0;
+    const prevPosition = document.body.style.position;
+    const prevTop = document.body.style.top;
+    const prevWidth = document.body.style.width;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+
+    const onResize = () => {
+      const visualH = window.visualViewport?.height;
+      const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
+      setViewportHeight(height);
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("scroll", onResize);
+
+    return () => {
+      document.body.classList.remove("art-modal-open");
+      document.body.style.position = prevPosition;
+      document.body.style.top = prevTop;
+      document.body.style.width = prevWidth;
+      document.body.style.overflow = prevOverflow;
+      window.scrollTo(0, scrollY);
+      window.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("scroll", onResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [onClose]);
+
+  useEffect(() => {
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    if (swiper.activeIndex === activeIndex) return;
+    swiper.slideTo(activeIndex, 0);
+  }, [activeIndex]);
+
+  const overlayStyle = useMemo(
+    () =>
+      ({
+        height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+        ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+      }) as CSSProperties,
+    [viewportHeight],
+  );
+
+  if (!portalHost || !activeArtwork) return null;
+
+  return createPortal(
+    <div className={styles.overlay} style={overlayStyle} role="dialog" aria-modal="true">
+      <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
+
+      <div className={styles.topBar}>
+        <button className={styles.closeBtn} type="button" onClick={onClose}>
+          {closeLabel}
+        </button>
+      </div>
+
+      <div className={styles.stage} onClick={(event) => event.stopPropagation()}>
+        <div className={styles.viewport}>
+          <Swiper
+            className={styles.swiper}
+            slidesPerView={1}
+            spaceBetween={0}
+            centeredSlides
+            resistance
+            longSwipes
+            threshold={8}
+            speed={260}
+            watchOverflow
+            initialSlide={activeIndex}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            onSlideChange={(swiper) => {
+              const nextIndex = swiper.activeIndex;
+              if (nextIndex !== activeIndex) onChangeIndex(nextIndex);
+            }}
+          >
+            {artworks.map((art) => (
+              <SwiperSlide className={styles.slide} key={art.id}>
+                <img
+                  className={styles.slideImg}
+                  src={getArtworkSrc(art.filename)}
+                  alt={art.title}
+                  onError={(event) => {
+                    event.currentTarget.src = fallbackSrc;
+                  }}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <p className={styles.caption}>
+          {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
+        </p>
+
+        <div className={styles.dots} aria-label={titleLabel}>
+          {artworks.map((art, index) => (
+            <button
+              key={art.id}
+              type="button"
+              className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
+              onClick={() => swiperRef.current?.slideTo(index)}
+              aria-label={`${index + 1}`}
+              aria-current={index === activeIndex ? "true" : "false"}
+            />
+          ))}
+        </div>
+      </div>
+    </div>,
+    portalHost,
+  );
+}
+import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
 import styles from "./ArtLightbox.module.css";
 import type { Artwork } from "../content/artworks";

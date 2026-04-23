@@ -1,11 +1,8 @@
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
   inset: 0;
   z-index: 4000;
   isolation: isolate;
-  background: #070708;
   width: 100vw;
   height: var(--lightbox-vh, 100dvh);
   min-height: var(--lightbox-vh, 100dvh);
@@ -14,6 +11,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 0.28rem;
+  background: #070708;
   padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
   padding-right: max(0.62rem, env(safe-area-inset-right, 0px));
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
@@ -33,6 +31,8 @@
 .backdrop {
   position: absolute;
   inset: 0;
+  border: 0;
+  background: transparent;
   z-index: 1;
 }
 
@@ -57,7 +57,6 @@
   width: 100%;
   min-height: 0;
   overflow: hidden;
-  touch-action: none;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
   justify-items: center;
@@ -70,51 +69,37 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  overflow: clip;
-  isolation: isolate;
   contain: layout paint size;
-  clip-path: inset(0);
   background: #060607;
 }
 
-.track {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+.swiper {
   width: 100%;
-  min-width: 100%;
   height: 100%;
-  gap: 0;
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
+}
+
+.swiper :global(.swiper-wrapper) {
+  width: 100%;
+  height: 100%;
 }
 
 .slide {
-  position: relative;
-  flex: 0 0 100%;
-  width: 100%;
-  min-width: 100%;
+  width: 100% !important;
   max-width: 100%;
+  min-width: 100%;
   height: 100%;
+  overflow: hidden;
   display: grid;
   place-items: center;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
   background: #060607;
 }
 
 .slideImg {
   width: 100%;
-  min-width: 100%;
-  max-width: 100%;
   height: 100%;
   max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
   object-fit: contain;
   display: block;
-  box-sizing: border-box;
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -155,52 +140,6 @@
   transform: scale(1.18);
 }
 
-.zoomLayer {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: var(--lightbox-vh, 100dvh);
-  min-height: var(--lightbox-vh, 100dvh);
-  min-height: -webkit-fill-available;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
-}
-
-.zoomImg {
-  width: 100%;
-  max-width: 100%;
-  max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
-  height: auto;
-  object-fit: contain;
-  transform-origin: center center;
-  will-change: transform;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.zoomUiHidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-6px);
-}
-
-.topBar,
-.caption,
-.dots {
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-/* Debug helper: enable with `document.body.classList.add("lightbox-debug")` */
-:global(body.lightbox-debug) .viewport {
-  outline: 1px solid red;
-}
-
-:global(body.lightbox-debug) .slide {
-  outline: 1px solid blue;
-}
-
 @media (max-width: 759px) {
   .overlay {
     padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
@@ -210,8 +149,7 @@
     gap: 0.12rem;
   }
 
-  .slideImg,
-  .zoomImg {
+  .slideImg {
     max-height: calc(var(--lightbox-vh, 100dvh) * 0.68);
   }
 

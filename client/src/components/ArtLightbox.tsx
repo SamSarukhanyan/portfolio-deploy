@@ -539,6 +539,46 @@ export function ArtLightbox({
     return forcedTarget;
   }
 
+  function getComputedTranslateX(wrapper: HTMLElement) {
+    const transform = window.getComputedStyle(wrapper).transform;
+    if (!transform || transform === "none") return 0;
+    if (transform.startsWith("matrix3d(")) {
+      const values = transform
+        .slice("matrix3d(".length, -1)
+        .split(",")
+        .map((value) => Number(value.trim()));
+      return Number.isFinite(values[12]) ? values[12] : 0;
+    }
+    if (transform.startsWith("matrix(")) {
+      const values = transform
+        .slice("matrix(".length, -1)
+        .split(",")
+        .map((value) => Number(value.trim()));
+      return Number.isFinite(values[4]) ? values[4] : 0;
+    }
+    return 0;
+  }
+
+  function forceFinalSlideSnap(swiper: SwiperType) {
+    const activeIndex = clampIndex(swiper.activeIndex);
+    const containerWidth = Math.round(swiper.el.clientWidth || window.innerWidth || 0);
+    if (containerWidth <= 0) return;
+    const targetTranslateX = -(activeIndex * containerWidth);
+    const wrapper = swiper.wrapperEl;
+    wrapper.style.transition = "none";
+    wrapper.style.transitionDuration = "0ms";
+    wrapper.style.transform = `translate3d(${targetTranslateX}px, 0, 0)`;
+    // Keep Swiper internal state aligned with authoritative final transform.
+    (swiper as unknown as { translate: number }).translate = targetTranslateX;
+    const computedTranslateX = getComputedTranslateX(wrapper);
+    console.log({
+      activeIndex,
+      translateX: computedTranslateX,
+      slideWidth: containerWidth,
+      fractional: computedTranslateX % 1,
+    });
+  }
+
   const overlayStyle = useMemo(
     () =>
       ({
@@ -616,10 +656,12 @@ export function ArtLightbox({
               settledIndexRef.current = nextIndex;
               gestureStartIndexRef.current = nextIndex;
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
+              forceFinalSlideSnap(swiper);
               unlockTransition();
             }}
             onTransitionEnd={(swiper: SwiperType) => {
               settledIndexRef.current = clampIndex(swiper.activeIndex);
+              forceFinalSlideSnap(swiper);
               unlockTransition();
             }}
           >

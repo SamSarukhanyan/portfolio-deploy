@@ -3,19 +3,24 @@
   inset: 0;
   z-index: 4000;
   isolation: isolate;
+  box-sizing: border-box;
   width: 100vw;
   height: var(--lightbox-vh, 100dvh);
   min-height: var(--lightbox-vh, 100dvh);
   min-height: -webkit-fill-available;
   overflow: hidden;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  gap: 0.28rem;
+  display: block;
   background: #070708;
   padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
   padding-right: max(0.62rem, env(safe-area-inset-right, 0px));
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
   padding-left: max(0.62rem, env(safe-area-inset-left, 0px));
+}
+
+.zooming::before {
+  background:
+    radial-gradient(circle at 50% 46%, rgba(10, 10, 11, 0.82), rgba(6, 6, 7, 0.94) 56%, rgba(4, 4, 5, 1)),
+    linear-gradient(180deg, rgba(7, 7, 8, 0.96), rgba(5, 5, 6, 1));
 }
 
 .overlay::before {
@@ -37,11 +42,9 @@
 }
 
 .topBar {
-  position: relative;
-  z-index: 2;
   display: flex;
   justify-content: flex-end;
-  transition: opacity 0.18s ease;
+  pointer-events: none;
 }
 
 .closeBtn {
@@ -50,18 +53,15 @@
   color: #d9d9d9;
   border-radius: 10px;
   padding: 0.5rem 0.72rem;
+  pointer-events: auto;
 }
 
 .stage {
   position: relative;
   z-index: 2;
   width: 100%;
-  min-height: 0;
+  height: 100%;
   overflow: hidden;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto auto;
-  justify-items: center;
-  gap: 0.5rem;
 }
 
 .viewport {
@@ -72,42 +72,87 @@
   overflow: hidden;
   contain: layout paint size;
   background: #060607;
+  margin: 0;
+  padding: 0;
 }
 
 .swiper {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 .swiper :global(.swiper-wrapper) {
   width: 100%;
   height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.swiper :global(.swiper-slide) {
+  width: 100% !important;
+  flex-shrink: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+:global(.swiper-zoom-container) {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slide {
   width: 100% !important;
   max-width: 100%;
   min-width: 100%;
+  flex-shrink: 0;
   height: 100%;
   overflow: hidden;
   display: grid;
   place-items: center;
   background: #060607;
+  margin: 0;
+  padding: 0;
 }
 
 .slideImg {
-  width: 100%;
-  height: 100%;
-  max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
-  transition: opacity 0.12s linear;
 }
 
-.slideImgHidden {
+.uiLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: opacity 0.2s ease;
+}
+
+.zooming .uiLayer {
   opacity: 0;
+}
+
+.bottomUi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
 }
 
 .caption {
@@ -115,7 +160,6 @@
   color: #acacac;
   text-align: center;
   font-size: 0.86rem;
-  transition: opacity 0.18s ease;
 }
 
 .dots {
@@ -129,12 +173,7 @@
   background: rgba(17, 17, 18, 0.62);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: opacity 0.18s ease;
-}
-
-.zoomUiHidden {
-  opacity: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .dot {
@@ -153,38 +192,16 @@
   transform: scale(1.18);
 }
 
-.zoomLayer {
-  position: fixed;
-  inset: 0;
-  z-index: 5005;
-  display: grid;
-  place-items: center;
-  background: rgba(6, 6, 7, 0.98);
-  touch-action: none;
-  overscroll-behavior: contain;
-}
-
-.zoomImg {
-  width: 100vw;
-  height: 100dvh;
-  object-fit: contain;
-  transform-origin: center center;
-  will-change: transform;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
 @media (max-width: 759px) {
   .overlay {
     padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
     padding-right: max(0.42rem, env(safe-area-inset-right, 0px));
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
     padding-left: max(0.42rem, env(safe-area-inset-left, 0px));
-    gap: 0.12rem;
   }
 
   .slideImg {
-    max-height: calc(var(--lightbox-vh, 100dvh) * 0.68);
+    max-height: 100%;
   }
 
   .dot {

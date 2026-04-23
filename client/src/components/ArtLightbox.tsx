@@ -34,6 +34,7 @@ export function ArtLightbox({
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isZooming, setIsZooming] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
   const isTransitioningRef = useRef(false);
   const settledIndexRef = useRef(activeIndex);
@@ -45,6 +46,16 @@ export function ArtLightbox({
   useEffect(() => {
     activeIndexRef.current = activeIndex;
   }, [activeIndex]);
+
+  function resetZoom(swiper: SwiperType | null) {
+    if (!swiper || !swiper.zoom) return;
+    if (swiper.zoom.scale <= 1) {
+      setIsZooming(false);
+      return;
+    }
+    swiper.zoom.out();
+    setIsZooming(false);
+  }
 
   useEffect(() => {
     let root = document.getElementById(ROOT_ID);
@@ -152,14 +163,8 @@ export function ArtLightbox({
   if (!portalHost || !activeArtwork) return null;
 
   return createPortal(
-    <div className={styles.overlay} style={overlayStyle} role="dialog" aria-modal="true">
+    <div className={`${styles.overlay} ${isZooming ? styles.zooming : ""}`} style={overlayStyle} role="dialog" aria-modal="true">
       <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
-
-      <div className={styles.topBar}>
-        <button className={styles.closeBtn} type="button" onClick={onClose}>
-          {closeLabel}
-        </button>
-      </div>
 
       <div className={styles.stage} onClick={(event) => event.stopPropagation()}>
         <div className={styles.viewport}>
@@ -198,6 +203,9 @@ export function ArtLightbox({
               swiperRef.current = swiper;
               settledIndexRef.current = activeIndexRef.current;
               gestureStartIndexRef.current = activeIndexRef.current;
+              swiper.on("zoomChange", (_swiper, scale) => {
+                setIsZooming(scale > 1.01);
+              });
             }}
             onTouchStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) {
@@ -209,6 +217,7 @@ export function ArtLightbox({
             }}
             onSlideChangeTransitionStart={(swiper: SwiperType) => {
               if (isTransitioningRef.current) return;
+              resetZoom(swiper);
               lockTransition();
               const nextIndex = enforceSingleStep(swiper);
               if (nextIndex !== activeIndexRef.current) onChangeIndex(nextIndex);
@@ -227,7 +236,17 @@ export function ArtLightbox({
           >
             {artworks.map((art) => (
               <SwiperSlide className={styles.slide} key={art.id}>
-                <div className="swiper-zoom-container">
+                <div
+                  className={`${styles.zoomContainer} swiper-zoom-container`}
+                  onTouchEndCapture={(event) => {
+                    if (event.touches.length === 0) {
+                      resetZoom(swiperRef.current);
+                    }
+                  }}
+                  onTouchCancel={() => {
+                    resetZoom(swiperRef.current);
+                  }}
+                >
                   <img
                     className={styles.slideImg}
                     src={getArtworkSrc(art.filename)}
@@ -241,25 +260,35 @@ export function ArtLightbox({
             ))}
           </Swiper>
         </div>
+      </div>
 
-        <p className={styles.caption}>
-          {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
-        </p>
+      <div className={styles.uiLayer}>
+        <div className={styles.topBar}>
+          <button className={styles.closeBtn} type="button" onClick={onClose}>
+            {closeLabel}
+          </button>
+        </div>
 
-        <div className={styles.dots} aria-label={titleLabel}>
-          {artworks.map((art, index) => (
-            <button
-              key={art.id}
-              type="button"
-              className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
-              onClick={() => {
-                if (isTransitioningRef.current) return;
-                swiperRef.current?.slideTo(index);
-              }}
-              aria-label={`${index + 1}`}
-              aria-current={index === activeIndex ? "true" : "false"}
-            />
-          ))}
+        <div className={styles.bottomUi}>
+          <p className={styles.caption}>
+            {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
+          </p>
+
+          <div className={styles.dots} aria-label={titleLabel}>
+            {artworks.map((art, index) => (
+              <button
+                key={art.id}
+                type="button"
+                className={`${styles.dot} ${index === activeIndex ? styles.dotActive : ""}`}
+                onClick={() => {
+                  if (isTransitioningRef.current) return;
+                  swiperRef.current?.slideTo(index);
+                }}
+                aria-label={`${index + 1}`}
+                aria-current={index === activeIndex ? "true" : "false"}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>,

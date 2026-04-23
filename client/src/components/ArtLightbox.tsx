@@ -563,11 +563,14 @@ export function ArtLightbox({
     const wrapper = swiper.wrapperEl;
     wrapper.style.transform = `translate3d(${translateX}px, 0, 0)`;
     console.log({
+      dpr: window.devicePixelRatio,
       activeIndex,
       translateX,
       slideWidth,
       containerWidth,
+      computedTransform: translateX,
       translateMod: slideWidth > 0 ? Math.abs(translateX) % slideWidth : 0,
+      fractionalCheck: translateX % 1,
       isFractional: Math.abs(translateX % 1) > 0,
     });
   }

@@ -60,9 +60,11 @@ export function ArtPage() {
       if (event.key === "ArrowLeft") setActiveIndex((v) => (v === null ? null : (v - 1 + artworks.length) % artworks.length));
     };
 
+    document.body.classList.add("art-modal-open");
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKeyDown);
     return () => {
+      document.body.classList.remove("art-modal-open");
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };

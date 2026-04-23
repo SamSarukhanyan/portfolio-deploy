@@ -476,20 +476,26 @@
   width: 100%;
   min-height: 0;
   overflow: hidden;
+  position: relative;
+  border-radius: 12px;
+  isolation: isolate;
 }
 
 .carouselTrack {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 100%;
-  align-items: center;
+  position: relative;
+  width: 100%;
+  min-height: min(68vh, 78dvh);
 }
 
 .carouselSlide {
+  position: absolute;
+  inset: 0;
   display: grid;
   justify-items: center;
   align-items: center;
-  padding-inline: 0.18rem;
+  padding: 0;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .figure img {

@@ -34,6 +34,7 @@ export function ArtPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [slideDragX, setSlideDragX] = useState(0);
   const [isSlideDragging, setIsSlideDragging] = useState(false);
+  const [isSlideSettling, setIsSlideSettling] = useState(false);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [settling, setSettling] = useState(false);
@@ -53,6 +54,7 @@ export function ArtPage() {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const settleTimeoutRef = useRef<number | null>(null);
   const gestureTimeoutRef = useRef<number | null>(null);
+  const slideSettleTimeoutRef = useRef<number | null>(null);
 
   const activeArtwork = useMemo(
     () => (activeIndex === null ? null : artworks[activeIndex] ?? null),
@@ -89,6 +91,7 @@ export function ArtPage() {
     return () => {
       if (settleTimeoutRef.current !== null) window.clearTimeout(settleTimeoutRef.current);
       if (gestureTimeoutRef.current !== null) window.clearTimeout(gestureTimeoutRef.current);
+      if (slideSettleTimeoutRef.current !== null) window.clearTimeout(slideSettleTimeoutRef.current);
     };
   }, []);
 
@@ -96,6 +99,7 @@ export function ArtPage() {
     setActiveIndex(null);
     setSlideDragX(0);
     setIsSlideDragging(false);
+    setIsSlideSettling(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -108,6 +112,7 @@ export function ArtPage() {
     setActiveIndex(index);
     setSlideDragX(0);
     setIsSlideDragging(false);
+    setIsSlideSettling(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -119,6 +124,7 @@ export function ArtPage() {
     setActiveIndex(nextIndex);
     setSlideDragX(0);
     setIsSlideDragging(false);
+    setIsSlideSettling(false);
     setScale(1);
     setOffset({ x: 0, y: 0 });
     scaleRef.current = 1;
@@ -141,6 +147,27 @@ export function ArtPage() {
   function goToDot(index: number) {
     if (activeIndex === null || activeIndex === index) return;
     goToIndex(index);
+  }
+
+  function settleSlideTo(direction: "next" | "prev") {
+    if (activeIndex === null || isSlideSettling) return;
+    const stageWidth = stageRef.current?.clientWidth ?? window.innerWidth;
+    const targetDrag = direction === "next" ? -stageWidth : stageWidth;
+    const nextIndex =
+      direction === "next"
+        ? Math.min(activeIndex + 1, artworks.length - 1)
+        : Math.max(activeIndex - 1, 0);
+
+    setIsSlideDragging(false);
+    setIsSlideSettling(true);
+    setSlideDragX(targetDrag);
+
+    if (slideSettleTimeoutRef.current !== null) window.clearTimeout(slideSettleTimeoutRef.current);
+    slideSettleTimeoutRef.current = window.setTimeout(() => {
+      goToIndex(nextIndex);
+      setSlideDragX(0);
+      setIsSlideSettling(false);
+    }, 230);
   }
 
   function applyTransform(nextScale: number, nextOffset: { x: number; y: number }) {
@@ -286,10 +313,21 @@ export function ArtPage() {
     if (isSlideDragging) {
       const canGoNext = activeIndex !== null && activeIndex < artworks.length - 1;
       const canGoPrev = activeIndex !== null && activeIndex > 0;
-      if (slideDragX <= -threshold && canGoNext) showNext();
-      else if (slideDragX >= threshold && canGoPrev) showPrev();
-      setSlideDragX(0);
+      if (slideDragX <= -threshold && canGoNext) {
+        settleSlideTo("next");
+        return;
+      }
+      if (slideDragX >= threshold && canGoPrev) {
+        settleSlideTo("prev");
+        return;
+      }
       setIsSlideDragging(false);
+      setIsSlideSettling(true);
+      setSlideDragX(0);
+      if (slideSettleTimeoutRef.current !== null) window.clearTimeout(slideSettleTimeoutRef.current);
+      slideSettleTimeoutRef.current = window.setTimeout(() => {
+        setIsSlideSettling(false);
+      }, 220);
       return;
     }
 
@@ -310,11 +348,21 @@ export function ArtPage() {
   const trackStyle = useMemo(
     () =>
       ({
-        transform: `translate3d(calc(${-100 * (activeIndex ?? 0)}% + ${slideDragX}px), 0, 0)`,
-        transition: isSlideDragging ? "none" : "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: isSlideDragging ? "none" : "transform 230ms cubic-bezier(0.22, 1, 0.36, 1)",
       }) as CSSProperties,
-    [activeIndex, isSlideDragging, slideDragX],
+    [isSlideDragging],
   );
+
+  const carouselItems = useMemo(() => {
+    if (activeIndex === null) return [];
+    const prevIndex = Math.max(activeIndex - 1, 0);
+    const nextIndex = Math.min(activeIndex + 1, artworks.length - 1);
+    return [
+      { key: `prev-${artworks[prevIndex].id}`, art: artworks[prevIndex], slot: -1 },
+      { key: `current-${artworks[activeIndex].id}`, art: artworks[activeIndex], slot: 0 },
+      { key: `next-${artworks[nextIndex].id}`, art: artworks[nextIndex], slot: 1 },
+    ];
+  }, [activeIndex]);
 
   const hideUi = gestureActive || scale > 1.01;
 
@@ -391,12 +439,17 @@ export function ArtPage() {
             <figure className={styles.figure}>
               <div className={styles.carouselViewport}>
                 <div className={styles.carouselTrack} style={trackStyle}>
-                  {artworks.map((art, index) => (
-                    <div className={styles.carouselSlide} key={art.id} aria-hidden={index !== activeIndex}>
+                  {carouselItems.map(({ key, art, slot }) => (
+                    <div
+                      className={styles.carouselSlide}
+                      key={key}
+                      style={{ transform: `translate3d(calc(${slot * 100}% + ${slideDragX}px), 0, 0)` }}
+                      aria-hidden={art.id !== activeArtwork.id}
+                    >
                       <img
                         src={getArtworkSrc(art.filename)}
                         alt={art.title}
-                        style={index === activeIndex ? imageStyle : undefined}
+                        style={art.id === activeArtwork.id ? imageStyle : undefined}
                         onError={(event) => {
                           event.currentTarget.src = fallbackImage;
                         }}

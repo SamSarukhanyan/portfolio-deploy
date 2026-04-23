@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 import styles from "./ArtPage.module.css";
 import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
@@ -20,8 +20,6 @@ const fallbackImage =
       <text x="50%" y="56%" fill="#8091a7" font-size="34" text-anchor="middle" font-family="Inter, Arial">/public/artworks/filename.jpg</text>
     </svg>`,
   );
-
-const SNAKE_SEGMENTS = 12;
 
 type ArtworkCardProps = {
   art: (typeof artworks)[number];
@@ -82,31 +80,46 @@ export function ArtPage() {
   return (
     <section className={`section ${styles.section}`}>
       <div className="shell">
-        <div className={`glass ${styles.hero}`}>
+        <div className={styles.hero}>
+          <div className={styles.heroHalo} aria-hidden>
+            {Array.from({ length: 10 }, (_, i) => (
+              <span key={i} className={styles.heroHaloSeg} />
+            ))}
+          </div>
           <div className={styles.heroTop}>
             <a href="/" className={styles.backLink} onClick={(event) => onSpaLinkClick(event, "/")}>
               {t("art.backHome")}
             </a>
-            <div className={styles.heroMonoMotion} aria-hidden>
-              <span className={styles.shapeCircle} />
-              <span className={styles.shapeDiamond} />
-              <span className={styles.shapeSnake}>
-                {Array.from({ length: SNAKE_SEGMENTS }, (_, i) => (
-                  <span
-                    key={i}
-                    className={styles.snakeSegRing}
-                    style={{ ["--i" as string]: String(i) } as CSSProperties}
-                  >
-                    <span className={styles.snakeSegDot} />
-                  </span>
-                ))}
-              </span>
+            <div className={styles.heroAurora} aria-hidden>
+              {Array.from({ length: 12 }, (_, i) => (
+                <span key={i} className={styles.heroAuroraMote} />
+              ))}
             </div>
           </div>
-          <h1 className={styles.title}>{t("art.title")}</h1>
-          <p className={styles.lead}>{t("art.lead")}</p>
+          <div className={styles.heroBody}>
+            <div className={styles.heroText}>
+              <h1 className={styles.title}>{t("art.title")}</h1>
+              <p className={styles.lead}>{t("art.lead")}</p>
+            </div>
+            {artworks.length > 0 ? (
+              <div className={styles.heroSlideshow}>
+                <span className={styles.slideshowLine} aria-hidden="true" />
+                <button
+                  type="button"
+                  className={styles.slideshowBtn}
+                  onClick={() => {
+                    openAt(0);
+                  }}
+                >
+                  {t("art.openSlideshow")}
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
+      </div>
 
+      <div className={styles.gridFullBleed}>
         <div className={styles.grid}>
           {artworks.map((art, index) => (
             <ArtworkCard

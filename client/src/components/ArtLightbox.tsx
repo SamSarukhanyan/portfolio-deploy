@@ -117,9 +117,9 @@ export function ArtLightbox({
     document.body.style.overflow = "hidden";
 
     const onResize = () => {
-      const containerW = viewportRef.current?.getBoundingClientRect().width;
+      const containerW = viewportRef.current?.clientWidth;
       const visualH = window.visualViewport?.height;
-      const width = Math.max(1, containerW ?? window.innerWidth);
+      const width = Math.max(1, Math.round(containerW ?? window.innerWidth));
       const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
       setSliderWidth(width);
       setViewportHeight(height);
@@ -175,7 +175,7 @@ export function ArtLightbox({
   }
 
   function applyTrackOffset(px: number) {
-    const precisePx = Number.isFinite(px) ? Math.round(px) : 0;
+    const precisePx = Number.isFinite(px) ? px : 0;
     const track = trackRef.current;
     if (!track) return;
     visualXRef.current = precisePx;
@@ -519,6 +519,15 @@ export function ArtLightbox({
     height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
     ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
   } as CSSProperties;
+  const trackStyle = {
+    width: `${sliderWidth * artworks.length}px`,
+  } as CSSProperties;
+  const slideStyle = {
+    width: `${sliderWidth}px`,
+    minWidth: `${sliderWidth}px`,
+    maxWidth: `${sliderWidth}px`,
+    flexBasis: `${sliderWidth}px`,
+  } as CSSProperties;
 
   if (!portalHost) return null;
 
@@ -547,9 +556,9 @@ export function ArtLightbox({
           onTouchEnd={handleSliderTouchEnd}
           onTouchCancel={handleSliderTouchEnd}
         >
-          <div className={styles.track} ref={trackRef}>
+          <div className={styles.track} ref={trackRef} style={trackStyle}>
             {artworks.map((art) => (
-              <div className={styles.slide} key={art.id}>
+              <div className={styles.slide} key={art.id} style={slideStyle}>
                 <img
                   className={styles.slideImg}
                   src={getArtworkSrc(art.filename)}

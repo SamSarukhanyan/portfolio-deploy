@@ -1,5 +1,7 @@
 .overlay {
   position: fixed;
+  top: 0;
+  left: 0;
   inset: 0;
   z-index: 4000;
   isolation: isolate;
@@ -7,13 +9,16 @@
   backdrop-filter: blur(10px) saturate(90%);
   -webkit-backdrop-filter: blur(10px) saturate(90%);
   width: 100vw;
-  height: 100vh;
-  height: 100dvh;
+  height: var(--lightbox-vh, 100dvh);
+  min-height: var(--lightbox-vh, 100dvh);
   min-height: -webkit-fill-available;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 0.28rem;
-  padding: 0.62rem;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
+  padding-right: max(0.62rem, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
+  padding-left: max(0.62rem, env(safe-area-inset-left, 0px));
 }
 
 .overlay::before {
@@ -88,7 +93,7 @@
 .slideImg {
   width: 100%;
   max-width: 100%;
-  max-height: min(70vh, 78dvh);
+  max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
   height: auto;
   object-fit: contain;
   user-select: none;
@@ -135,8 +140,8 @@
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
-  height: 100dvh;
+  height: var(--lightbox-vh, 100dvh);
+  min-height: var(--lightbox-vh, 100dvh);
   min-height: -webkit-fill-available;
   z-index: 3;
   display: grid;
@@ -147,7 +152,7 @@
 .zoomImg {
   width: 100%;
   max-width: 100%;
-  max-height: min(70vh, 78dvh);
+  max-height: calc(var(--lightbox-vh, 100dvh) * 0.72);
   height: auto;
   object-fit: contain;
   transform-origin: center center;
@@ -170,13 +175,16 @@
 
 @media (max-width: 759px) {
   .overlay {
-    padding: 0.42rem 0.42rem 0.54rem;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
+    padding-right: max(0.42rem, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
+    padding-left: max(0.42rem, env(safe-area-inset-left, 0px));
     gap: 0.12rem;
   }
 
   .slideImg,
   .zoomImg {
-    max-height: min(62vh, 68dvh);
+    max-height: calc(var(--lightbox-vh, 100dvh) * 0.68);
   }
 
   .dot {

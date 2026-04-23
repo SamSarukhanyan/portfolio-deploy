@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useEffect, useRef, useState, type TouchEvent as ReactTouchEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent as ReactTouchEvent } from "react";
 import styles from "./ArtLightbox.module.css";
 import type { Artwork } from "../content/artworks";
 
@@ -39,6 +39,7 @@ export function ArtLightbox({
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [viewportWidth, setViewportWidth] = useState(1);
+  const [viewportHeight, setViewportHeight] = useState(0);
 
   const [zoomActive, setZoomActive] = useState(false);
   const [zoomScale, setZoomScale] = useState(1);
@@ -105,9 +106,13 @@ export function ArtLightbox({
     const onResize = () => {
       const w = viewportRef.current?.clientWidth ?? window.innerWidth;
       setViewportWidth(Math.max(1, w));
+      const visualH = window.visualViewport?.height;
+      setViewportHeight(Math.max(1, Math.round(visualH ?? window.innerHeight)));
     };
     onResize();
     window.addEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("scroll", onResize);
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -121,6 +126,8 @@ export function ArtLightbox({
       document.body.classList.remove("art-modal-open");
       document.body.style.overflow = prevOverflow;
       window.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("scroll", onResize);
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [activeIndex, canGoNext, canGoPrev, onChangeIndex, onClose, zoomActive]);
@@ -449,8 +456,17 @@ export function ArtLightbox({
 
   if (!portalHost) return null;
 
+  const overlayStyle = useMemo(
+    () =>
+      ({
+        height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+        ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
+      }) as CSSProperties,
+    [viewportHeight],
+  );
+
   return createPortal(
-    <div className={styles.overlay} role="dialog" aria-modal="true">
+    <div className={styles.overlay} style={overlayStyle} role="dialog" aria-modal="true">
       <div
         className={styles.backdrop}
         onPointerDown={onBackdropPointerDown}

@@ -65,7 +65,7 @@ export function ArtLightbox({
 
   const snapRafRef = useRef<number | null>(null);
   const zoomResetRafRef = useRef<number | null>(null);
-  const sliderOffsetRef = useRef(0);
+  const dragDeltaRef = useRef(0);
   const activeIndexRef = useRef(activeIndex);
   const isDraggingRef = useRef(false);
   const modeRef = useRef<"idle" | "drag" | "snap">("idle");
@@ -152,16 +152,22 @@ export function ArtLightbox({
 
   function applyTrackOffset(px: number, withTransition: boolean) {
     const roundedPx = Math.round(px);
-    sliderOffsetRef.current = roundedPx;
     const track = trackRef.current;
     if (!track) return;
     track.style.transition = withTransition ? "transform 240ms cubic-bezier(0.16, 1, 0.3, 1)" : "none";
     track.style.transform = `translate3d(${roundedPx}px, 0, 0)`;
+    if (import.meta.env.DEV) {
+      console.debug("[LightboxSlider]", { currentIndex: activeIndexRef.current, translateX: roundedPx });
+    }
+  }
+
+  function getBaseTranslate(index = activeIndexRef.current) {
+    return -index * viewportSize.width;
   }
 
   useEffect(() => {
     if (modeRef.current !== "drag") {
-      applyTrackOffset(-activeIndex * viewportSize.width, false);
+      applyTrackOffset(getBaseTranslate(activeIndex), false);
     }
   }, [activeIndex, viewportSize.width]);
 
@@ -186,8 +192,8 @@ export function ArtLightbox({
     stopSliderAnimation();
     modeRef.current = "snap";
     lockedTargetRef.current = targetIndex;
-    const from = sliderOffsetRef.current;
-    const to = -targetIndex * viewportSize.width;
+    const from = getBaseTranslate(activeIndexRef.current) + dragDeltaRef.current;
+    const to = getBaseTranslate(targetIndex);
     const start = performance.now();
     const duration = 240;
     const frame = (now: number) => {
@@ -199,6 +205,7 @@ export function ArtLightbox({
       } else {
         snapRafRef.current = null;
         applyTrackOffset(to, false);
+        dragDeltaRef.current = 0;
         modeRef.current = "idle";
         const lockedTarget = lockedTargetRef.current;
         lockedTargetRef.current = null;
@@ -223,8 +230,8 @@ export function ArtLightbox({
   function finishSwipe() {
     const width = viewportSize.width;
     const velocity = clamp(computeVelocity(), -1.8, 1.8);
-    const projected = sliderOffsetRef.current + velocity * 180;
-    const progressFromCurrent = (projected + activeIndexRef.current * width) / width;
+    const projectedDrag = dragDeltaRef.current + velocity * 180;
+    const progressFromCurrent = projectedDrag / width;
 
     let target = activeIndexRef.current;
     if ((progressFromCurrent < -0.18 || velocity < -0.42) && canGoNext) {
@@ -241,11 +248,12 @@ export function ArtLightbox({
     if (event.touches.length !== 1) return;
     stopSliderAnimation();
     const t = event.touches[0];
-    dragStartRef.current = { x: t.clientX, y: t.clientY, t: performance.now(), baseOffset: sliderOffsetRef.current };
+    dragStartRef.current = { x: t.clientX, y: t.clientY, t: performance.now(), baseOffset: getBaseTranslate() };
     touchSamplesRef.current = [{ x: t.clientX, y: t.clientY, t: performance.now() }];
     isDraggingRef.current = false;
     modeRef.current = "idle";
     gestureStateRef.current = "idle";
+    dragDeltaRef.current = 0;
   }
 
   function handleSliderTouchMove(event: ReactTouchEvent<HTMLDivElement>) {
@@ -272,10 +280,12 @@ export function ArtLightbox({
 
     event.preventDefault();
     const base = dragStartRef.current.baseOffset;
+    const rawDelta = dx;
+    dragDeltaRef.current = rawDelta;
     if ((!canGoPrev && dx > 0) || (!canGoNext && dx < 0)) {
-      applyTrackOffset(base + dx * 0.2, false);
+      applyTrackOffset(base + rawDelta * 0.2, false);
     } else {
-      applyTrackOffset(base + dx, false);
+      applyTrackOffset(base + rawDelta, false);
     }
     touchSamplesRef.current.push({ x: t.clientX, y: t.clientY, t: performance.now() });
     if (touchSamplesRef.current.length > 10) touchSamplesRef.current.shift();
@@ -286,7 +296,8 @@ export function ArtLightbox({
     if (!dragStartRef.current) return;
     dragStartRef.current = null;
     if (!isDraggingRef.current) {
-      applyTrackOffset(-activeIndexRef.current * viewportSize.width, false);
+      dragDeltaRef.current = 0;
+      applyTrackOffset(getBaseTranslate(), false);
       gestureStateRef.current = "idle";
       return;
     }
@@ -337,7 +348,8 @@ export function ArtLightbox({
     setZoomScale(1);
     setZoomX(0);
     setZoomY(0);
-    applyTrackOffset(-activeIndexRef.current * viewportSize.width, false);
+    dragDeltaRef.current = 0;
+    applyTrackOffset(getBaseTranslate(), false);
     isDraggingRef.current = false;
   }
 

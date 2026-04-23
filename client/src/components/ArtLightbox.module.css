@@ -82,6 +82,9 @@
   height: 100%;
   overflow: hidden !important;
   clip-path: inset(0 0 0 0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -100,7 +103,7 @@
 }
 
 .swiper :global(.swiper-slide) {
-  flex: 0 0 100% !important;
+  flex: 0 0 auto !important;
   width: 100% !important;
   max-width: 100% !important;
   min-width: 100% !important;

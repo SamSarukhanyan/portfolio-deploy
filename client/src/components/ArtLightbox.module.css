@@ -93,15 +93,12 @@
   min-width: 100%;
   margin: 0 !important;
   padding: 0 !important;
-  gap: 0 !important;
   box-sizing: border-box;
 }
 
+/* Let Swiper set slide width from spaceBetween + slidesPerView — do not force 100% */
 .swiper :global(.swiper-slide) {
-  flex: 0 0 100% !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 100% !important;
+  height: 100%;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden;
@@ -118,15 +115,9 @@
   background: #060607;
   box-sizing: border-box;
   padding: 0;
-  contain: paint;
-  isolation: isolate;
-  transform: translateZ(0);
 }
 
 .slide {
-  width: 100% !important;
-  max-width: 100%;
-  min-width: 100%;
   flex-shrink: 0;
   height: 100%;
   overflow: hidden;
@@ -137,8 +128,6 @@
   padding: 0;
   transform: none !important;
   backface-visibility: hidden;
-  contain: paint;
-  isolation: isolate;
 }
 
 .slideImg {

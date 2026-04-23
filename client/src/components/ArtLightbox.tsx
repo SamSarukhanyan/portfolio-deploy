@@ -552,8 +552,8 @@ export function ArtLightbox({
             slidesPerView={1}
             slidesPerGroup={1}
             slidesPerGroupSkip={0}
-            spaceBetween={0}
-            centeredSlides={false}
+            spaceBetween={2}
+            centeredSlides
             roundLengths
             loop={false}
             freeMode={false}

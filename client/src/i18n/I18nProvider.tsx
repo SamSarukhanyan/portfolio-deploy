@@ -30,9 +30,20 @@ type I18nContextValue = {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
+/**
+ * In development, the Vite dev server proxies /api to :4000. If nothing listens there,
+ * every page load spams the terminal with ECONNREFUSED. Bundled `bundles.default.json`
+ * is enough for local work unless you explicitly opt in to the API.
+ */
+function shouldFetchRemoteTranslations(): boolean {
+  if (import.meta.env.VITE_SKIP_SERVER_I18N === "true") return false;
+  if (import.meta.env.VITE_SKIP_SERVER_I18N === "false") return true;
+  if (import.meta.env.DEV) return false;
+  return true;
+}
+
 function translationsUrl(): string {
-  const skip = import.meta.env.VITE_SKIP_SERVER_I18N === "true";
-  if (skip) return "";
+  if (!shouldFetchRemoteTranslations()) return "";
   const base = import.meta.env.VITE_API_BASE_URL;
   if (typeof base === "string" && base.length > 0) {
     return `${base.replace(/\/$/, "")}/api/translations`;

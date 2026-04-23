@@ -11,6 +11,7 @@
   overflow: hidden;
   display: block;
   background: #070708;
+  
   padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
   padding-right: max(0.62rem, env(safe-area-inset-right, 0px));
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);
@@ -26,6 +27,7 @@
 .overlay::before {
   content: "";
   position: absolute;
+  
   inset: 0;
   background:
     radial-gradient(circle at 50% 46%, rgba(14, 14, 15, 0.68), rgba(8, 8, 9, 0.86) 56%, rgba(6, 6, 7, 0.96)),
@@ -84,6 +86,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
 .swiper :global(.swiper-wrapper) {
@@ -94,27 +97,30 @@
   margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box;
+  
 }
 
 /* Let Swiper set slide width from spaceBetween + slidesPerView — do not force 100% */
 .swiper :global(.swiper-slide) {
   height: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
   overflow: hidden;
   box-sizing: border-box;
+  
+  
 }
 
 .slideMedia {
   width: 100%;
   height: 100%;
   display: flex;
+
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: #060607;
   box-sizing: border-box;
   padding: 0;
+
 }
 
 .slide {
@@ -124,26 +130,30 @@
   display: grid;
   place-items: center;
   background: #060607;
-  margin: 0;
   padding: 0;
   transform: none !important;
   backface-visibility: hidden;
+
+  
+  
 }
 
 .slideImg {
   max-width: 100%;
   max-height: 100%;
   width: auto;
-  height: auto;
+  height: auto;text-align: center;
   object-fit: contain;
   display: block;
   user-select: none;
   -webkit-user-drag: none;
   touch-action: none;
+    
 }
 
 .slideImgHidden {
   opacity: 0;
+  
 }
 
 .uiLayer {
@@ -155,6 +165,7 @@
   flex-direction: column;
   justify-content: space-between;
   transition: opacity 0.2s ease;
+  
 }
 
 .zooming .uiLayer {
@@ -178,6 +189,7 @@
   color: #acacac;
   text-align: center;
   font-size: 0.86rem;
+  
 }
 
 .dots {
@@ -233,10 +245,12 @@
   user-select: none;
   -webkit-user-drag: none;
   touch-action: none;
+  
 }
 
 @media (max-width: 759px) {
   .overlay {
+    
     padding-top: calc(env(safe-area-inset-top, 0px) + 0.42rem);
     padding-right: max(0.42rem, env(safe-area-inset-right, 0px));
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.54rem);

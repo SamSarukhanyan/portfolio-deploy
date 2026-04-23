@@ -635,10 +635,6 @@ export function ArtLightbox({
         </div>
 
         <div className={styles.bottomUi}>
-          <p className={styles.caption}>
-            {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
-          </p>
-
           <div className={styles.dots} aria-label={titleLabel}>
             {artworks.map((art, index) => (
               <button
@@ -654,6 +650,11 @@ export function ArtLightbox({
               />
             ))}
           </div>
+          <p className={styles.caption}>
+            {activeArtwork.title} · {activeArtwork.size} · {activeArtwork.medium}
+          </p>
+
+        
         </div>
       </div>
 

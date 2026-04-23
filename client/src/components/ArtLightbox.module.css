@@ -65,7 +65,7 @@
 }
 
 .viewport {
-  --edge-guard: 4px;
+  --edge-guard: 2px;
   position: relative;
   width: 100%;
   height: 100%;
@@ -75,7 +75,7 @@
   contain: layout paint size;
   background: #060607;
   margin: 0;
-  padding: 0 var(--edge-guard);
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -159,7 +159,7 @@
   overflow: hidden;
   background: #060607;
   box-sizing: border-box;
-  padding: 0 0 0 1px;
+  padding: 0;
 }
 
 .slide {

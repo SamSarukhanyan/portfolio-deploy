@@ -574,8 +574,7 @@ export function ArtLightbox({
             freeMode={false}
             allowSlideNext
             allowSlidePrev
-            resistance
-            resistanceRatio={0.6}
+            resistance={false}
             followFinger
             longSwipes
             longSwipesRatio={0.24}

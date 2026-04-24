@@ -57,10 +57,16 @@ export function StackSection() {
             {t("stack.title")}
           </Reveal>
           <Reveal className={styles.stackGlyph} direction="right" delayMs={65} aria-hidden>
-            <span className={styles.techOrb} />
-            <span className={styles.techOrb} />
-            <span className={styles.techOrb} />
-            <span className={styles.techTrail} />
+            <span className={styles.stackChipAura} />
+            <span className={styles.stackChipBody}>
+              <span className={styles.stackChipCore} />
+              <span className={styles.stackChipTraceA} />
+              <span className={styles.stackChipTraceB} />
+            </span>
+            <span className={styles.stackPinsTop} />
+            <span className={styles.stackPinsBottom} />
+            <span className={styles.stackPinsLeft} />
+            <span className={styles.stackPinsRight} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>

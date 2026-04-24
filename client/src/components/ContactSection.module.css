@@ -1,10 +1,13 @@
 .section {
-  padding-top: 0;
+  padding-top: clamp(0.6rem, 1.35vw, 1.1rem);
   padding-bottom: clamp(2.25rem, 5vw, 3.5rem);
 }
 
 .card {
-  padding: clamp(1.15rem, 2.4vw, 1.85rem);
+  padding:
+    clamp(1.35rem, 2.8vw, 2.08rem)
+    clamp(1.15rem, 2.4vw, 1.85rem)
+    clamp(1.15rem, 2.4vw, 1.85rem);
   position: relative;
   overflow: hidden;
   border-radius: 26px;
@@ -34,6 +37,7 @@
   justify-content: space-between;
   gap: 0.7rem;
   margin-bottom: 0.5rem;
+  margin-top: clamp(0.28rem, 0.75vw, 0.6rem);
 }
 
 .title {
@@ -324,11 +328,12 @@
 
 @media (max-width: 560px) {
   .section {
+    padding-top: 0.56rem;
     padding-bottom: 1.9rem;
   }
 
   .card {
-    padding: 0.95rem;
+    padding: 1.08rem 0.95rem 0.95rem;
     border-radius: 12px 24px 10px 26px;
     background:
       radial-gradient(circle at 86% 10%, rgba(203, 203, 203, 0.24), transparent 48%),
@@ -342,6 +347,7 @@
   .titleRow {
     margin-bottom: 0.38rem;
     align-items: center;
+    margin-top: 0.32rem;
   }
 
   .actions {

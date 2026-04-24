@@ -1,5 +1,5 @@
 .section {
-  padding-top: 0;
+  padding-top: clamp(0.6rem, 1.35vw, 1.1rem);
 }
 
 .grid {
@@ -16,7 +16,7 @@
 
 .card {
   position: relative;
-  padding: 0.8rem 0.88rem 0.8rem 1.1rem;
+  padding: 1.02rem 0.88rem 0.8rem 1.1rem;
   border-radius: 14px;
   border: 1px solid var(--border-neutral);
   background: linear-gradient(140deg, rgba(34, 34, 39, 0.9), rgba(23, 23, 26, 0.88));

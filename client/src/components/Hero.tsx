@@ -9,19 +9,37 @@ import { trackEvent } from "../lib/analytics";
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 
 const SNAKE_SEGMENTS = 12;
+const CPU_PIN_COUNT = 8;
 
-function MotionDockSnake() {
+function MotionDockCpuChip() {
   return (
-    <div className={styles.heroSnakeCell}>
-      <span className={styles.heroSnake} aria-hidden>
-        {Array.from({ length: SNAKE_SEGMENTS }, (_, i) => (
-          <span
-            key={i}
-            className={styles.snakeSegRing}
-            style={{ ["--i" as string]: String(i) } as CSSProperties}
-          >
-            <span className={styles.snakeSegDot} />
-          </span>
+    <div className={styles.techOrb} aria-hidden>
+      <span className={styles.cpuAura} />
+      <span className={styles.cpuChip}>
+        <span className={styles.cpuGrid} />
+        <span className={styles.cpuCore} />
+        <span className={styles.cpuTraceA} />
+        <span className={styles.cpuTraceB} />
+        <span className={styles.cpuTraceC} />
+      </span>
+      <span className={styles.cpuPinsTop}>
+        {Array.from({ length: CPU_PIN_COUNT }, (_, i) => (
+          <span key={`top-${i}`} className={styles.cpuPin} />
+        ))}
+      </span>
+      <span className={styles.cpuPinsBottom}>
+        {Array.from({ length: CPU_PIN_COUNT }, (_, i) => (
+          <span key={`bottom-${i}`} className={styles.cpuPin} />
+        ))}
+      </span>
+      <span className={styles.cpuPinsLeft}>
+        {Array.from({ length: CPU_PIN_COUNT }, (_, i) => (
+          <span key={`left-${i}`} className={styles.cpuPin} />
+        ))}
+      </span>
+      <span className={styles.cpuPinsRight}>
+        {Array.from({ length: CPU_PIN_COUNT }, (_, i) => (
+          <span key={`right-${i}`} className={styles.cpuPin} />
         ))}
       </span>
     </div>
@@ -138,21 +156,7 @@ export function Hero() {
             <div className={styles.visual} aria-hidden>
               <Reveal className={`${styles.orbit} ${styles.orbitDesktop}`} direction="right" delayMs={90}>
                 <div className={styles.motionDock}>
-                  <MotionDockSnake />
-                  <div className={styles.devCore}>
-                    <span className={styles.coreBloom}>
-                      <span className={styles.bloomRing} />
-                      <span className={styles.bloomRing} />
-                      <span className={styles.bloomRing} />
-                      <span className={styles.bloomCenter} aria-hidden>
-                        <span className={styles.logoChip}>
-                          <span className={styles.logoNode} />
-                          <span className={styles.logoNode} />
-                          <span className={styles.logoNode} />
-                        </span>
-                      </span>
-                    </span>
-                  </div>
+                  <MotionDockCpuChip />
                 </div>
               </Reveal>
               <Reveal className={styles.signalPanel} direction="right" delayMs={120}>

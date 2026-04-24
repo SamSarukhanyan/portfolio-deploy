@@ -195,6 +195,7 @@
 /* Replaces the three small shapes (circle / diamond / ring-snake) — one soft golden bar, same area */
 .heroAurora {
   position: relative;
+  isolation: isolate;
   flex-shrink: 0;
   width: clamp(160px, 30vw, 220px);
   min-width: clamp(152px, 28vw, 210px);
@@ -211,13 +212,17 @@
     inset 0 0 0 1px rgba(255, 214, 140, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 0 18px rgba(245, 197, 66, 0.07);
-  transform: translateX(-12px);
+  mask-image: radial-gradient(white, black);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  clip-path: inset(0 round 18px);
+  transform: translateZ(0) translateX(-12px);
 }
 
 .heroAurora::before {
   content: "";
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background: linear-gradient(
     100deg,
     rgba(255, 235, 200, 0) 0%,
@@ -240,6 +245,7 @@
   right: 0;
   bottom: 0;
   height: 48%;
+  border-radius: inherit;
   background: radial-gradient(ellipse 100% 90% at 50% 100%, rgba(250, 215, 150, 0.14) 0%, transparent 65%);
   pointer-events: none;
   animation: heroAuroraFloor 4.2s ease-in-out infinite alternate;

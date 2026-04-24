@@ -434,12 +434,9 @@
   position: relative;
   width: 100%;
   margin-bottom: 0;
-  border-radius: 20px;
-  border: 1px solid var(--border-neutral);
-  background:
-    radial-gradient(circle at 16% 14%, rgba(179, 179, 179, 0.2), transparent 50%),
-    rgba(13, 13, 13, 0.56);
-  padding: 0.4rem;
+  border: none;
+  background: transparent;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -675,10 +672,154 @@
 
 .motionDock {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  min-height: clamp(212px, 31vw, 276px);
-  padding: clamp(0.52rem, 1.6vw, 0.75rem);
+  place-items: center;
+  min-height: clamp(300px, 40vw, 420px);
+  padding: 0;
+}
+
+.techOrb {
+  --chip-size: clamp(210px, 23vw, 260px);
+  position: relative;
+  width: calc(var(--chip-size) + 74px);
+  height: calc(var(--chip-size) + 74px);
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 14px 30px rgba(245, 197, 66, 0.14));
+}
+
+.cpuAura {
+  position: absolute;
+  inset: 6%;
+  border-radius: 28px;
+  background: radial-gradient(circle, rgba(245, 197, 66, 0.16) 0%, rgba(245, 197, 66, 0.05) 46%, rgba(245, 197, 66, 0) 74%);
+  filter: blur(12px);
+  animation: cpuAuraShift 4.4s ease-in-out infinite;
+}
+
+.cpuChip {
+  position: absolute;
+  width: var(--chip-size);
+  aspect-ratio: 1;
+  border-radius: 20px;
+  border: 1px solid rgba(219, 219, 219, 0.24);
+  background:
+    linear-gradient(145deg, rgba(64, 64, 67, 0.88), rgba(29, 29, 31, 0.94)),
+    radial-gradient(circle at 24% 20%, rgba(229, 229, 229, 0.2), transparent 46%);
+  box-shadow:
+    inset 0 0 0 1px rgba(245, 197, 66, 0.16),
+    inset 0 10px 18px rgba(255, 255, 255, 0.06),
+    0 0 24px rgba(245, 197, 66, 0.14);
+  overflow: hidden;
+  animation: cpuChipFloat 3.8s ease-in-out infinite;
+}
+
+.cpuGrid {
+  position: absolute;
+  inset: 16%;
+  border-radius: 12px;
+  background-image:
+    linear-gradient(rgba(245, 197, 66, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 197, 66, 0.16) 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 1px solid rgba(222, 222, 222, 0.16);
+  mask-image: radial-gradient(circle at 50% 50%, black 72%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 72%, transparent 100%);
+}
+
+.cpuCore {
+  position: absolute;
+  inset: 34%;
+  border-radius: 10px;
+  border: 1px solid rgba(245, 197, 66, 0.4);
+  background:
+    linear-gradient(145deg, rgba(250, 220, 150, 0.26), rgba(148, 148, 148, 0.28)),
+    rgba(48, 48, 50, 0.88);
+  box-shadow:
+    0 0 18px rgba(245, 197, 66, 0.24),
+    inset 0 0 12px rgba(255, 233, 189, 0.2);
+  animation: cpuCorePulse 2.2s ease-in-out infinite;
+}
+
+.cpuTraceA,
+.cpuTraceB,
+.cpuTraceC {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(245, 197, 66, 0), rgba(245, 197, 66, 0.88), rgba(245, 197, 66, 0));
+  box-shadow: 0 0 12px rgba(245, 197, 66, 0.42);
+}
+
+.cpuTraceA {
+  width: 54%;
+  left: 10%;
+  top: 28%;
+  animation: cpuTraceRun 2.1s linear infinite;
+}
+
+.cpuTraceB {
+  width: 50%;
+  right: 10%;
+  top: 52%;
+  animation: cpuTraceRun 1.7s linear infinite reverse;
+}
+
+.cpuTraceC {
+  width: 46%;
+  left: 22%;
+  top: 72%;
+  animation: cpuTraceRun 2.4s linear infinite;
+}
+
+.cpuPinsTop,
+.cpuPinsBottom {
+  position: absolute;
+  left: 50%;
+  width: calc(var(--chip-size) + 12px);
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+}
+
+.cpuPinsTop {
+  top: 8px;
+}
+
+.cpuPinsBottom {
+  bottom: 8px;
+}
+
+.cpuPinsLeft,
+.cpuPinsRight {
+  position: absolute;
+  top: 50%;
+  height: calc(var(--chip-size) + 12px);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cpuPinsLeft {
+  left: 8px;
+}
+
+.cpuPinsRight {
+  right: 8px;
+}
+
+.cpuPin {
+  width: 10px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(191, 191, 191, 0.88), rgba(245, 197, 66, 0.66));
+  box-shadow: 0 0 8px rgba(245, 197, 66, 0.24);
+}
+
+.cpuPinsLeft .cpuPin,
+.cpuPinsRight .cpuPin {
+  width: 3px;
+  height: 10px;
 }
 
 .heroSnakeCell,
@@ -988,6 +1129,52 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes cpuAuraShift {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.42;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.78;
+  }
+}
+
+@keyframes cpuChipFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotateZ(-1.5deg);
+  }
+  50% {
+    transform: translateY(-7px) rotateZ(1.5deg);
+  }
+}
+
+@keyframes cpuCorePulse {
+  0%,
+  100% {
+    transform: scale(0.95);
+    filter: brightness(0.92);
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.06);
+  }
+}
+
+@keyframes cpuTraceRun {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translateX(0) scaleX(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(14px) scaleX(1.08);
   }
 }
 

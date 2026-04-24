@@ -63,8 +63,10 @@ export function ArtLightbox({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [zoomLayer, setZoomLayer] = useState<ZoomLayer | null>(null);
   const [isUiHidden, setIsUiHidden] = useState(false);
+  const [slideImageHeights, setSlideImageHeights] = useState<Record<number, number>>({});
   const swiperRef = useRef<SwiperType | null>(null);
   const slideImageRefs = useRef<Array<HTMLImageElement | null>>([]);
+  const imageResizeObserversRef = useRef<Array<ResizeObserver | null>>([]);
   const zoomImgRef = useRef<HTMLImageElement | null>(null);
   const zoomRuntimeRef = useRef<ZoomRuntime | null>(null);
   const zoomRafRef = useRef<number | null>(null);
@@ -501,6 +503,14 @@ export function ArtLightbox({
     };
   }, [onClose, zoomLayer]);
 
+  useEffect(
+    () => () => {
+      imageResizeObserversRef.current.forEach((observer) => observer?.disconnect());
+      imageResizeObserversRef.current = [];
+    },
+    [],
+  );
+
   useEffect(() => {
     const swiper = swiperRef.current;
     if (!swiper) return;
@@ -522,6 +532,35 @@ export function ArtLightbox({
 
   function clampIndex(index: number) {
     return Math.max(0, Math.min(artworks.length - 1, index));
+  }
+
+  function goPrev() {
+    if (isTransitioningRef.current || isZooming) return;
+    swiperRef.current?.slidePrev();
+  }
+
+  function goNext() {
+    if (isTransitioningRef.current || isZooming) return;
+    swiperRef.current?.slideNext();
+  }
+
+  function setImageNodeForIndex(index: number, node: HTMLImageElement | null) {
+    const prevObserver = imageResizeObserversRef.current[index];
+    if (prevObserver) {
+      prevObserver.disconnect();
+      imageResizeObserversRef.current[index] = null;
+    }
+    slideImageRefs.current[index] = node;
+    if (!node || typeof window === "undefined" || typeof ResizeObserver === "undefined") return;
+    const updateHeight = () => {
+      const nextHeight = Math.round(node.getBoundingClientRect().height);
+      if (nextHeight <= 0) return;
+      setSlideImageHeights((prev) => (prev[index] === nextHeight ? prev : { ...prev, [index]: nextHeight }));
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(node);
+    imageResizeObserversRef.current[index] = observer;
   }
 
   const overlayStyle = useMemo(
@@ -609,17 +648,44 @@ export function ArtLightbox({
             {artworks.map((art, index) => (
               <SwiperSlide className={styles.slide} key={art.id}>
                 <div className={styles.slideMedia}>
-                  <img
-                    className={`${styles.slideImg} ${isZooming && activeIndex === index ? styles.slideImgHidden : ""}`}
-                    ref={(node) => {
-                      slideImageRefs.current[index] = node;
-                    }}
-                    src={getArtworkSrc(art.filename)}
-                    alt={art.title}
-                    onError={(event) => {
-                      event.currentTarget.src = fallbackSrc;
-                    }}
-                  />
+                  <div
+                    className={styles.imageShell}
+                    style={
+                      {
+                        ["--nav-image-height" as string]: `${slideImageHeights[index] ?? 0}px`,
+                      } as CSSProperties
+                    }
+                  >
+                    <button
+                      type="button"
+                      className={`${styles.navZone} ${styles.navZonePrev}`}
+                      onClick={goPrev}
+                      aria-label="Previous image"
+                    >
+                      <span className={styles.navGlyph} aria-hidden>
+                        &#8249;
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.navZone} ${styles.navZoneNext}`}
+                      onClick={goNext}
+                      aria-label="Next image"
+                    >
+                      <span className={styles.navGlyph} aria-hidden>
+                        &#8250;
+                      </span>
+                    </button>
+                    <img
+                      className={`${styles.slideImg} ${isZooming && activeIndex === index ? styles.slideImgHidden : ""}`}
+                      ref={(node) => setImageNodeForIndex(index, node)}
+                      src={getArtworkSrc(art.filename)}
+                      alt={art.title}
+                      onError={(event) => {
+                        event.currentTarget.src = fallbackSrc;
+                      }}
+                    />
+                  </div>
                 </div>
               </SwiperSlide>
             ))}

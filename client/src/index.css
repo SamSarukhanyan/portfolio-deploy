@@ -371,7 +371,7 @@ section#top.section > .shell {
   background:
     radial-gradient(120% 86% at 84% 20%, rgba(245, 197, 66, 0.13), transparent 58%),
     radial-gradient(100% 72% at 14% 84%, rgba(176, 176, 181, 0.1), transparent 64%),
-    linear-gradient(180deg, rgba(30, 30, 34, 0.48), rgba(16, 16, 19, 0.18) 74%, transparent 100%);
+    linear-gradient(180deg, rgba(30, 30, 34, 0.48), rgba(16, 16, 19, 0.24) 74%, rgba(16, 16, 19, 0.34) 100%);
 }
 
 #stack::before,

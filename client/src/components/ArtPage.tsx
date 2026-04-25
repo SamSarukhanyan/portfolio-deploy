@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import styles from "./ArtPage.module.css";
 import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
@@ -27,9 +27,17 @@ type ArtworkCardProps = {
   onOpen: (index: number) => void;
   getArtworkSrc: (filename: string) => string;
   fallbackImage: string;
+  eagerLoad: boolean;
 };
 
-const ArtworkCard = memo(function ArtworkCard({ art, index, onOpen, getArtworkSrc, fallbackImage }: ArtworkCardProps) {
+const ArtworkCard = memo(function ArtworkCard({
+  art,
+  index,
+  onOpen,
+  getArtworkSrc,
+  fallbackImage,
+  eagerLoad,
+}: ArtworkCardProps) {
   const [imageReady, setImageReady] = useState(false);
 
   return (
@@ -41,7 +49,8 @@ const ArtworkCard = memo(function ArtworkCard({ art, index, onOpen, getArtworkSr
             className={imageReady ? styles.imageVisible : styles.imagePending}
             src={getArtworkSrc(art.filename)}
             alt={art.title}
-            loading="lazy"
+            loading={eagerLoad ? "eager" : "lazy"}
+            fetchPriority={eagerLoad ? "high" : "auto"}
             decoding="async"
             onLoad={() => {
               setImageReady(true);
@@ -75,6 +84,15 @@ export function ArtPage() {
 
   const closeModal = useCallback(() => {
     setActiveIndex(null);
+  }, []);
+
+  useEffect(() => {
+    // Preload gallery assets so skeletons disappear almost simultaneously.
+    artworks.forEach((art) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = getArtworkSrc(art.filename);
+    });
   }, []);
 
   return (
@@ -129,6 +147,7 @@ export function ArtPage() {
               onOpen={openAt}
               getArtworkSrc={getArtworkSrc}
               fallbackImage={fallbackImage}
+              eagerLoad={index < 12}
             />
           ))}
         </div>

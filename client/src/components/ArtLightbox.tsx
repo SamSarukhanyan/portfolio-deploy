@@ -659,7 +659,10 @@ export function ArtLightbox({
                     <button
                       type="button"
                       className={`${styles.navZone} ${styles.navZonePrev}`}
-                      onClick={goPrev}
+                      onClick={(event) => {
+                        goPrev();
+                        event.currentTarget.blur();
+                      }}
                       aria-label="Previous image"
                     >
                       <span className={styles.navGlyph} aria-hidden>
@@ -669,7 +672,10 @@ export function ArtLightbox({
                     <button
                       type="button"
                       className={`${styles.navZone} ${styles.navZoneNext}`}
-                      onClick={goNext}
+                      onClick={(event) => {
+                        goNext();
+                        event.currentTarget.blur();
+                      }}
                       aria-label="Next image"
                     >
                       <span className={styles.navGlyph} aria-hidden>

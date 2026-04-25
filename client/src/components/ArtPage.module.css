@@ -1181,6 +1181,11 @@
 }
 
 @media (max-width: 759px) {
+  .gridFullBleed {
+    padding-left: max(2px, env(safe-area-inset-left, 0));
+    padding-right: max(2px, env(safe-area-inset-right, 0));
+  }
+
   .grid {
     --art-grid-gap: 5px;
   }

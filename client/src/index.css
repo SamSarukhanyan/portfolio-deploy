@@ -664,6 +664,21 @@ section#top.section > .shell {
     padding-top: 0.1rem;
   }
 
+  /* Mobile top section: reduce a few rings/triangles for cleaner header */
+  section#top.section::before {
+    background:
+      radial-gradient(136% 94% at 9% 14%, rgba(245, 197, 66, 0.08), transparent 62%),
+      radial-gradient(120% 88% at 90% 80%, rgba(176, 176, 181, 0.065), transparent 68%),
+      radial-gradient(160px 160px at 16% 24%, transparent 62%, rgba(245, 197, 66, 0.11) 63% 64%, transparent 66%),
+      radial-gradient(150px 150px at 72% 68%, transparent 60%, rgba(245, 197, 66, 0.09) 61% 62%, transparent 64%),
+      radial-gradient(170px 170px at 62% 36%, transparent 63%, rgba(176, 176, 181, 0.082) 64% 65%, transparent 68%),
+      radial-gradient(140px 140px at 14% 74%, transparent 61%, rgba(245, 197, 66, 0.078) 62% 63%, transparent 66%),
+      conic-gradient(from 210deg at 24% 18%, transparent 0deg 280deg, rgba(245, 197, 66, 0.13) 280deg 318deg, transparent 318deg 360deg),
+      conic-gradient(from 120deg at 86% 20%, transparent 0deg 250deg, rgba(176, 176, 181, 0.13) 250deg 296deg, transparent 296deg 360deg),
+      conic-gradient(from 20deg at 44% 24%, transparent 0deg 272deg, rgba(245, 197, 66, 0.12) 272deg 310deg, transparent 310deg 360deg),
+      conic-gradient(from 156deg at 72% 26%, transparent 0deg 276deg, rgba(176, 176, 181, 0.11) 276deg 312deg, transparent 312deg 360deg);
+  }
+
   html {
     scroll-behavior: auto;
   }

@@ -380,18 +380,49 @@
   }
 
   .mailPulse {
-    width: 90px;
-    height: 44px;
+    width: 180px;
+    height: 88px;
     transform: none;
   }
 
+  .mailPulse .wave {
+    border-color: rgba(214, 214, 219, 0.44);
+  }
+
+  .mailPulse .wave:nth-child(2) {
+    border-color: rgba(245, 197, 66, 0.34);
+  }
+
+  .mailPulse .wave:nth-child(3) {
+    border-color: rgba(196, 196, 201, 0.4);
+  }
+
+  .mailPulse .mailSpark {
+    width: 10px;
+    height: 10px;
+  }
+
+  .mailPulse .mailSpark:nth-child(4) {
+    background: rgba(245, 197, 66, 0.88);
+  }
+
+  .mailPulse .mailSpark:nth-child(5) {
+    background: rgba(214, 214, 219, 0.82);
+  }
+
   .mailIcon {
-    width: 34px;
-    height: 26px;
+    width: 68px;
+    height: 52px;
+    border-color: rgba(210, 210, 214, 0.64);
+    background: linear-gradient(145deg, rgba(34, 34, 38, 0.92), rgba(49, 44, 30, 0.86));
   }
 
   .mailIcon svg {
-    width: 16px;
-    height: 16px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .mailIcon path {
+    stroke: rgba(238, 238, 240, 0.95);
   }
 }

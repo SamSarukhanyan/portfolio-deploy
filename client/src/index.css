@@ -624,18 +624,26 @@ section#top.section > .shell {
     scroll-behavior: auto;
   }
 
+  .page-bg {
+    transform: none;
+    transform-origin: top center;
+  }
+
   .page-bg::before,
   .page-bg::after {
     animation: none;
-    filter: none;
+    background-position: 50% 0%;
+    transform-origin: top center;
   }
 
   .page-bg::before {
-    opacity: 0.24;
+    opacity: 0.52;
+    transform: translateY(-12%) scale(0.52);
   }
 
   .page-bg::after {
-    opacity: 0.16;
+    opacity: 0.28;
+    transform: translateY(-10%) scale(0.56);
   }
 
   .glass {

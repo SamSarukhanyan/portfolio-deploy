@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import styles from "./ArtPage.module.css";
 import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
@@ -29,7 +29,7 @@ type ArtworkCardProps = {
   fallbackImage: string;
 };
 
-function ArtworkCard({ art, index, onOpen, getArtworkSrc, fallbackImage }: ArtworkCardProps) {
+const ArtworkCard = memo(function ArtworkCard({ art, index, onOpen, getArtworkSrc, fallbackImage }: ArtworkCardProps) {
   const [imageReady, setImageReady] = useState(false);
 
   return (
@@ -62,20 +62,20 @@ function ArtworkCard({ art, index, onOpen, getArtworkSrc, fallbackImage }: Artwo
       </div>
     </article>
   );
-}
+});
 
 export function ArtPage() {
   const { t } = useI18n();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const activeArtwork = activeIndex === null ? null : artworks[activeIndex] ?? null;
 
-  function openAt(index: number) {
+  const openAt = useCallback((index: number) => {
     setActiveIndex(index);
-  }
+  }, []);
 
-  function closeModal() {
+  const closeModal = useCallback(() => {
     setActiveIndex(null);
-  }
+  }, []);
 
   return (
     <section className={`section ${styles.section}`}>

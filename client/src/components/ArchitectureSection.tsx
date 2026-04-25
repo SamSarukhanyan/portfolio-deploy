@@ -1,4 +1,5 @@
 import styles from "./ArchitectureSection.module.css";
+import { useSectionDecorPause } from "../hooks/useSectionDecorPause";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 
@@ -25,18 +26,32 @@ const nodes = [
 
 export function ArchitectureSection() {
   const { t } = useI18n();
+  const [sectionRef, decorPaused] = useSectionDecorPause();
 
   return (
-    <section id="architecture" className={`section ${styles.section}`}>
+    <section
+      ref={sectionRef}
+      id="architecture"
+      className={`section ${styles.section}`}
+      data-anim-paused={decorPaused ? "true" : undefined}
+    >
       <div className="shell">
         <div className={styles.head}>
           <Reveal as="h2" className="section-title" direction="right">
             {t("arch.title")}
           </Reveal>
           <Reveal className={styles.route} direction="left" delayMs={70} aria-hidden>
-            <span className={styles.routePulse} />
-            <span className={styles.routeCore} />
-            <span className={styles.routeOrb} />
+            <span className={styles.netSvg} aria-hidden>
+              <svg viewBox="0 0 120 72" className={styles.netSvgInner}>
+                <path className={styles.netEdgeA} d="M18 52 L60 14 L102 52 Z" fill="none" />
+                <path className={styles.netEdgeB} d="M60 14 v38" fill="none" />
+                <circle className={styles.netVertexA} cx="18" cy="52" r="4" />
+                <circle className={styles.netVertexB} cx="102" cy="52" r="4" />
+                <circle className={styles.netVertexC} cx="60" cy="14" r="4" />
+                <circle className={styles.netPulse} cx="60" cy="38" r="3" />
+              </svg>
+            </span>
+            <span className={styles.netGlow} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>

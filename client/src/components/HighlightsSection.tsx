@@ -1,4 +1,5 @@
 import styles from "./HighlightsSection.module.css";
+import { useSectionDecorPause } from "../hooks/useSectionDecorPause";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 
@@ -22,18 +23,30 @@ const revealPlan = [
 
 export function HighlightsSection() {
   const { t } = useI18n();
+  const [sectionRef, decorPaused] = useSectionDecorPause();
 
   return (
-    <section id="highlights" className={`section ${styles.section}`}>
+    <section
+      ref={sectionRef}
+      id="highlights"
+      className={`section ${styles.section}`}
+      data-anim-paused={decorPaused ? "true" : undefined}
+    >
       <div className="shell">
         <div className={styles.head}>
           <Reveal as="h2" className="section-title" direction="left" delayMs={24} skipInitialVisibilityCheck>
             {t("highlights.title")}
           </Reveal>
           <Reveal className={styles.signal} direction="right" delayMs={92} aria-hidden skipInitialVisibilityCheck>
-            <span className={styles.signalWave} />
-            <span className={styles.signalWave} />
-            <span className={styles.signalComet} />
+            <span className={styles.meter} aria-hidden>
+              <span className={styles.meterBar} data-i="0" />
+              <span className={styles.meterBar} data-i="1" />
+              <span className={styles.meterBar} data-i="2" />
+              <span className={styles.meterBar} data-i="3" />
+              <span className={styles.meterBar} data-i="4" />
+            </span>
+            <span className={styles.meterCap} />
+            <span className={styles.meterDot} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={56} skipInitialVisibilityCheck>

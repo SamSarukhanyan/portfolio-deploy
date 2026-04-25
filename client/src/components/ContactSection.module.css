@@ -125,6 +125,12 @@
   stroke-linejoin: round;
 }
 
+.section[data-anim-paused="true"] .wave,
+.section[data-anim-paused="true"] .mailSpark,
+.section[data-anim-paused="true"] .mailIcon {
+  animation-play-state: paused;
+}
+
 @media (min-width: 800px) {
   .layout {
     grid-template-columns: minmax(0, 1fr) auto auto;

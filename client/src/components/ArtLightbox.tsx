@@ -96,7 +96,6 @@ export function ArtLightbox({
 
   function setBackgroundLock(isLocked: boolean) {
     const swiper = swiperRef.current;
-    console.log("swiper locked?", swiper ? !swiper.allowTouchMove : "no-swiper");
     if (swiper) {
       swiper.allowTouchMove = !isLocked;
     }
@@ -348,11 +347,6 @@ export function ArtLightbox({
     const distance = distanceBetweenTouches(touchA, touchB);
     const pinchRatio = runtime.startDistance > 0 ? distance / runtime.startDistance : 1;
     const nextScale = Math.max(1, Math.min(MAX_ZOOM_SCALE, runtime.startScale * pinchRatio));
-    console.log({
-      initialDistance: runtime.startDistance,
-      newDistance: distance,
-      scale: nextScale,
-    });
     const viewportCenterX = runtime.metrics.viewportWidth * 0.5;
     const viewportCenterY = runtime.metrics.viewportHeight * 0.5;
     const scaleRatio = runtime.startScale > 0 ? nextScale / runtime.startScale : 1;
@@ -462,10 +456,15 @@ export function ArtLightbox({
     document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
 
+    let resizeRaf = 0;
     const onResize = () => {
-      const visualH = window.visualViewport?.height;
-      const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
-      setViewportHeight(height);
+      if (resizeRaf) return;
+      resizeRaf = requestAnimationFrame(() => {
+        resizeRaf = 0;
+        const visualH = window.visualViewport?.height;
+        const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
+        setViewportHeight(height);
+      });
     };
 
     onResize();
@@ -474,6 +473,7 @@ export function ArtLightbox({
     window.visualViewport?.addEventListener("scroll", onResize);
 
     return () => {
+      if (resizeRaf) cancelAnimationFrame(resizeRaf);
       setBackgroundLock(false);
       resetZoomState();
       document.body.classList.remove("art-modal-open");
@@ -681,6 +681,7 @@ export function ArtLightbox({
                       ref={(node) => setImageNodeForIndex(index, node)}
                       src={getArtworkSrc(art.filename)}
                       alt={art.title}
+                      decoding="async"
                       onError={(event) => {
                         event.currentTarget.src = fallbackSrc;
                       }}
@@ -732,7 +733,14 @@ export function ArtLightbox({
           onTouchEnd={handleZoomTouchEnd}
           onTouchCancel={handleZoomTouchCancel}
         >
-          <img ref={zoomImgRef} className={styles.zoomLayerImage} src={zoomLayer.src} alt={zoomLayer.alt} draggable={false} />
+          <img
+            ref={zoomImgRef}
+            className={styles.zoomLayerImage}
+            src={zoomLayer.src}
+            alt={zoomLayer.alt}
+            draggable={false}
+            decoding="async"
+          />
         </div>
       ) : null}
     </div>,

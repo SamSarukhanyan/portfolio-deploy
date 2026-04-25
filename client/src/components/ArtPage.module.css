@@ -1,5 +1,9 @@
 .section {
   padding-top: 0.4rem;
+  background:
+    radial-gradient(115% 78% at 14% 12%, rgba(245, 197, 66, 0.11), transparent 60%),
+    radial-gradient(110% 82% at 84% 82%, rgba(176, 176, 181, 0.09), transparent 64%),
+    linear-gradient(180deg, rgba(27, 27, 31, 0.46), rgba(15, 15, 18, 0.18) 72%, transparent 100%);
 }
 
 .hero {

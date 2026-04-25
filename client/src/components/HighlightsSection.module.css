@@ -16,8 +16,10 @@
   width: 112px;
   height: 52px;
   border-radius: 18px 9px 16px 10px;
-  border: 1px solid rgba(170, 170, 170, 0.32);
-  background: linear-gradient(145deg, rgba(26, 26, 26, 0.64), rgba(27, 27, 27, 0.58));
+  border: 1px solid rgba(47, 47, 53, 0.85);
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(245, 197, 66, 0.1), transparent 55%),
+    linear-gradient(155deg, rgba(32, 32, 36, 0.88), rgba(16, 16, 19, 0.92));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,44 +30,77 @@
   margin-left: auto;
   margin-top: 0;
   transform: none;
+  box-shadow: inset 0 0 0 1px rgba(245, 197, 66, 0.06);
 }
 
-.signalWave {
+.meter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  height: 64%;
+  width: 86%;
+  transform-origin: center bottom;
+  animation: highlightsStageBreath 5.5s ease-in-out infinite;
+}
+
+.meterBar {
+  width: 5px;
+  min-height: 6px;
+  border-radius: 999px;
+  transform-origin: center bottom;
+  background: linear-gradient(180deg, rgba(245, 197, 66, 0.55), rgba(255, 184, 77, 0.35) 40%, rgba(32, 32, 36, 0.65));
+  box-shadow: 0 0 10px rgba(245, 197, 66, 0.2);
+  animation: highlightsMetricFlow 1.35s ease-in-out infinite;
+}
+
+.meterBar[data-i="0"] {
+  animation-duration: 1.22s;
+  animation-delay: 0ms;
+}
+
+.meterBar[data-i="1"] {
+  animation-duration: 1.38s;
+  animation-delay: 80ms;
+}
+
+.meterBar[data-i="2"] {
+  animation-duration: 1.1s;
+  animation-delay: 150ms;
+}
+
+.meterBar[data-i="3"] {
+  animation-duration: 1.5s;
+  animation-delay: 40ms;
+}
+
+.meterBar[data-i="4"] {
+  animation-duration: 1.28s;
+  animation-delay: 200ms;
+}
+
+.meterCap {
   position: absolute;
-  inset: auto;
-  width: 66%;
-  height: 42%;
-  border: 1px solid rgba(170, 170, 170, 0.34);
+  top: 10%;
+  right: 14%;
+  width: 32%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(176, 176, 181, 0.45), rgba(245, 197, 66, 0.55), transparent);
+  opacity: 0.85;
+  animation: highlightsCapFlick 3.1s ease-in-out infinite;
+}
+
+.meterDot {
+  position: absolute;
+  left: 12%;
+  bottom: 14%;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  --wave-shift: -10%;
-  --wave-rot: -10deg;
-  transform: translateX(var(--wave-shift)) rotate(var(--wave-rot));
-  opacity: 0.78;
-}
-
-.signalWave:nth-child(1) {
-  animation: outcomesWavePulse 3.5s ease-in-out infinite;
-}
-
-.signalWave:nth-child(2) {
-  width: 52%;
-  height: 30%;
-  border-color: rgba(192, 192, 192, 0.32);
-  --wave-shift: 10%;
-  --wave-rot: 11deg;
-  animation: outcomesWavePulse 3.5s ease-in-out infinite 460ms;
-}
-
-.signalComet {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, rgba(225, 225, 225, 0.95), rgba(195, 195, 195, 0.74));
-  box-shadow:
-    0 0 0 0 rgba(195, 195, 195, 0.4),
-    -10px 0 16px rgba(192, 192, 192, 0.2);
-  animation: outcomesCometDrift 2.9s ease-in-out infinite;
+  background: rgba(255, 184, 77, 0.85);
+  box-shadow: 0 0 8px rgba(245, 197, 66, 0.4);
+  animation: highlightsRecPulse 1.6s ease-in-out infinite;
 }
 
 
@@ -132,16 +167,25 @@
 
 @media (min-width: 1024px) {
   .signal {
-    width: 214px;
-    height: 100px;
-    padding: 0.7rem 0.95rem;
+    width: 220px;
+    height: 104px;
+    padding: 0.75rem 1rem;
     border-radius: 24px 12px 22px 14px;
     transform: none;
   }
 
-  .signalComet {
-    width: 14px;
-    height: 14px;
+  .meter {
+    gap: 7px;
+    height: 70%;
+  }
+
+  .meterBar {
+    width: 7px;
+  }
+
+  .meterDot {
+    width: 6px;
+    height: 6px;
   }
 }
 
@@ -151,16 +195,16 @@
   }
 
   .signal {
-    width: 176px;
-    height: 78px;
-    padding: 0.5rem 0.66rem;
+    width: 196px;
+    height: 90px;
+    padding: 0.55rem 0.7rem;
     align-self: flex-start;
     margin-top: 0.28rem;
   }
 
-  .signalComet {
-    width: 10px;
-    height: 10px;
+  .meterDot {
+    width: 5px;
+    height: 5px;
   }
 }
 
@@ -288,32 +332,59 @@
   line-height: 1.55;
 }
 
-@keyframes outcomesWavePulse {
+@keyframes highlightsMetricFlow {
   0%,
   100% {
-    transform: translateX(var(--wave-shift)) rotate(var(--wave-rot)) scale(0.92);
-    opacity: 0.7;
+    transform: scaleY(0.32);
+    opacity: 0.72;
+    filter: brightness(0.92);
   }
   50% {
-    transform: translateX(var(--wave-shift)) rotate(var(--wave-rot)) scale(1.06);
+    transform: scaleY(1.02);
+    opacity: 1;
+    filter: brightness(1.12);
+  }
+}
+
+@keyframes highlightsStageBreath {
+  0%,
+  100% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes highlightsCapFlick {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: blur(0);
+  }
+  50% {
+    opacity: 0.95;
+    filter: blur(0.2px);
+  }
+}
+
+@keyframes highlightsRecPulse {
+  0%,
+  100% {
+    transform: scale(0.82);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.12);
     opacity: 1;
   }
 }
 
-@keyframes outcomesCometDrift {
-  0%,
-  100% {
-    transform: translateX(-26px);
-    box-shadow:
-      0 0 0 0 rgba(195, 195, 195, 0.32),
-      -10px 0 16px rgba(192, 192, 192, 0.16);
-  }
-  50% {
-    transform: translateX(24px);
-    box-shadow:
-      0 0 0 7px rgba(195, 195, 195, 0),
-      10px 0 18px rgba(192, 192, 192, 0.22);
-  }
+.section[data-anim-paused="true"] .meter,
+.section[data-anim-paused="true"] .meterBar,
+.section[data-anim-paused="true"] .meterCap,
+.section[data-anim-paused="true"] .meterDot {
+  animation-play-state: paused;
 }
 
 @media (max-width: 560px) {
@@ -401,13 +472,11 @@
     transform: translateY(4px);
   }
 
-  .signalWave {
-    width: 62%;
-    height: 40%;
+  .meter {
+    gap: 4px;
   }
 
-  .signalComet {
-    width: 7px;
-    height: 7px;
+  .meterBar {
+    width: 3px;
   }
 }

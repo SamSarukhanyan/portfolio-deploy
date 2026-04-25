@@ -1,4 +1,5 @@
 import styles from "./ContactSection.module.css";
+import { useSectionDecorPause } from "../hooks/useSectionDecorPause";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import type { MouseEvent } from "react";
@@ -32,6 +33,7 @@ function Icon({ kind }: { kind: Social["icon"] }) {
 
 export function ContactSection() {
   const { t } = useI18n();
+  const [sectionRef, decorPaused] = useSectionDecorPause();
   const socials: Social[] = [
     site.githubUrl ? { label: "GitHub", href: site.githubUrl, icon: "gh" } : null,
     site.linkedinUrl ? { label: "LinkedIn", href: site.linkedinUrl, icon: "in" } : null,
@@ -88,7 +90,12 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" className={`section ${styles.section}`}>
+    <section
+      ref={sectionRef}
+      id="contact"
+      className={`section ${styles.section}`}
+      data-anim-paused={decorPaused ? "true" : undefined}
+    >
       <div className="shell">
         <Reveal className={`glass ${styles.card}`} direction="up">
           <div className={styles.layout}>

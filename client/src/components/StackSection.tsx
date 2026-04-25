@@ -1,4 +1,5 @@
 import styles from "./StackSection.module.css";
+import { useSectionDecorPause } from "../hooks/useSectionDecorPause";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 
@@ -48,25 +49,27 @@ const layers = [
 
 export function StackSection() {
   const { t } = useI18n();
+  const [sectionRef, decorPaused] = useSectionDecorPause();
 
   return (
-    <section id="stack" className={`section ${styles.section}`}>
+    <section
+      ref={sectionRef}
+      id="stack"
+      className={`section ${styles.section}`}
+      data-anim-paused={decorPaused ? "true" : undefined}
+    >
       <div className="shell">
         <div className={styles.head}>
           <Reveal as="h2" className="section-title" direction="left">
             {t("stack.title")}
           </Reveal>
           <Reveal className={styles.stackGlyph} direction="right" delayMs={65} aria-hidden>
-            <span className={styles.stackChipAura} />
-            <span className={styles.stackChipBody}>
-              <span className={styles.stackChipCore} />
-              <span className={styles.stackChipTraceA} />
-              <span className={styles.stackChipTraceB} />
-            </span>
-            <span className={styles.stackPinsTop} />
-            <span className={styles.stackPinsBottom} />
-            <span className={styles.stackPinsLeft} />
-            <span className={styles.stackPinsRight} />
+            <span className={styles.orbitRing} />
+            <span className={styles.orbitBall} data-orbit="a" />
+            <span className={styles.orbitBall} data-orbit="b" />
+            <span className={styles.orbitBall} data-orbit="c" />
+            <span className={styles.orbitCore} />
+            <span className={styles.orbitFlare} />
           </Reveal>
         </div>
         <Reveal as="p" className="section-lead" direction="up" delayMs={60}>

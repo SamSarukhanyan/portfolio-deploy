@@ -56,6 +56,53 @@
     radial-gradient(112% 84% at 88% 18%, rgba(176, 176, 181, 0.07), transparent 58%),
     radial-gradient(126% 92% at 50% 112%, rgba(245, 197, 66, 0.06), transparent 62%),
     linear-gradient(180deg, #08080a 0%, #0d0d11 36%, #131319 68%, #09090b 100%);
+  /* BG tuning controls (desktop defaults) */
+  --bg-main-shift-x: 0px;
+  --bg-main-shift-y: 0px;
+  --bg-main-scale: 1;
+  --bg-layer-shift-x: 0px;
+  --bg-layer-shift-y: -10px;
+  --bg-layer-scale: 1.2;
+  --bg-layer-pos-x: 50%;
+  --bg-layer-pos-y: -10%;
+  --bg-layer-before-opacity: 0.64;
+  --bg-layer-after-opacity: 0.28;
+  --section-bg-shape-set:
+    radial-gradient(136% 94% at 9% 14%, rgba(245, 197, 66, 0.08), transparent 62%),
+    radial-gradient(120% 88% at 90% 80%, rgba(176, 176, 181, 0.065), transparent 68%),
+    radial-gradient(160px 160px at 16% 24%, transparent 62%, rgba(245, 197, 66, 0.11) 63% 64%, transparent 66%),
+    radial-gradient(190px 190px at 78% 18%, transparent 58%, rgba(176, 176, 181, 0.1) 59% 60%, transparent 62%),
+    radial-gradient(150px 150px at 72% 68%, transparent 60%, rgba(245, 197, 66, 0.09) 61% 62%, transparent 64%),
+    radial-gradient(210px 210px at 34% 12%, transparent 64%, rgba(245, 197, 66, 0.085) 65% 66%, transparent 69%),
+    radial-gradient(170px 170px at 62% 36%, transparent 63%, rgba(176, 176, 181, 0.082) 64% 65%, transparent 68%),
+    radial-gradient(140px 140px at 14% 74%, transparent 61%, rgba(245, 197, 66, 0.078) 62% 63%, transparent 66%),
+    conic-gradient(from 210deg at 24% 18%, transparent 0deg 280deg, rgba(245, 197, 66, 0.13) 280deg 318deg, transparent 318deg 360deg),
+    conic-gradient(from 120deg at 86% 20%, transparent 0deg 250deg, rgba(176, 176, 181, 0.13) 250deg 296deg, transparent 296deg 360deg),
+    conic-gradient(from 20deg at 44% 24%, transparent 0deg 272deg, rgba(245, 197, 66, 0.12) 272deg 310deg, transparent 310deg 360deg),
+    conic-gradient(from 238deg at 8% 28%, transparent 0deg 286deg, rgba(176, 176, 181, 0.12) 286deg 324deg, transparent 324deg 360deg),
+    conic-gradient(from 308deg at 62% 14%, transparent 0deg 278deg, rgba(245, 197, 66, 0.11) 278deg 314deg, transparent 314deg 360deg),
+    conic-gradient(from 156deg at 72% 26%, transparent 0deg 276deg, rgba(176, 176, 181, 0.11) 276deg 312deg, transparent 312deg 360deg);
+
+  /* Preset: close
+  --bg-layer-shift-y: -4px;
+  --bg-layer-scale: 1.08;
+  --bg-layer-pos-y: -4%;
+  --bg-layer-before-opacity: 0.56;
+  */
+
+  /* Preset: balanced
+  --bg-layer-shift-y: -10px;
+  --bg-layer-scale: 1.2;
+  --bg-layer-pos-y: -10%;
+  --bg-layer-before-opacity: 0.64;
+  */
+
+  /* Preset: wide
+  --bg-layer-shift-y: -16px;
+  --bg-layer-scale: 1.34;
+  --bg-layer-pos-y: -16%;
+  --bg-layer-before-opacity: 0.72;
+  */
 }
 
 *,
@@ -144,21 +191,10 @@ body {
   filter: none;
 }
 
-.app-shell--art .page-bg {
-  background:
-    radial-gradient(138% 86% at 14% 0%, rgba(245, 197, 66, 0.09), transparent 55%),
-    radial-gradient(116% 82% at 88% 22%, rgba(176, 176, 181, 0.08), transparent 58%),
-    radial-gradient(122% 88% at 48% 110%, rgba(245, 197, 66, 0.06), transparent 64%),
-    linear-gradient(180deg, #08080a 0%, #0d0d11 36%, #131319 68%, #09090b 100%);
+#root::before {
+  content: none;
 }
 
-.app-shell--art .page-bg::before {
-  opacity: 0.28;
-}
-
-.app-shell--art .page-bg::after {
-  opacity: 0.12;
-}
 
 /* Контент над декоративным .page-bg */
 .app-main {
@@ -201,65 +237,30 @@ button {
   cursor: pointer;
 }
 
-/* Ambient background */
+/* Legacy ambient background node disabled (use #root::before) */
 .page-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--page-gradient);
+  display: none;
+}
+
+
+/* Temporary helper: set <body data-bg-tune="true"> to tune only the background */
+body[data-bg-tune="true"] .header,
+body[data-bg-tune="true"] footer {
+  visibility: hidden !important;
+}
+
+/* Hide all real content inside main, regardless of component/module class names */
+body[data-bg-tune="true"] .app-main * {
+  visibility: hidden !important;
+}
+
+/* Keep section wrappers visible so section backgrounds and separators remain */
+body[data-bg-tune="true"] .app-main section {
+  visibility: visible !important;
+}
+
+body[data-bg-tune="true"] .app-main section {
   pointer-events: none;
-  overflow: hidden;
-  transform: scaleY(-1);
-  transform-origin: center;
-}
-
-.page-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(136% 94% at 9% 14%, rgba(245, 197, 66, 0.08), transparent 62%),
-    radial-gradient(120% 88% at 90% 80%, rgba(176, 176, 181, 0.065), transparent 68%),
-    radial-gradient(160px 160px at 16% 24%, transparent 62%, rgba(245, 197, 66, 0.11) 63% 64%, transparent 66%),
-    radial-gradient(190px 190px at 78% 18%, transparent 58%, rgba(176, 176, 181, 0.1) 59% 60%, transparent 62%),
-    radial-gradient(150px 150px at 72% 68%, transparent 60%, rgba(245, 197, 66, 0.09) 61% 62%, transparent 64%),
-    radial-gradient(210px 210px at 34% 12%, transparent 64%, rgba(245, 197, 66, 0.085) 65% 66%, transparent 69%),
-    radial-gradient(170px 170px at 62% 36%, transparent 63%, rgba(176, 176, 181, 0.082) 64% 65%, transparent 68%),
-    radial-gradient(140px 140px at 14% 74%, transparent 61%, rgba(245, 197, 66, 0.078) 62% 63%, transparent 66%),
-    conic-gradient(from 210deg at 24% 76%, transparent 0deg 280deg, rgba(245, 197, 66, 0.08) 280deg 314deg, transparent 314deg 360deg),
-    conic-gradient(from 120deg at 86% 64%, transparent 0deg 250deg, rgba(176, 176, 181, 0.08) 250deg 292deg, transparent 292deg 360deg),
-    conic-gradient(from 20deg at 44% 88%, transparent 0deg 272deg, rgba(245, 197, 66, 0.072) 272deg 306deg, transparent 306deg 360deg),
-    conic-gradient(from 238deg at 8% 38%, transparent 0deg 286deg, rgba(176, 176, 181, 0.07) 286deg 318deg, transparent 318deg 360deg);
-  opacity: 0.52;
-}
-
-.page-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(110px 76px at 14% 30%, rgba(245, 197, 66, 0.11), transparent 74%),
-    radial-gradient(128px 84px at 82% 26%, rgba(176, 176, 181, 0.09), transparent 76%),
-    radial-gradient(98px 72px at 32% 70%, rgba(245, 197, 66, 0.1), transparent 78%),
-    radial-gradient(88px 66px at 68% 82%, rgba(176, 176, 181, 0.08), transparent 80%),
-    radial-gradient(84px 60px at 22% 52%, rgba(245, 197, 66, 0.085), transparent 82%),
-    radial-gradient(96px 68px at 78% 44%, rgba(176, 176, 181, 0.082), transparent 82%),
-    radial-gradient(72px 56px at 52% 90%, rgba(245, 197, 66, 0.075), transparent 84%),
-    radial-gradient(72px 72px at 48% 16%, transparent 64%, rgba(245, 197, 66, 0.16) 65% 67%, transparent 70%),
-    radial-gradient(62px 62px at 58% 54%, transparent 62%, rgba(176, 176, 181, 0.14) 63% 65%, transparent 68%),
-    radial-gradient(58px 58px at 88% 18%, transparent 60%, rgba(245, 197, 66, 0.14) 61% 63%, transparent 66%),
-    radial-gradient(52px 52px at 16% 86%, transparent 60%, rgba(176, 176, 181, 0.13) 61% 63%, transparent 66%),
-    radial-gradient(4px 4px at 12% 22%, rgba(245, 197, 66, 0.34), transparent 74%),
-    radial-gradient(3px 3px at 26% 64%, rgba(176, 176, 181, 0.32), transparent 76%),
-    radial-gradient(3px 3px at 64% 24%, rgba(245, 197, 66, 0.3), transparent 78%),
-    radial-gradient(4px 4px at 86% 58%, rgba(176, 176, 181, 0.28), transparent 80%),
-    radial-gradient(3px 3px at 38% 12%, rgba(245, 197, 66, 0.28), transparent 82%),
-    radial-gradient(3px 3px at 74% 88%, rgba(176, 176, 181, 0.26), transparent 82%),
-    conic-gradient(from 30deg at 42% 42%, transparent 0deg 304deg, rgba(245, 197, 66, 0.1) 304deg 330deg, transparent 330deg 360deg),
-    conic-gradient(from 220deg at 74% 72%, transparent 0deg 286deg, rgba(176, 176, 181, 0.1) 286deg 314deg, transparent 314deg 360deg),
-    conic-gradient(from 154deg at 26% 30%, transparent 0deg 292deg, rgba(245, 197, 66, 0.082) 292deg 322deg, transparent 322deg 360deg),
-    conic-gradient(from 312deg at 86% 78%, transparent 0deg 288deg, rgba(176, 176, 181, 0.078) 288deg 320deg, transparent 320deg 360deg);
-  opacity: 0.28;
 }
 
 /* Layout */
@@ -273,6 +274,20 @@ button {
   padding-top: var(--space-section-top);
   padding-bottom: var(--space-section-bottom);
   position: relative;
+  isolation: isolate;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--section-bg-shape-set);
+  transform: translate(var(--bg-layer-shift-x), var(--bg-layer-shift-y)) scale(var(--bg-layer-scale));
+  transform-origin: center;
+  background-position: var(--bg-layer-pos-x) var(--bg-layer-pos-y);
+  opacity: var(--bg-layer-before-opacity);
 }
 
 .section::after {
@@ -294,6 +309,34 @@ section#top.section {
 
 section#top.section::after {
   content: none;
+}
+
+#highlights.section::before {
+  background:
+    radial-gradient(120% 88% at 90% 80%, rgba(176, 176, 181, 0.065), transparent 68%),
+    radial-gradient(136% 94% at 9% 14%, rgba(245, 197, 66, 0.08), transparent 62%),
+    var(--section-bg-shape-set);
+}
+
+#stack.section::before {
+  background:
+    conic-gradient(from 120deg at 86% 20%, transparent 0deg 250deg, rgba(176, 176, 181, 0.13) 250deg 296deg, transparent 296deg 360deg),
+    conic-gradient(from 210deg at 24% 18%, transparent 0deg 280deg, rgba(245, 197, 66, 0.13) 280deg 318deg, transparent 318deg 360deg),
+    var(--section-bg-shape-set);
+}
+
+#architecture.section::before {
+  background:
+    conic-gradient(from 308deg at 62% 14%, transparent 0deg 278deg, rgba(245, 197, 66, 0.11) 278deg 314deg, transparent 314deg 360deg),
+    conic-gradient(from 156deg at 72% 26%, transparent 0deg 276deg, rgba(176, 176, 181, 0.11) 276deg 312deg, transparent 312deg 360deg),
+    var(--section-bg-shape-set);
+}
+
+#contact.section::before {
+  background:
+    radial-gradient(190px 190px at 78% 18%, transparent 58%, rgba(176, 176, 181, 0.1) 59% 60%, transparent 62%),
+    radial-gradient(160px 160px at 16% 24%, transparent 62%, rgba(245, 197, 66, 0.11) 63% 64%, transparent 66%),
+    var(--section-bg-shape-set);
 }
 
 section#top.section > .shell {
@@ -624,113 +667,9 @@ section#top.section > .shell {
     scroll-behavior: auto;
   }
 
-  .page-bg {
-    transform: none;
-    transform-origin: top center;
-    left: 0;
-    right: 0;
-    width: 100%;
-  }
-
-  .page-bg::before,
-  .page-bg::after {
+  #root::before {
     animation: none;
-    background-position: 50% 0%;
-    transform-origin: top center;
-    inset: -14% -18%;
-  }
-
-  .page-bg::before {
-    opacity: 0.52;
-    transform: translateY(0) scale(1);
-    background:
-      radial-gradient(136% 94% at 9% 14%, rgba(245, 197, 66, 0.09), transparent 62%),
-      radial-gradient(120% 88% at 90% 80%, rgba(176, 176, 181, 0.078), transparent 68%),
-      radial-gradient(160px 160px at 16% 24%, transparent 62%, rgba(245, 197, 66, 0.125) 63% 64%, transparent 66%),
-      radial-gradient(190px 190px at 78% 18%, transparent 58%, rgba(176, 176, 181, 0.115) 59% 60%, transparent 62%),
-      radial-gradient(150px 150px at 72% 68%, transparent 60%, rgba(245, 197, 66, 0.105) 61% 62%, transparent 64%),
-      radial-gradient(210px 210px at 34% 12%, transparent 64%, rgba(245, 197, 66, 0.1) 65% 66%, transparent 69%),
-      radial-gradient(170px 170px at 62% 36%, transparent 63%, rgba(176, 176, 181, 0.095) 64% 65%, transparent 68%),
-      radial-gradient(140px 140px at 14% 74%, transparent 61%, rgba(245, 197, 66, 0.088) 62% 63%, transparent 66%),
-      radial-gradient(150px 150px at 12% 54%, transparent 61%, rgba(245, 197, 66, 0.09) 62% 63%, transparent 66%),
-      radial-gradient(172px 172px at 84% 60%, transparent 61%, rgba(176, 176, 181, 0.092) 62% 63%, transparent 66%),
-      radial-gradient(126px 126px at 52% 42%, transparent 59%, rgba(245, 197, 66, 0.094) 60% 61%, transparent 64%),
-      conic-gradient(from 210deg at 24% 76%, transparent 0deg 280deg, rgba(245, 197, 66, 0.09) 280deg 314deg, transparent 314deg 360deg),
-      conic-gradient(from 120deg at 86% 64%, transparent 0deg 250deg, rgba(176, 176, 181, 0.09) 250deg 292deg, transparent 292deg 360deg),
-      conic-gradient(from 20deg at 44% 88%, transparent 0deg 272deg, rgba(245, 197, 66, 0.082) 272deg 306deg, transparent 306deg 360deg),
-      conic-gradient(from 238deg at 8% 38%, transparent 0deg 286deg, rgba(176, 176, 181, 0.08) 286deg 318deg, transparent 318deg 360deg),
-      conic-gradient(from 42deg at 66% 22%, transparent 0deg 274deg, rgba(245, 197, 66, 0.08) 274deg 308deg, transparent 308deg 360deg),
-      conic-gradient(from 312deg at 18% 16%, transparent 0deg 282deg, rgba(176, 176, 181, 0.078) 282deg 318deg, transparent 318deg 360deg);
-  }
-
-  .page-bg::after {
-    opacity: 0.34;
-    transform: translateY(0) scale(1);
-    background:
-      radial-gradient(110px 76px at 14% 30%, rgba(245, 197, 66, 0.13), transparent 74%),
-      radial-gradient(128px 84px at 82% 26%, rgba(176, 176, 181, 0.11), transparent 76%),
-      radial-gradient(98px 72px at 32% 70%, rgba(245, 197, 66, 0.12), transparent 78%),
-      radial-gradient(88px 66px at 68% 82%, rgba(176, 176, 181, 0.1), transparent 80%),
-      radial-gradient(84px 60px at 22% 52%, rgba(245, 197, 66, 0.1), transparent 82%),
-      radial-gradient(96px 68px at 78% 44%, rgba(176, 176, 181, 0.1), transparent 82%),
-      radial-gradient(72px 56px at 52% 90%, rgba(245, 197, 66, 0.09), transparent 84%),
-      radial-gradient(72px 72px at 48% 16%, transparent 64%, rgba(245, 197, 66, 0.18) 65% 67%, transparent 70%),
-      radial-gradient(62px 62px at 58% 54%, transparent 62%, rgba(176, 176, 181, 0.16) 63% 65%, transparent 68%),
-      radial-gradient(58px 58px at 88% 18%, transparent 60%, rgba(245, 197, 66, 0.16) 61% 63%, transparent 66%),
-      radial-gradient(52px 52px at 16% 86%, transparent 60%, rgba(176, 176, 181, 0.15) 61% 63%, transparent 66%),
-      radial-gradient(66px 66px at 26% 18%, transparent 60%, rgba(245, 197, 66, 0.15) 61% 63%, transparent 66%),
-      radial-gradient(78px 78px at 74% 16%, transparent 62%, rgba(176, 176, 181, 0.14) 63% 65%, transparent 68%),
-      radial-gradient(74px 74px at 8% 62%, transparent 60%, rgba(245, 197, 66, 0.14) 61% 63%, transparent 66%),
-      radial-gradient(4px 4px at 12% 22%, rgba(245, 197, 66, 0.36), transparent 74%),
-      radial-gradient(3px 3px at 26% 64%, rgba(176, 176, 181, 0.34), transparent 76%),
-      radial-gradient(3px 3px at 64% 24%, rgba(245, 197, 66, 0.34), transparent 78%),
-      radial-gradient(4px 4px at 86% 58%, rgba(176, 176, 181, 0.32), transparent 80%),
-      radial-gradient(3px 3px at 38% 12%, rgba(245, 197, 66, 0.32), transparent 82%),
-      radial-gradient(3px 3px at 74% 88%, rgba(176, 176, 181, 0.3), transparent 82%),
-      radial-gradient(3px 3px at 18% 44%, rgba(245, 197, 66, 0.31), transparent 82%),
-      radial-gradient(3px 3px at 56% 76%, rgba(176, 176, 181, 0.3), transparent 82%),
-      conic-gradient(from 30deg at 42% 42%, transparent 0deg 304deg, rgba(245, 197, 66, 0.12) 304deg 330deg, transparent 330deg 360deg),
-      conic-gradient(from 220deg at 74% 72%, transparent 0deg 286deg, rgba(176, 176, 181, 0.12) 286deg 314deg, transparent 314deg 360deg),
-      conic-gradient(from 154deg at 26% 30%, transparent 0deg 292deg, rgba(245, 197, 66, 0.1) 292deg 322deg, transparent 322deg 360deg),
-      conic-gradient(from 312deg at 86% 78%, transparent 0deg 288deg, rgba(176, 176, 181, 0.1) 288deg 320deg, transparent 320deg 360deg),
-      conic-gradient(from 58deg at 8% 84%, transparent 0deg 280deg, rgba(245, 197, 66, 0.1) 280deg 316deg, transparent 316deg 360deg),
-      conic-gradient(from 286deg at 92% 32%, transparent 0deg 278deg, rgba(176, 176, 181, 0.098) 278deg 314deg, transparent 314deg 360deg);
-  }
-
-  #highlights {
-    background:
-      radial-gradient(130% 80% at 12% 18%, rgba(245, 197, 66, 0.16), transparent 56%),
-      radial-gradient(95% 70% at 88% 72%, rgba(176, 176, 181, 0.11), transparent 62%),
-      radial-gradient(44% 28% at 78% 18%, rgba(245, 197, 66, 0.1), transparent 70%),
-      conic-gradient(from 16deg at 18% 74%, transparent 0deg 292deg, rgba(176, 176, 181, 0.08) 292deg 322deg, transparent 322deg 360deg),
-      linear-gradient(180deg, rgba(26, 26, 30, 0.56), rgba(16, 16, 19, 0.24) 72%, transparent 100%);
-  }
-
-  #stack {
-    background:
-      radial-gradient(120% 82% at 86% 14%, rgba(245, 197, 66, 0.15), transparent 58%),
-      radial-gradient(110% 76% at 10% 86%, rgba(242, 242, 242, 0.1), transparent 64%),
-      radial-gradient(42% 30% at 24% 18%, rgba(176, 176, 181, 0.09), transparent 72%),
-      conic-gradient(from 36deg at 74% 82%, transparent 0deg 286deg, rgba(245, 197, 66, 0.08) 286deg 318deg, transparent 318deg 360deg),
-      linear-gradient(180deg, rgba(30, 30, 34, 0.54), rgba(17, 17, 20, 0.24) 74%, transparent 100%);
-  }
-
-  #architecture {
-    background:
-      radial-gradient(110% 74% at 18% 12%, rgba(245, 197, 66, 0.13), transparent 60%),
-      radial-gradient(108% 80% at 82% 84%, rgba(176, 176, 181, 0.1), transparent 64%),
-      radial-gradient(46% 32% at 62% 22%, rgba(245, 197, 66, 0.09), transparent 72%),
-      conic-gradient(from 226deg at 16% 68%, transparent 0deg 286deg, rgba(176, 176, 181, 0.08) 286deg 318deg, transparent 318deg 360deg),
-      linear-gradient(180deg, rgba(28, 28, 32, 0.54), rgba(16, 16, 19, 0.24) 72%, transparent 100%);
-  }
-
-  #contact {
-    background:
-      radial-gradient(120% 86% at 84% 20%, rgba(245, 197, 66, 0.16), transparent 58%),
-      radial-gradient(100% 72% at 14% 84%, rgba(176, 176, 181, 0.12), transparent 64%),
-      radial-gradient(38% 30% at 36% 18%, rgba(245, 197, 66, 0.1), transparent 70%),
-      conic-gradient(from 64deg at 70% 78%, transparent 0deg 286deg, rgba(176, 176, 181, 0.082) 286deg 318deg, transparent 318deg 360deg),
-      linear-gradient(180deg, rgba(30, 30, 34, 0.52), rgba(16, 16, 19, 0.22) 74%, transparent 100%);
+    transform-origin: center;
   }
 
   .glass {

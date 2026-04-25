@@ -727,15 +727,15 @@
   }
 }
 
-/* Full viewport width: images touch left/right; only the gutters between cards */
+/* Grid container aligned with global shell gutters/width */
 .gridFullBleed {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: var(--max-width);
+  margin: 0 auto;
   margin-top: 0.15rem;
-  padding: 0;
-  padding-left: env(safe-area-inset-left, 0);
-  padding-right: env(safe-area-inset-right, 0);
+  padding: 0 clamp(0.7rem, 2.2vw, 1.2rem);
+  padding-left: max(clamp(0.7rem, 2.2vw, 1.2rem), env(safe-area-inset-left, 0));
+  padding-right: max(clamp(0.7rem, 2.2vw, 1.2rem), env(safe-area-inset-right, 0));
   box-sizing: border-box;
 }
 
@@ -768,7 +768,7 @@
   }
 }
 
-@media (min-width: 1180px) {
+@media (min-width: 767px) {
   .grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     --art-grid-gap: 7px;

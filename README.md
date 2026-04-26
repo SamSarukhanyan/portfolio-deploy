@@ -23,7 +23,7 @@ If the API or database is unavailable, the frontend continues to work using loca
 - CSS Modules + global design system variables
 - IntersectionObserver-based scroll reveal animations
 
-### Backend
+## Backend
 
 - Node.js
 - Express 4

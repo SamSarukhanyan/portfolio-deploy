@@ -15,7 +15,7 @@ If the API or database is unavailable, the frontend continues to work using loca
 
 ##ё Tech Stack
 
-## Frontend
+### Frontend
 
 - React 19
 - Vite 6

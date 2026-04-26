@@ -32,8 +32,6 @@ jobs:
 
       - name: Install and build
         working-directory: client
-        env:
-          VITE_GA_MEASUREMENT_ID: ${{ secrets.VITE_GA_MEASUREMENT_ID }}
         run: |
           npm ci
           npm run build

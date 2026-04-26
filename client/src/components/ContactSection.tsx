@@ -4,7 +4,6 @@ import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import type { MouseEvent } from "react";
 import { Reveal } from "./Reveal";
-import { trackEvent } from "../lib/analytics";
 
 type Social = { label: string; href: string; icon: "gh" | "in" | "tg" };
 
@@ -51,7 +50,6 @@ export function ContactSection() {
 
   function openEmailClient(event: MouseEvent<HTMLAnchorElement>) {
     if (!hasEmail) return;
-    trackEvent("contact_email_click", { source: "contact_section" });
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (!isMobile) {
       event.preventDefault();
@@ -141,12 +139,6 @@ export function ContactSection() {
                     href={s.href}
                     target="_blank"
                     rel="noreferrer noopener"
-                    onClick={() =>
-                      trackEvent("social_link_click", {
-                        source: "contact_section",
-                        network: s.label.toLowerCase(),
-                      })
-                    }
                     direction={idx % 2 === 0 ? "left" : "right"}
                     delayMs={120 + idx * 40}
                   >

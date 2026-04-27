@@ -153,7 +153,7 @@ Default copy lives in:
 
 When backend translation storage is configured, remote bundle keys can override local defaults without rebuilding the frontend.
 
-## Deployment Notes
+### Deployment Notes
 
 Deployment references are included in:
 

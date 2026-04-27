@@ -159,6 +159,7 @@ Deployment references are included in:
 
 - `docs/deploy-order.txt`
 - `docs/nginx-portfolio.conf.example`
+- `docs/ga4-production-setup.md`
 
 The intended production model is:
 

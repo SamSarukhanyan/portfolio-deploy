@@ -4,6 +4,7 @@ import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
 import { onSpaLinkClick } from "../utils/spaRouter";
 import { ArtLightbox } from "./ArtLightbox";
+import { trackEvent } from "../analytics/ga";
 
 const fallbackImage =
   "data:image/svg+xml;charset=UTF-8," +
@@ -79,6 +80,7 @@ export function ArtPage() {
   const activeArtwork = activeIndex === null ? null : artworks[activeIndex] ?? null;
 
   const openAt = useCallback((index: number) => {
+    trackEvent("artwork_open", { index, artwork_id: artworks[index]?.id ?? "unknown" });
     setActiveIndex(index);
   }, []);
 
@@ -105,7 +107,14 @@ export function ArtPage() {
             ))}
           </div>
           <div className={styles.heroTop}>
-            <a href="/" className={styles.backLink} onClick={(event) => onSpaLinkClick(event, "/")}>
+            <a
+              href="/"
+              className={styles.backLink}
+              onClick={(event) => {
+                onSpaLinkClick(event, "/");
+                trackEvent("navigation_click", { placement: "art_page", target: "home" });
+              }}
+            >
               {t("art.backHome")}
             </a>
             <div className={styles.heroAurora} aria-hidden>

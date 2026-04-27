@@ -1,9 +1,11 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Navigation } from "./components/Navigation";
 import { Hero } from "./components/Hero";
 import { Footer } from "./components/Footer";
 import { ArtPage } from "./components/ArtPage";
 import { usePathname } from "./utils/spaRouter";
+import { shouldShowConsentBanner, trackPageView } from "./analytics/ga";
+import { AnalyticsConsentBanner } from "./components/AnalyticsConsentBanner";
 
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
@@ -24,7 +26,11 @@ const ContactSection = lazy(() =>
 export default function App() {
   const pathname = usePathname();
   const isArtPage = pathname.startsWith("/art");
+  const [showConsentBanner, setShowConsentBanner] = useState(() => shouldShowConsentBanner());
 
+  useEffect(() => {
+    trackPageView(pathname);
+  }, [pathname]);
 
   return (
     <div className={`app-shell${isArtPage ? " app-shell--art" : ""}`}>
@@ -47,6 +53,7 @@ export default function App() {
         )}
       </main>
       <Footer />
+      {showConsentBanner ? <AnalyticsConsentBanner onResolved={() => setShowConsentBanner(false)} /> : null}
     </div>
   );
 }

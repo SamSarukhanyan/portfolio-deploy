@@ -4,6 +4,7 @@ import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { Reveal } from "./Reveal";
 import { onSpaLinkClick } from "../utils/spaRouter";
+import { trackEvent } from "../analytics/ga";
 const signalKeys = ["hero.signal.0", "hero.signal.1", "hero.signal.2"] as const;
 
 const SNAKE_SEGMENTS = 12;
@@ -105,6 +106,7 @@ export function Hero() {
                   href="/art"
                   onClick={(event) => {
                     onSpaLinkClick(event, "/art");
+                    trackEvent("cta_click", { section: "hero", cta: "explore_art" });
                   }}
                 >
                   {t("hero.ctaArt")}
@@ -125,6 +127,7 @@ export function Hero() {
                   href="https://github.com/SamSarukhanyan/my-fullstack-app"
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => trackEvent("outbound_click", { section: "hero", target: "fullstack_repo" })}
                 >
                   github.com/SamSarukhanyan/my-fullstack-app
                 </a>
@@ -133,10 +136,18 @@ export function Hero() {
                 {t("hero.summary")}
               </Reveal>
               <Reveal className={styles.actions} direction="up" delayMs={260} data-reveal-mobile-instant="true">
-                <a className="btn-primary" href="#contact">
+                <a
+                  className="btn-primary"
+                  href="#contact"
+                  onClick={() => trackEvent("cta_click", { section: "hero", cta: "contact" })}
+                >
                   {t("hero.ctaContact")}
                 </a>
-                <a className="btn-ghost" href="#highlights">
+                <a
+                  className="btn-ghost"
+                  href="#highlights"
+                  onClick={() => trackEvent("cta_click", { section: "hero", cta: "highlights" })}
+                >
                   {t("hero.ctaHighlights")}
                 </a>
               </Reveal>

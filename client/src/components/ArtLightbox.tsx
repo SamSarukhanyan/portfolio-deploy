@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type TouchEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type TouchEvent } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
@@ -59,11 +59,6 @@ export function ArtLightbox({
   titleLabel,
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
-  const [viewportHeight, setViewportHeight] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    const visualH = window.visualViewport?.height;
-    return Math.max(1, Math.round(visualH ?? window.innerHeight));
-  });
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [zoomLayer, setZoomLayer] = useState<ZoomLayer | null>(null);
   const [isUiHidden, setIsUiHidden] = useState(false);
@@ -467,23 +462,7 @@ export function ArtLightbox({
     document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
 
-    let resizeRaf = 0;
-    const onResize = () => {
-      if (resizeRaf) return;
-      resizeRaf = requestAnimationFrame(() => {
-        resizeRaf = 0;
-        const visualH = window.visualViewport?.height;
-        const height = Math.max(1, Math.round(visualH ?? window.innerHeight));
-        setViewportHeight(height);
-      });
-    };
-
-    onResize();
-    window.addEventListener("resize", onResize);
-    window.visualViewport?.addEventListener("resize", onResize);
-
     return () => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf);
       setBackgroundLock(false);
       resetZoomState();
       document.body.classList.remove("art-modal-open");
@@ -492,8 +471,6 @@ export function ArtLightbox({
       document.body.style.width = prevWidth;
       document.body.style.overflow = prevOverflow;
       window.scrollTo(0, scrollY);
-      window.removeEventListener("resize", onResize);
-      window.visualViewport?.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -572,19 +549,10 @@ export function ArtLightbox({
     imageResizeObserversRef.current[index] = observer;
   }
 
-  const overlayStyle = useMemo(
-    () =>
-      ({
-        height: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
-        ["--lightbox-vh" as string]: viewportHeight > 0 ? `${viewportHeight}px` : "100dvh",
-      }) as CSSProperties,
-    [viewportHeight],
-  );
-
   if (!portalHost || !activeArtwork) return null;
 
   return createPortal(
-    <div className={`${styles.overlay} ${isUiHidden ? styles.zooming : ""}`} style={overlayStyle} role="dialog" aria-modal="true">
+    <div className={`${styles.overlay} ${isUiHidden ? styles.zooming : ""}`} role="dialog" aria-modal="true">
       <button className={styles.backdrop} type="button" aria-label={closeLabel} onClick={onClose} />
 
       <div className={styles.stage} onClick={(event) => event.stopPropagation()}>

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import styles from "./ArtPage.module.css";
 import { artworks, getArtworkSrc } from "../content/artworks";
 import { useI18n } from "../i18n/I18nProvider";
@@ -28,6 +28,7 @@ type ArtworkCardProps = {
   getArtworkSrc: (filename: string) => string;
   fallbackImage: string;
   eagerLoad: boolean;
+  highPriority: boolean;
 };
 
 const ArtworkCard = memo(function ArtworkCard({
@@ -37,6 +38,7 @@ const ArtworkCard = memo(function ArtworkCard({
   getArtworkSrc,
   fallbackImage,
   eagerLoad,
+  highPriority,
 }: ArtworkCardProps) {
   const [imageReady, setImageReady] = useState(false);
 
@@ -50,7 +52,7 @@ const ArtworkCard = memo(function ArtworkCard({
             src={getArtworkSrc(art.filename)}
             alt={art.title}
             loading={eagerLoad ? "eager" : "lazy"}
-            fetchPriority={eagerLoad ? "high" : "auto"}
+            fetchPriority={highPriority ? "high" : "auto"}
             decoding="async"
             onLoad={() => {
               setImageReady(true);
@@ -84,15 +86,6 @@ export function ArtPage() {
 
   const closeModal = useCallback(() => {
     setActiveIndex(null);
-  }, []);
-
-  useEffect(() => {
-    // Preload gallery assets so skeletons disappear almost simultaneously.
-    artworks.forEach((art) => {
-      const img = new Image();
-      img.decoding = "async";
-      img.src = getArtworkSrc(art.filename);
-    });
   }, []);
 
   return (
@@ -153,7 +146,8 @@ export function ArtPage() {
               onOpen={openAt}
               getArtworkSrc={getArtworkSrc}
               fallbackImage={fallbackImage}
-              eagerLoad={index < 12}
+              eagerLoad={index < 4}
+              highPriority={index < 2}
             />
           ))}
         </div>

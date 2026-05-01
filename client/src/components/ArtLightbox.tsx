@@ -59,7 +59,11 @@ export function ArtLightbox({
   titleLabel,
 }: Props) {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
-  const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const visualH = window.visualViewport?.height;
+    return Math.max(1, Math.round(visualH ?? window.innerHeight));
+  });
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [zoomLayer, setZoomLayer] = useState<ZoomLayer | null>(null);
   const [isUiHidden, setIsUiHidden] = useState(false);
@@ -185,8 +189,6 @@ export function ArtLightbox({
     if (isClosingZoomRef.current) return;
     isClosingZoomRef.current = true;
     isZoomActiveRef.current = false;
-    // UI must return immediately when zoom reset starts.
-    setIsUiHidden(false);
     cancelZoomFrames();
     const metrics = zoomRuntimeRef.current?.metrics;
     const start = performance.now();
@@ -212,14 +214,15 @@ export function ArtLightbox({
         resetRafRef.current = window.requestAnimationFrame(animate);
         return;
       }
-      setBackgroundLock(false);
       setZoomLayer(null);
+      setBackgroundLock(false);
+      setIsUiHidden(false);
       resetZoomState();
     };
     if (Math.abs(from.scale - 1) < 0.001 && Math.abs(from.x) < 0.01 && Math.abs(from.y) < 0.01) {
+      setZoomLayer(null);
       setBackgroundLock(false);
       setIsUiHidden(false);
-      setZoomLayer(null);
       resetZoomState();
       return;
     }
@@ -370,6 +373,10 @@ export function ArtLightbox({
       beginPinch(event.touches[0], event.touches[1]);
       return;
     }
+    if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001 && zoomRuntimeRef.current) {
+      beginPan(event.touches[0], zoomRuntimeRef.current);
+      return;
+    }
     animateResetAndCloseLayer();
   }
 
@@ -426,6 +433,10 @@ export function ArtLightbox({
       beginPinch(touchA, touchB);
       return;
     }
+    if (event.touches.length === 1 && zoomMotionRef.current.scale > 1.001 && zoomRuntimeRef.current) {
+      beginPan(event.touches[0], zoomRuntimeRef.current);
+      return;
+    }
     animateResetAndCloseLayer();
   }
 
@@ -470,7 +481,6 @@ export function ArtLightbox({
     onResize();
     window.addEventListener("resize", onResize);
     window.visualViewport?.addEventListener("resize", onResize);
-    window.visualViewport?.addEventListener("scroll", onResize);
 
     return () => {
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
@@ -484,7 +494,6 @@ export function ArtLightbox({
       window.scrollTo(0, scrollY);
       window.removeEventListener("resize", onResize);
       window.visualViewport?.removeEventListener("resize", onResize);
-      window.visualViewport?.removeEventListener("scroll", onResize);
     };
   }, []);
 

@@ -79,8 +79,8 @@
 }
 
 .brandGlyph svg {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
 }
 
 .glyphOuter {
@@ -90,7 +90,7 @@
 
 .glyphLetter {
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 900;
   letter-spacing: -0.02em;
 }

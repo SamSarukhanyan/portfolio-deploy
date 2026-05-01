@@ -25,6 +25,17 @@ server {
         add_header Cache-Control "no-cache";
     }
 
+    # Keep favicon and manifest fresh for bots and clients.
+    location = /favicon.ico {
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
+    location ~* ^/(favicon-16x16\.png|favicon-32x32\.png|apple-touch-icon\.png|site\.webmanifest)$ {
+        expires -1;
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+    }
+
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|webp|avif)$ {
         expires 1y;
         add_header Cache-Control "public, immutable";

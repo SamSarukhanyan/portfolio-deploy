@@ -3,7 +3,6 @@ import styles from "./Navigation.module.css";
 import { site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { onSpaLinkClick, usePathname } from "../utils/spaRouter";
-import { trackEvent } from "../analytics/ga";
 
 export function Navigation() {
   const { t } = useI18n();
@@ -39,7 +38,6 @@ export function Navigation() {
           href={isArtPage ? "/" : "#top"}
           onClick={(event) => {
             onSpaLinkClick(event, isArtPage ? "/" : "#top");
-            trackEvent("navigation_click", { placement: "header", target: isArtPage ? "home" : "top" });
             setOpen(false);
           }}
         >
@@ -84,7 +82,6 @@ export function Navigation() {
                     href={l.href}
                     onClick={(event) => {
                       onSpaLinkClick(event, l.href);
-                      trackEvent("navigation_click", { placement: "desktop", target: l.labelKey });
                     }}
                   >
                     {t(l.labelKey)}
@@ -102,7 +99,6 @@ export function Navigation() {
               href="/art"
               onClick={(event) => {
                 onSpaLinkClick(event, "/art");
-                trackEvent("navigation_click", { placement: "mobile_shortcut", target: "art" });
               }}
             >
               {t("nav.art")}
@@ -113,7 +109,6 @@ export function Navigation() {
             href={isArtPage ? "/" : "/art"}
             onClick={(event) => {
               onSpaLinkClick(event, isArtPage ? "/" : "/art");
-              trackEvent("navigation_click", { placement: "quick_cta", target: isArtPage ? "home" : "art" });
             }}
           >
             {isArtPage ? t("art.backHome") : t("hero.ctaArt")}
@@ -151,7 +146,6 @@ export function Navigation() {
                     href={l.href}
                     onClick={(event) => {
                       onSpaLinkClick(event, l.href);
-                      trackEvent("navigation_click", { placement: "drawer", target: l.labelKey });
                       setOpen(false);
                     }}
                   >

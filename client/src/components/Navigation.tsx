@@ -45,12 +45,12 @@ export function Navigation() {
             <svg viewBox="0 0 48 48">
               <defs>
                 <linearGradient id="navGlyphBg" x1="5" y1="5" x2="43" y2="43" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#1f2228" />
-                  <stop offset="100%" stopColor="#111418" />
+                  <stop offset="0%" stopColor="#0b0b0c" />
+                  <stop offset="100%" stopColor="#000000" />
                 </linearGradient>
                 <linearGradient id="navGlyphLetter" x1="12" y1="10" x2="37" y2="36" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor="#f2f3f5" />
-                  <stop offset="100%" stopColor="#b9bcc2" />
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="100%" stopColor="#ffffff" />
                 </linearGradient>
               </defs>
               <rect x="5" y="5" width="38" height="38" rx="10" fill="url(#navGlyphBg)" className={styles.glyphOuter} />

@@ -32,6 +32,9 @@ jobs:
 
       - name: Install and build
         working-directory: client
+        env:
+          # No i18n API is deployed next to the static site; use bundled translations.
+          VITE_SKIP_SERVER_I18N: "true"
         run: |
           npm ci
           npm run build

@@ -53,3 +53,15 @@ jobs:
 
       - name: Reload nginx
         run: sudo nginx -t && sudo systemctl reload nginx
+
+      # Fails the run (and GitHub emails you) if the live site is not serving this build.
+      - name: Smoke test live site
+        run: |
+          expected=$(grep -o 'assets/index-[^"]*\.js' client/dist/index.html | head -1)
+          for url in https://samsarukhanyan.com/ https://www.samsarukhanyan.com/; do
+            for i in 1 2 3 4 5; do
+              body=$(curl -fsS --max-time 10 "$url") && echo "$body" | grep -q "$expected" && { echo "OK $url"; continue 2; }
+              sleep 3
+            done
+            echo "::error::$url is down or not serving the new build ($expected)"; exit 1
+          done

@@ -10,3 +10,9 @@
 *.log
 .idea/
 .vscode/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+**/terraform.tfvars

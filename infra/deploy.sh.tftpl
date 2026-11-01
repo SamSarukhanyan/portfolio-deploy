@@ -1,0 +1,37 @@
+#!/bin/bash
+set -euo pipefail
+
+ACTION='{{ Action }}'
+RELEASE='{{ Release }}'
+URL='{{ ArtifactUrl }}'
+ROOT=/var/www/portfolio
+DIR="$ROOT/releases/$RELEASE"
+
+mkdir -p "$ROOT/releases"
+
+if [ "$ACTION" = deploy ] && [ ! -f "$DIR/index.html" ]; then
+  tmp=$(mktemp -d "$ROOT/releases/.incoming.XXXXXX")
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsS --retry 3 --max-time 120 "$URL" | tar -xz -C "$tmp"
+  test -f "$tmp/index.html" || { echo "build has no index.html" >&2; exit 1; }
+  chown -R www-data:www-data "$tmp"
+  find "$tmp" -type d -exec chmod 755 {} +
+  find "$tmp" -type f -exec chmod 644 {} +
+  chmod 755 "$tmp"
+  rm -rf "$DIR"
+  mv "$tmp" "$DIR"
+  trap - EXIT
+fi
+
+test -f "$DIR/index.html" || { echo "release $RELEASE not found on server" >&2; exit 1; }
+
+# rename(2) over the old symlink is atomic: every request sees either the old or the new release.
+ln -sfn "releases/$RELEASE" "$ROOT/current.next"
+mv -T "$ROOT/current.next" "$ROOT/current"
+touch "$DIR"
+echo "live: $RELEASE"
+
+# Keep the newest ${releases_kept} releases (by last activation); never delete the live one.
+cd "$ROOT/releases"
+{ ls -1t | grep -vx "$RELEASE" || true; } | tail -n +${releases_kept} | xargs -r rm -rf --
+echo "kept: $(ls -1t | tr '\n' ' ')"

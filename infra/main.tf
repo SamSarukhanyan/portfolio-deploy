@@ -63,6 +63,7 @@ resource "aws_instance" "portfolio" {
   subnet_id              = data.aws_subnet.default_a.id
   vpc_security_group_ids = [aws_security_group.web.id]
   key_name               = aws_key_pair.portfolio.key_name
+  iam_instance_profile   = aws_iam_instance_profile.server.name
 
   # "standard" = never pay for CPU bursts beyond the t3 baseline.
   credit_specification {
@@ -76,6 +77,10 @@ resource "aws_instance" "portfolio" {
   root_block_device {
     volume_type = "gp3"
     volume_size = 10
+    tags = {
+      Name   = "portfolio-root"
+      Backup = "daily"
+    }
   }
 
   tags = {

@@ -16,3 +16,6 @@
 *.tfstate
 *.tfstate.*
 **/terraform.tfvars
+
+# Personal notes (local only)
+docs/cheatsheet-ru.md

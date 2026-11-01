@@ -6,7 +6,8 @@ server {
     listen [::]:80;
     server_name samsarukhanyan.com www.samsarukhanyan.com;
 
-    root /var/www/portfolio;
+    # Atomic deploys: current -> releases/<sha> (see infra/deploy.sh.tftpl).
+    root /var/www/portfolio/current;
     index index.html;
 
     gzip on;

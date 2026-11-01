@@ -1,36 +1,66 @@
-# Production static deploy for the Vite app in client/ → /var/www/portfolio
-# Requires a SECOND self-hosted runner with label: portfolio (do not reuse the fullstack runner).
-# Runner user must have passwordless sudo for: mkdir/rm/cp/chown/chmod/nginx.
+# Build on a GitHub-hosted runner, ship to the EC2 server without SSH or stored keys:
+#   OIDC → IAM role (main only) → tarball to S3 → SSM document portfolio-deploy
+#   → server unpacks into releases/<sha> and atomically re-points current → smoke test.
+# Rollback: Actions → Deploy portfolio → Run workflow → action=rollback, release=<sha>.
+# AWS side lives in infra/ (Terraform).
 
-name: Deploy portfolio (static)
+name: Deploy portfolio
 
 on:
   push:
     branches: [main]
+    paths:
+      - "client/**"
+      - ".github/workflows/deploy-portfolio.yml"
   workflow_dispatch:
+    inputs:
+      action:
+        description: "deploy = build this commit; rollback = switch back to an earlier release"
+        type: choice
+        options: [deploy, rollback]
+        default: deploy
+      release:
+        description: "Rollback only: commit SHA of a release still on the server (last 5 are kept)"
+        type: string
+        required: false
 
 concurrency:
   group: portfolio-deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
+  id-token: write # OIDC token for AWS
   contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  AWS_ROLE: arn:aws:iam::358871394134:role/portfolio-github-deploy
+  ARTIFACTS_BUCKET: samsarukhanyan-artifacts-358871394134
+  INSTANCE_ID: i-0d3df0c9c0dbc8e1c
+  SITE_URLS: https://samsarukhanyan.com/ https://www.samsarukhanyan.com/
 
 jobs:
   deploy:
-    runs-on: [self-hosted, portfolio]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ACTION: ${{ inputs.action || 'deploy' }}
+      RELEASE: ${{ inputs.action == 'rollback' && inputs.release || github.sha }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        if: env.ACTION == 'deploy'
+        uses: actions/checkout@v7
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        if: env.ACTION == 'deploy'
+        uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
           cache-dependency-path: client/package-lock.json
 
       - name: Install and build
+        if: env.ACTION == 'deploy'
         working-directory: client
         env:
           # No i18n API is deployed next to the static site; use bundled translations.
@@ -38,30 +68,57 @@ jobs:
         run: |
           npm ci
           npm run build
+          test -f dist/index.html
+          tar -czf "$RUNNER_TEMP/build.tgz" -C dist .
 
-      - name: Verify build output
-        run: test -f client/dist/index.html
+      - name: AWS credentials (OIDC, no stored keys)
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
 
-      - name: Publish to nginx web root
+      - name: Upload build to S3
+        if: env.ACTION == 'deploy'
         run: |
-          sudo mkdir -p /var/www/portfolio
-          sudo rm -rf /var/www/portfolio/*
-          sudo cp -a client/dist/. /var/www/portfolio/
-          sudo chown -R www-data:www-data /var/www/portfolio
-          sudo find /var/www/portfolio -type d -exec chmod 755 {} \;
-          sudo find /var/www/portfolio -type f -exec chmod 644 {} \;
+          key="builds/$RELEASE.tgz"
+          aws s3 cp --only-show-errors "$RUNNER_TEMP/build.tgz" "s3://$ARTIFACTS_BUCKET/$key"
+          url=$(aws s3 presign "s3://$ARTIFACTS_BUCKET/$key" --expires-in 900)
+          echo "::add-mask::$url"
+          echo "ARTIFACT_URL=$url" >> "$GITHUB_ENV"
 
-      - name: Reload nginx
-        run: sudo nginx -t && sudo systemctl reload nginx
+      - name: Switch server to release
+        env:
+          INPUT_RELEASE: ${{ inputs.release }}
+        run: |
+          if [ "$ACTION" = rollback ] && [ -z "$INPUT_RELEASE" ]; then
+            echo "::error::rollback needs a release SHA"; exit 1
+          fi
+          [[ "$RELEASE" =~ ^[0-9a-f]{7,40}$ ]] || { echo "::error::release must be a commit SHA"; exit 1; }
+          params=$(jq -nc --arg a "$ACTION" --arg r "$RELEASE" --arg u "${ARTIFACT_URL:-none}" \
+            '{Action: [$a], Release: [$r], ArtifactUrl: [$u]}')
+          id=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name portfolio-deploy \
+            --comment "$ACTION ${RELEASE:0:7} (run $GITHUB_RUN_ID)" \
+            --parameters "$params" \
+            --query Command.CommandId --output text)
+          aws ssm wait command-executed --command-id "$id" --instance-id "$INSTANCE_ID" || true
+          aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE_ID" \
+            --query '[Status, StandardOutputContent, StandardErrorContent]' --output text
+          status=$(aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE_ID" --query Status --output text)
+          [ "$status" = Success ] || { echo "::error::server switch $status"; exit 1; }
 
-      # Fails the run (and GitHub emails you) if the live site is not serving this build.
+      # Fails the run (and GitHub emails you) if the live site is not serving the release.
       - name: Smoke test live site
         run: |
-          expected=$(grep -o 'assets/index-[^"]*\.js' client/dist/index.html | head -1)
-          for url in https://samsarukhanyan.com/ https://www.samsarukhanyan.com/; do
+          expected=""
+          if [ "$ACTION" = deploy ]; then
+            expected=$(grep -o 'assets/index-[^"]*\.js' client/dist/index.html | head -1)
+          fi
+          for url in $SITE_URLS; do
             for i in 1 2 3 4 5; do
-              body=$(curl -fsS --max-time 10 "$url") && echo "$body" | grep -q "$expected" && { echo "OK $url"; continue 2; }
+              body=$(curl -fsS --max-time 10 "$url") && echo "$body" | grep -q "${expected:-<title>}" && { echo "OK $url"; continue 2; }
               sleep 3
             done
-            echo "::error::$url is down or not serving the new build ($expected)"; exit 1
+            echo "::error::$url is down or not serving the release ${expected}"; exit 1
           done

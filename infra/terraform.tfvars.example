@@ -1,2 +1,2 @@
-# Copy to terraform.tfvars (git-ignored). Your current IP: curl -s https://api.ipify.org
-ssh_allowed_cidrs = ["203.0.113.10/32"]
+# Optional, git-ignored as terraform.tfvars. Only for emergencies when SSM is unavailable:
+# ssh_allowed_cidrs = ["203.0.113.10/32"]   # your IP: curl -s https://api.ipify.org

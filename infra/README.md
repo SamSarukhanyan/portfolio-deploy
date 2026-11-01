@@ -1,7 +1,9 @@
 # Infrastructure (Terraform)
 
 Everything that runs samsarukhanyan.com in AWS (`eu-central-1`, account `358871394134`):
-EC2 `t3.micro` (Ubuntu 26.04), Elastic IP, security group, SSH key pair.
+EC2 `t3.micro` (Ubuntu 26.04), Elastic IP, security group (80/443 only), SSH key pair,
+keyless GitHub deploys (`deploy.tf`: OIDC role, artifacts bucket, SSM deploy document) and daily snapshots (`backup.tf`).
+How deploys work: `docs/ec2-setup.md`.
 The resources were first created by hand on 2026-10-31 and adopted with the `import` blocks in `imports.tf`.
 
 ## One-time setup on a new machine
@@ -16,8 +18,23 @@ The resources were first created by hand on 2026-10-31 and adopted with the `imp
    ```bash
    aws login --profile portfolio
    ```
-4. `cp terraform.tfvars.example terraform.tfvars` and put your current IP in it.
-5. `AWS_PROFILE=portfolio terraform init`
+4. `AWS_PROFILE=portfolio terraform init`
+
+## Shell on the server (port 22 is closed)
+
+Install the [Session Manager plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html), then add to `~/.ssh/config`:
+
+```
+Host portfolio
+    HostName i-0d3df0c9c0dbc8e1c
+    HostKeyAlias 3.75.98.233
+    User ubuntu
+    IdentityFile ~/.ssh/portfolio-key.pem
+    ProxyCommand sh -c "AWS_PROFILE=portfolio aws ssm start-session --region eu-central-1 --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p"
+```
+
+`ssh portfolio` / `scp file portfolio:` now work from any network — your home IP no longer matters.
+If SSM itself is broken, temporarily open port 22 via `ssh_allowed_cidrs` in `terraform.tfvars`.
 
 ## Everyday use
 
@@ -26,8 +43,6 @@ export AWS_PROFILE=portfolio
 terraform plan     # what would change — read it before applying
 terraform apply    # make it so
 ```
-
-**Home IP changed and SSH stopped working?** Update `terraform.tfvars` with `curl -s https://api.ipify.org` and `terraform apply`.
 
 ## State
 

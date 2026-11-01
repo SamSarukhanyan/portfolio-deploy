@@ -155,18 +155,17 @@ When backend translation storage is configured, remote bundle keys can override 
 
 ## Deployment Notes
 
-Deployment references are included in:
-
-- `docs/deploy-order.txt`
-- `docs/nginx-portfolio.conf.example`
+- `docs/ec2-setup.md` — how production runs, deploy/rollback, rebuilding from zero
+- `infra/` — Terraform for all AWS resources (EC2, Elastic IP, OIDC deploy role, SSM, S3, snapshots)
+- `docs/nginx-portfolio.conf.example` — Nginx site (SPA fallback, security headers, caching)
 - `docs/ga4-production-setup.md`
 
-The intended production model is:
+The production model:
 
-1. Build frontend static assets
-2. Serve via Nginx with SPA fallback
-3. Run optional i18n API as a separate Node service
-4. Secure domain with HTTPS (Certbot)
+1. GitHub Actions builds the frontend on GitHub-hosted runners
+2. Keyless deploy (GitHub OIDC → AWS) via S3 + SSM — no SSH, no stored credentials
+3. Atomic release switch on the server (`current` → `releases/<sha>`), one-click rollback
+4. Nginx with HTTPS (Certbot), infrastructure as code with Terraform
 
 ## Professional Context
 

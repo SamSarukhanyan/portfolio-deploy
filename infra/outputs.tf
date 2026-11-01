@@ -16,6 +16,7 @@ output "artifacts_bucket" {
   value = aws_s3_bucket.artifacts.bucket
 }
 
-output "ssh" {
-  value = "ssh -i ~/.ssh/portfolio-key.pem ubuntu@${aws_eip.portfolio.public_ip}"
+output "shell" {
+  description = "Port 22 is closed; both go through SSM (see infra/README.md)."
+  value       = "ssh portfolio   # or: aws ssm start-session --target ${aws_instance.portfolio.id}"
 }

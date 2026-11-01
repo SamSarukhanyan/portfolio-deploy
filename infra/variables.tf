@@ -9,8 +9,9 @@ variable "instance_type" {
 }
 
 variable "ssh_allowed_cidrs" {
-  description = "Who may SSH to the server, e.g. [\"5.77.128.6/32\"]. Your home IP changes — update and re-apply."
+  description = "Emergency only: open port 22 to these IPs, e.g. [\"203.0.113.10/32\"]. Normally empty — use `ssh portfolio` (tunnelled through SSM)."
   type        = list(string)
+  default     = []
 }
 
 variable "ssh_public_key" {

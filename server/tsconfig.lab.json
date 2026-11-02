@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "..",
+    "outDir": "dist-lab"
+  },
+  "include": ["src/lab/**/*.ts", "src/agent/**/*.ts", "../contracts/*.ts"],
+  "exclude": []
+}

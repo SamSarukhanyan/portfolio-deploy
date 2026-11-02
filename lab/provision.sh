@@ -51,14 +51,16 @@ class H(BaseHTTPRequestHandler):
         if self.path != "/api/health":
             return self.reply(404, {"ok": False})
         try:
-            with open("/var/lab/data/heartbeat", "w") as f:
+            # New file, then rename: needs fresh blocks even while the old heartbeat exists.
+            with open("/var/lab/data/heartbeat.new", "w") as f:
                 f.write(str(time.time()) + "\n" * 4096)
                 f.flush(); os.fsync(f.fileno())
+            os.replace("/var/lab/data/heartbeat.new", "/var/lab/data/heartbeat")
         except OSError as e:
             print(f"health: cannot write heartbeat: {e.strerror}", file=sys.stderr, flush=True)
             return self.reply(500, {"ok": False, "error": e.strerror})
         d = b"lab"
-        for _ in range(20000):   # a little real work, so CPU starvation shows up as latency
+        for _ in range(150000):  # ~0.1 s of real work, so CPU starvation shows up as seconds of latency
             d = hashlib.sha256(d).digest()
         self.reply(200, {"ok": True})
 

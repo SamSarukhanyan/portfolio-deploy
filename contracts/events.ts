@@ -3,6 +3,7 @@
 
 export type IncidentStatus =
   | "queued"        // waiting for the lab to be free
+  | "waking"        // lab server was asleep and is booting (~1 min)
   | "breaking"      // chaos script is running
   | "detecting"     // prober waits for the failure to show up
   | "investigating" // agent is reading the system

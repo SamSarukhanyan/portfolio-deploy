@@ -7,9 +7,14 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "seed": "tsx src/seed/run.ts"
+    "seed": "tsx src/seed/run.ts",
+    "lab:build": "tsc -p tsconfig.lab.json",
+    "lab:start": "node dist-lab/server/src/lab/main.js",
+    "lab:dev": "tsx watch src/lab/main.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ec2": "^3.1161.0",
+    "@aws-sdk/client-ssm": "^3.1161.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

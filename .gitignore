@@ -19,3 +19,7 @@
 
 # Personal notes (local only)
 docs/cheatsheet-ru.md
+
+# Incident Lab control plane
+**/dist-lab/
+**/lab-data/

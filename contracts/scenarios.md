@@ -26,8 +26,8 @@ Shared lab layout (owned by Chaos, provisioned by Infra):
 | `bad-config` | append a syntax error to the nginx site config, `systemctl restart nginx` (fails); logged in `changes.log` | connection refused; `nginx_config_test` shows the error | `restore_config nginx` | `nginx -t` ok, `/` = 200 |
 | `cpu-hog` | start `stress`-like busy loops as user `labapp` on all cores | `/api/health` slow (it does real CPU work); `get_metrics` CPU ≈ 100%; `list_processes` shows the hog | `kill_process <pid>` (kills the whole hog group) | no `lab-hog` process left, `/api/health` < 1 s |
 
-Detection: the prober checks `/` and `/api/health` every 5 s; an alert fires after 2 failed
-checks, or after `/api/health` is slower than a threshold twice (`cpu-hog`; the exact threshold
-is measured on the lab in stage 3).
+Detection: the prober checks `/`, the bundle and `/api/health`, plus CPU via `lab-get_metrics`; an alert fires after 2 bad
+checks in a row. A check is bad when a probe fails, `/api/health` is slower than 1.2 s, CPU is
+≥ 90% (`cpu-hog`: a starved 2-vCPU lab can still answer quickly), or `/var/lab` is ≥ 95% full.
 
 Surprise mode picks a scenario at random; its id is revealed only in `incident.revealed`.

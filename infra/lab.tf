@@ -53,8 +53,11 @@ resource "aws_instance" "lab" {
   # Public IPv4 only for outbound traffic; billed only while running. No key pair: shell is SSM only.
   associate_public_ip_address = true
 
+  # "unlimited": the cpu-hog scenario burns CPU on purpose. With "standard" the credits run out
+  # and the throttled lab stays slow after the fix. Surplus is billed only while it bursts
+  # (about a cent per incident); the lab sleeps the rest of the time.
   credit_specification {
-    cpu_credits = "standard"
+    cpu_credits = "unlimited"
   }
 
   metadata_options {

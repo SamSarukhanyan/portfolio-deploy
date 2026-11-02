@@ -57,8 +57,11 @@ export function createApp(getMetrics: () => Metrics | null): express.Express {
       "X-Accel-Buffering": "no", // nginx: stream, don't buffer
     });
     const send = (e: { seq: number; type: string }) => res.write(`id: ${e.seq}\nevent: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`);
-    const last = Number(req.get("Last-Event-ID"));
+    // Reconnect: resend what was missed. First visit: replay the incident in progress, if any.
+    const last = Number(req.get("Last-Event-ID") ?? req.query.after);
+    const running = labStatus().currentIncidentId;
     if (Number.isFinite(last) && last > 0) eventsAfter(last).forEach(send);
+    else if (running) eventsAfter(0).filter((e) => e.incidentId === running && e.type !== "metrics").forEach(send);
     const unsubscribe = subscribe(send);
     const ping = setInterval(() => res.write(": ping\n\n"), 15_000);
     req.on("close", () => {

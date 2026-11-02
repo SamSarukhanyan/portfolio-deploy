@@ -9,18 +9,19 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const pathname = usePathname();
-  const isArtPage = pathname.startsWith("/art");
+  const isSubPage = pathname.startsWith("/art") || pathname.startsWith("/lab");
 
   const links = useMemo(
     () =>
       [
-        { href: isArtPage ? "/#highlights" : "#highlights", labelKey: "nav.product" as const },
-        { href: isArtPage ? "/#stack" : "#stack", labelKey: "nav.stack" as const },
-        { href: isArtPage ? "/#architecture" : "#architecture", labelKey: "nav.architecture" as const },
-        { href: isArtPage ? "/#contact" : "#contact", labelKey: "nav.contact" as const },
+        { href: "/lab", labelKey: "nav.lab" as const },
+        { href: isSubPage ? "/#highlights" : "#highlights", labelKey: "nav.product" as const },
+        { href: isSubPage ? "/#stack" : "#stack", labelKey: "nav.stack" as const },
+        { href: isSubPage ? "/#architecture" : "#architecture", labelKey: "nav.architecture" as const },
+        { href: isSubPage ? "/#contact" : "#contact", labelKey: "nav.contact" as const },
         { href: "/art", labelKey: "nav.art" as const },
       ] as const,
-    [isArtPage],
+    [isSubPage],
   );
 
   useEffect(() => {
@@ -35,9 +36,9 @@ export function Navigation() {
       <div className={`shell ${styles.navShell} ${styles.inner}`}>
         <a
           className={styles.brand}
-          href={isArtPage ? "/" : "#top"}
+          href={isSubPage ? "/" : "#top"}
           onClick={(event) => {
-            onSpaLinkClick(event, isArtPage ? "/" : "#top");
+            onSpaLinkClick(event, isSubPage ? "/" : "#top");
             setOpen(false);
           }}
         >
@@ -93,7 +94,7 @@ export function Navigation() {
         </div>
 
         <div className={styles.end}>
-          {!isArtPage ? (
+          {!isSubPage ? (
             <a
               className={styles.mobileArt}
               href="/art"
@@ -106,12 +107,12 @@ export function Navigation() {
           ) : null}
           <a
             className={styles.quickCta}
-            href={isArtPage ? "/" : "/art"}
+            href={isSubPage ? "/" : "/art"}
             onClick={(event) => {
-              onSpaLinkClick(event, isArtPage ? "/" : "/art");
+              onSpaLinkClick(event, isSubPage ? "/" : "/art");
             }}
           >
-            {isArtPage ? t("art.backHome") : t("hero.ctaArt")}
+            {isSubPage ? t("art.backHome") : t("hero.ctaArt")}
           </a>
           <button
             type="button"

@@ -17,6 +17,7 @@ const StackSection = lazy(() =>
 const ArchitectureSection = lazy(() =>
   import("./components/ArchitectureSection").then((module) => ({ default: module.ArchitectureSection })),
 );
+const LabPage = lazy(() => import("./lab/LabPage").then((module) => ({ default: module.LabPage })));
 const ContactSection = lazy(() =>
   import("./components/ContactSection").then((module) => ({ default: module.ContactSection })),
 );
@@ -24,6 +25,7 @@ const ContactSection = lazy(() =>
 export default function App() {
   const pathname = usePathname();
   const isArtPage = pathname.startsWith("/art");
+  const isLabPage = pathname.startsWith("/lab");
 
   return (
     <div className={`app-shell${isArtPage ? " app-shell--art" : ""}`}>
@@ -32,6 +34,10 @@ export default function App() {
       <main className="app-main">
         {isArtPage ? (
           <ArtPage />
+        ) : isLabPage ? (
+          <Suspense fallback={<div className="shell section" aria-hidden />}>
+            <LabPage />
+          </Suspense>
         ) : (
           <>
             <Hero />

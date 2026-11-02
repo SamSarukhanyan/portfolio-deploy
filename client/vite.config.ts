@@ -20,7 +20,13 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    // contracts/ lives next to client/ and is shared with the Control Plane.
+    fs: { allow: [".."] },
     proxy: {
+      // Incident Lab Control Plane (server/src/lab); the rest of /api is the i18n API.
+      "^/api/(lab|scenarios|incidents|events)": {
+        target: "http://127.0.0.1:3100",
+      },
       "/api": {
         target: "http://127.0.0.1:4000",
         changeOrigin: true,

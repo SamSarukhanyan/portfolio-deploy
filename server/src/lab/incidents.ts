@@ -6,6 +6,8 @@ import { LIMITS, type CreateIncidentResponse, type RateLimitedResponse } from ".
 import type { IncidentStatus, LabEvent, Usage } from "../../../contracts/events.js";
 import { SCENARIOS } from "../../../contracts/scenarios.js";
 import { fakeAgent } from "../agent/fake.js";
+import { llmAgent } from "../agent/llm.js";
+import { claudeProvider, ollamaProvider } from "../agent/providers.js";
 import type { Agent } from "../agent/types.js";
 import { labState, runDoc, sleepLab, wakeLab } from "./aws.js";
 import { emit, subscribe } from "./bus.js";
@@ -38,11 +40,15 @@ let counted = { day: today(), n: countSince(today()) };
 const acceptedToday = () => (counted.day === today() ? counted.n : (counted = { day: today(), n: 0 }).n);
 export const remainingToday = () => Math.max(0, LIMITS.dailyLiveIncidents - acceptedToday());
 
-export const agentOnline = () => config.agent === "fake";
+export const agentOnline = () =>
+  config.agent === "fake" || config.agent === "ollama" || (config.agent === "claude" && !!process.env.ANTHROPIC_API_KEY);
+
+const provider = config.agent === "claude" ? claudeProvider() : config.agent === "ollama" ? ollamaProvider() : null;
 
 function agentFor(job: Job): Agent {
+  if (provider) return llmAgent(provider);
   if (config.agent === "fake") return fakeAgent(job.scenarioId);
-  throw new Error(`agent "${config.agent}" is not available yet`);
+  throw new Error(`unknown agent "${config.agent}"`);
 }
 
 function setStatus(job: Job, s: IncidentStatus): void {

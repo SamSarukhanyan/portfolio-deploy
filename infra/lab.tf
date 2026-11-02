@@ -47,6 +47,9 @@ resource "aws_instance" "lab" {
   vpc_security_group_ids = [aws_security_group.lab.id]
   iam_instance_profile   = aws_iam_instance_profile.lab.name
 
+  # Fixed, so a rebuilt lab keeps the proxy_pass target in docs/nginx-lab.conf.example.
+  private_ip = "172.31.24.229"
+
   # Public IPv4 only for outbound traffic; billed only while running. No key pair: shell is SSM only.
   associate_public_ip_address = true
 
@@ -81,7 +84,9 @@ resource "aws_instance" "lab" {
   }
 
   lifecycle {
-    ignore_changes = [ami, user_data]
+    # A stopped instance has no public IP, so AWS reports false; without this every plan
+    # while the lab sleeps would replace it.
+    ignore_changes = [ami, user_data, associate_public_ip_address]
   }
 }
 

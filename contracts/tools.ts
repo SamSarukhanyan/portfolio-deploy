@@ -1,4 +1,6 @@
 // The agent's allowlist. The model sees name/description/params; nothing else can run.
+// IAM lets the Control Plane run every lab-* document, including lab-scenario and lab-provision;
+// the agent loop must only ever map these tool names to lab-<name>, never to those two.
 // runner "local": executed by the Control Plane itself. runner "ssm": the SSM document
 // `lab-<name>` on the lab instance, whose parameters re-validate the same patterns.
 
@@ -36,7 +38,7 @@ export const TOOLS: readonly ToolSpec[] = [
     description: "Last lines of a service's journal.",
     explain: (a) => `Reading the ${a.service === "nginx" ? "web server" : "application"}'s diary.` },
   { name: "disk_usage", kind: "read", runner: "ssm", params: {},
-    description: "df for / and the 10 largest files under /var/lab.",
+    description: "df for / and /var/lab, and the 10 largest files under /var/lab.",
     explain: () => "Checking whether the disk is full." },
   { name: "list_processes", kind: "read", runner: "ssm", params: {},
     description: "Top 10 processes by CPU: pid, user, cpu%, mem%, command.",
@@ -64,12 +66,12 @@ export const TOOLS: readonly ToolSpec[] = [
     description: "Delete one file under /var/lab.",
     explain: () => "Removing the junk file that filled the disk." },
   { name: "kill_process", kind: "action", runner: "ssm",
-    params: { pid: { type: "integer", minimum: 2, maximum: 4194304 } },
-    description: "Kill a process owned by user labapp (others are refused).",
+    params: { pid: { type: "integer", minimum: 2, maximum: 9999999 } },
+    description: "Kill a process owned by user labapp (others are refused); kills its whole process group when the group is labapp's alone.",
     explain: () => "Stopping the runaway program." },
   { name: "restore_config", kind: "action", runner: "ssm",
     params: { name: { type: "string", enum: ["nginx"] } },
-    description: "Restore the last known-good config and reload the service.",
+    description: "Restore the last known-good config and restart the service.",
     explain: () => "Putting back the last working settings." },
   { name: "resolve", kind: "action", runner: "local",
     params: { summary: { type: "string", pattern: "^[\\s\\S]{10,500}$" } },

@@ -1,31 +1,33 @@
 # Chaos scenarios
 
-Each scenario lives in `lab/scenarios/<id>/` with three idempotent scripts run on the lab
-instance through SSM:
+All scenarios live in `lab/scenarios.sh` as `break_<id>` / `oracle_<id>` functions, run on the
+lab through the `lab-scenario` SSM document (`Scenario`, `Step` = `break` | `oracle`):
 
-| Script | Contract |
+| Step | Contract |
 |---|---|
-| `break.sh` | causes the failure; exit 0 when it is in place |
-| `oracle.sh` | exit 0 only when the site is healthy **and** this scenario's cause is gone; the agent never sees it |
-| `reset.sh` | brings the lab back to the golden state no matter what the agent did; exit 0 when done |
+| `break` | causes the failure; exit 0 when it is in place |
+| `oracle` | exit 0 only when the site is healthy **and** this scenario's cause is gone; the agent never sees it |
+| reset | one for all: the `lab-provision` document (`lab/provision.sh`) rebuilds the golden state no matter what the agent did |
 
 Shared lab layout (owned by Chaos, provisioned by Infra):
 
-- site: nginx serves `/var/www/lab/current` → `releases/<sha>`; the app (`app.service`,
+- site: nginx serves `/var/www/lab/current` → `releases/<sha>`; the app (`lab-app.service`,
   user `labapp`) answers `/api/health` on 127.0.0.1:3000 behind nginx.
-- `/var/lab/` is the only writable junk area; known-good nginx config is kept in
+- `/var/lab/` is its own 256 MB filesystem (loop image, no root reserve), the only writable
+  junk area, so `disk-full` can never fill the system disk; known-good nginx config is kept in
   `/etc/nginx/lab-known-good/`.
 - `/var/lab/changes.log` gets one line per deploy or config edit (read by `recent_changes`).
 
 | id | break | what the prober / agent sees | expected fix | oracle checks |
 |---|---|---|---|---|
 | `nginx-stopped` | `systemctl stop nginx` | connection refused; `service_status nginx` = inactive | `restart_service nginx` | nginx active, `/` = 200 |
-| `disk-full` | `fallocate` a file in `/var/lab/cache/` until disk ≥ 97%; app starts failing writes | 500 on `/api/health`; "No space left on device" in app logs; `disk_usage` shows the file | `delete_file <that file>` (+ `restart_service app` if still failing) | disk < 90%, `/api/health` = 200 |
-| `bad-release` | deploy a release whose `index.html` loads a missing JS bundle; logged in `changes.log` | `/` = 200 but health check of the bundle URL = 404; `recent_changes` shows the deploy | `rollback <previous sha>` | current = previous release, bundle = 200 |
+| `disk-full` | write `/var/lab/cache/tmp-export.bin` until `/var/lab` is full; app starts failing writes | 500 on `/api/health`; "No space left on device" in app logs; `disk_usage` shows the file | `delete_file <that file>` (+ `restart_service app` if still failing) | `/var/lab` < 90%, `/api/health` = 200 |
+| `bad-release` | deploy a release whose `index.html` loads a missing JS bundle; logged in `changes.log` | `/` = 200 but health check of the bundle URL = 404; `recent_changes` shows the deploy | `rollback <previous sha>` | current is not the bad release, bundle = 200 |
 | `bad-config` | append a syntax error to the nginx site config, `systemctl restart nginx` (fails); logged in `changes.log` | connection refused; `nginx_config_test` shows the error | `restore_config nginx` | `nginx -t` ok, `/` = 200 |
-| `cpu-hog` | start `stress`-like busy loops as user `labapp` on all cores | `/` slow (> 2 s); `get_metrics` CPU ≈ 100%; `list_processes` shows the hog | `kill_process <pid>` for each hog | no labapp process > 50% CPU, `/` < 500 ms |
+| `cpu-hog` | start `stress`-like busy loops as user `labapp` on all cores | `/api/health` slow (it does real CPU work); `get_metrics` CPU ≈ 100%; `list_processes` shows the hog | `kill_process <pid>` (kills the whole hog group) | no `lab-hog` process left, `/api/health` < 1 s |
 
 Detection: the prober checks `/` and `/api/health` every 5 s; an alert fires after 2 failed
-checks (or latency > 2 s twice for `cpu-hog`).
+checks, or after `/api/health` is slower than a threshold twice (`cpu-hog`; the exact threshold
+is measured on the lab in stage 3).
 
 Surprise mode picks a scenario at random; its id is revealed only in `incident.revealed`.

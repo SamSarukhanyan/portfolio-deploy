@@ -16,6 +16,15 @@ output "artifacts_bucket" {
   value = aws_s3_bucket.artifacts.bucket
 }
 
+output "lab_instance_id" {
+  value = aws_instance.lab.id
+}
+
+output "lab_private_ip" {
+  description = "proxy_pass target in the lab.samsarukhanyan.com nginx site on the portfolio server."
+  value       = aws_instance.lab.private_ip
+}
+
 output "shell" {
   description = "Port 22 is closed; both go through SSM (see infra/README.md)."
   value       = "ssh portfolio   # or: aws ssm start-session --target ${aws_instance.portfolio.id}"

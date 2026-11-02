@@ -1,0 +1,31 @@
+# /etc/nginx/sites-available/lab on the portfolio server.
+# lab.samsarukhanyan.com -> Incident Lab sandbox over the private network.
+# Replace LAB_PRIVATE_IP with `terraform output -raw lab_private_ip`, then:
+#   sudo ln -sf /etc/nginx/sites-available/lab /etc/nginx/sites-enabled/lab
+#   sudo nginx -t && sudo systemctl reload nginx
+#   sudo certbot --nginx -d lab.samsarukhanyan.com
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name lab.samsarukhanyan.com;
+
+    location / {
+        proxy_pass http://LAB_PRIVATE_IP;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+
+        # Sandbox asleep or broken on purpose: say so instead of a bare 502.
+        proxy_intercept_errors off;
+        error_page 502 503 504 = @lab_down;
+    }
+
+    location @lab_down {
+        default_type text/html;
+        add_header Cache-Control "no-store" always;
+        return 503 '<!doctype html><meta charset="utf-8"><title>Incident Lab</title><h1>The lab server is down or asleep</h1><p>That may be the incident in progress. Watch it live on <a href="https://samsarukhanyan.com">samsarukhanyan.com</a>.</p>';
+    }
+}

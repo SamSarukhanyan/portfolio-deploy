@@ -16,6 +16,10 @@ git push (client/**) ─► GitHub Actions (ubuntu-latest): npm ci, vite build
 - Uptime: UptimeRobot (email + iPhone push). Costs: Budgets `monthly-15usd`.
 - Port 22 is closed. Shell: `ssh portfolio` (SSH tunnelled through SSM, see `infra/README.md`).
 - Backups: daily EBS snapshots at 02:00 UTC, last 7 kept (EC2 → Snapshots).
+- Incident Lab sandbox (`infra/lab.tf`, `docs/ai-oncall/PLAN.md`): second instance `portfolio-lab`,
+  no public inbound, reached as `lab.samsarukhanyan.com` through the portfolio nginx
+  (`docs/nginx-lab.conf.example`, DNS A `lab` → Elastic IP). Normally stopped; wake it with
+  `aws ec2 start-instances --instance-ids $(terraform -chdir=infra output -raw lab_instance_id)`.
 
 ## Everyday
 

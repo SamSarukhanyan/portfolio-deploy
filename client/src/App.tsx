@@ -4,6 +4,7 @@ import { Hero } from "./components/Hero";
 import { Footer } from "./components/Footer";
 import { ArtPage } from "./components/ArtPage";
 import { usePathname } from "./utils/spaRouter";
+import { features } from "./config/site";
 
 const HighlightsSection = lazy(() =>
   import("./components/HighlightsSection").then((module) => ({ default: module.HighlightsSection })),
@@ -25,7 +26,7 @@ const ContactSection = lazy(() =>
 export default function App() {
   const pathname = usePathname();
   const isArtPage = pathname.startsWith("/art");
-  const isLabPage = pathname.startsWith("/lab");
+  const isLabPage = features.incidentLab && pathname.startsWith("/lab");
 
   return (
     <div className={`app-shell${isArtPage ? " app-shell--art" : ""}`}>

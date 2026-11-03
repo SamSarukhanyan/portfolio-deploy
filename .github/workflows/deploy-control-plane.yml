@@ -5,17 +5,11 @@
 
 name: Deploy control plane
 
+# Paused with Incident Lab (client/src/config/site.ts features.incidentLab): manual runs only,
+# because the install step re-enables the service. To resume, restore the push trigger:
+#   push: { branches: [main], paths: [server/src/lab/**, server/src/agent/**, server/package.json,
+#           server/package-lock.json, server/tsconfig*.json, contracts/**, .github/workflows/deploy-control-plane.yml] }
 on:
-  push:
-    branches: [main]
-    paths:
-      - "server/src/lab/**"
-      - "server/src/agent/**"
-      - "server/package.json"
-      - "server/package-lock.json"
-      - "server/tsconfig*.json"
-      - "contracts/**"
-      - ".github/workflows/deploy-control-plane.yml"
   workflow_dispatch:
 
 concurrency:

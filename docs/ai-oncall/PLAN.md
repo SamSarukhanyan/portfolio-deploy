@@ -3,7 +3,36 @@
 Рабочее название: **Incident Lab**. Публичный сайт, где посетитель ломает настоящий сервер,
 а AI-дежурный инженер вживую расследует, чинит и пишет постмортем.
 
-Статус: **черновик, ждёт одобрения**. Код пока не пишем.
+Статус: **построено и работало на продакшене (ноябрь 2026), сейчас на паузе.** Код остаётся в репозитории
+для будущих проектов.
+
+## Пауза и как включить обратно
+
+Что сделано при паузе (3 ноября 2026):
+- `client/src/config/site.ts`: `features.incidentLab = false` — страница `/lab` и пункт меню скрыты;
+- `.github/workflows/deploy-control-plane.yml` — только ручной запуск (push больше не деплоит);
+- на сервере: служба `incident-lab` остановлена и выключена (`systemctl disable --now`);
+- `lab.samsarukhanyan.com` отвечает редиректом 302 на главную (строка с `# incident-lab paused`
+  в `/etc/nginx/sites-available/lab`, копия до паузы — `lab.before-pause`);
+- песочница `portfolio-lab` остановлена.
+
+Расходы на паузе: Claude API — $0 (никто его не вызывает); песочница — только её диск, ~$0.8/мес из кредитов AWS.
+Полностью до $0: удалить песочницу (`terraform destroy -target=aws_instance.lab`), она пересоздаётся из кода.
+
+Включить обратно:
+1. `features.incidentLab = true` в `client/src/config/site.ts`, push — вернутся `/lab` и пункт меню.
+2. Вернуть push-триггер в `deploy-control-plane.yml` (он есть в комментарии) и запустить workflow вручную:
+   он поставит службу и снова включит её.
+3. На сервере вернуть прокси песочницы:
+   `sudo cp /etc/nginx/sites-available/lab.before-pause /etc/nginx/sites-available/lab && sudo nginx -t && sudo systemctl reload nginx`
+4. Если API-ключ Claude отключали в Console: новый ключ →
+   `aws ssm put-parameter --name /incident-lab/anthropic-api-key --type SecureString --overwrite --value ...`,
+   затем `sudo systemctl restart incident-lab`.
+5. Проверка: `curl https://samsarukhanyan.com/api/lab/status` → `agentOnline: true`, затем один инцидент на `/lab`.
+
+Что можно переиспользовать в других идеях: `server/src/agent/` (агентный цикл, провайдеры Claude/Ollama,
+evals), `server/src/lab/` (SSE, очередь, лимиты, toolbox с allowlist), `infra/lab*.tf` и `lab/` (песочница и
+SSM-инструменты), `client/src/lab/` (живая консоль, повторы, i18n EN/RU/HY).
 
 ---
 

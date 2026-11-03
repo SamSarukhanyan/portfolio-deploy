@@ -1,6 +1,6 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./Navigation.module.css";
-import { site } from "../config/site";
+import { features, site } from "../config/site";
 import { useI18n } from "../i18n/I18nProvider";
 import { onSpaLinkClick, usePathname } from "../utils/spaRouter";
 
@@ -14,7 +14,7 @@ export function Navigation() {
   const links = useMemo(
     () =>
       [
-        { href: "/lab", labelKey: "nav.lab" as const },
+        ...(features.incidentLab ? [{ href: "/lab", labelKey: "nav.lab" as const }] : []),
         { href: isSubPage ? "/#highlights" : "#highlights", labelKey: "nav.product" as const },
         { href: isSubPage ? "/#stack" : "#stack", labelKey: "nav.stack" as const },
         { href: isSubPage ? "/#architecture" : "#architecture", labelKey: "nav.architecture" as const },

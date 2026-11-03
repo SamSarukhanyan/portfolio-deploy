@@ -632,3 +632,61 @@
     animation: none;
   }
 }
+
+/* ---------- language switch ---------- */
+
+.introTop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.introTop .eyebrow {
+  margin: 0;
+}
+
+.langs {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-neutral);
+  border-radius: 999px;
+  background: rgba(23, 23, 26, 0.9);
+}
+
+.langs button {
+  min-width: 2.6rem;
+  padding: 0.3rem 0.65rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: 600 0.78rem/1 var(--font-sans);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background var(--t-fast) ease,
+    color var(--t-fast) ease;
+}
+
+.langs button:hover {
+  color: var(--text-primary);
+}
+
+.langs button:focus-visible {
+  outline: 2px solid var(--accent-main);
+  outline-offset: 2px;
+}
+
+.langs .langOn {
+  background: var(--accent-main);
+  color: #141414;
+}
+
+.historyNote {
+  margin: -0.4rem 0 0.8rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}

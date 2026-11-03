@@ -2,7 +2,7 @@
 // Also enforces the limits from contracts/api.ts and puts the lab to sleep when idle.
 
 import { randomUUID } from "node:crypto";
-import { LIMITS, type CreateIncidentResponse, type RateLimitedResponse } from "../../../contracts/api.js";
+import { LIMITS, type CreateIncidentResponse, type Lang, type RateLimitedResponse } from "../../../contracts/api.js";
 import type { IncidentStatus, LabEvent, Usage } from "../../../contracts/events.js";
 import { SCENARIOS } from "../../../contracts/scenarios.js";
 import { fakeAgent } from "../agent/fake.js";
@@ -20,6 +20,7 @@ interface Job {
   id: string;
   scenarioId: string;
   mode: "chosen" | "surprise";
+  lang: Lang;
   createdAt: string;
 }
 
@@ -56,7 +57,7 @@ function setStatus(job: Job, s: IncidentStatus): void {
   emit({ incidentId: job.id, type: "incident.status", data: { status: s } });
 }
 
-export function createIncident(scenario: string, ip: string): CreateIncidentResponse | RateLimitedResponse | { error: string } {
+export function createIncident(scenario: string, ip: string, lang: Lang = "en"): CreateIncidentResponse | RateLimitedResponse | { error: string } {
   const surprise = scenario === "surprise";
   if (!surprise && !SCENARIOS.some((s) => s.id === scenario)) return { error: "unknown_scenario" };
   if (!agentOnline()) return { error: "agent_offline" };
@@ -70,6 +71,7 @@ export function createIncident(scenario: string, ip: string): CreateIncidentResp
     id: new Date().toISOString().slice(0, 10) + "-" + randomUUID().slice(0, 8),
     scenarioId: surprise ? SCENARIOS[Math.floor(Math.random() * SCENARIOS.length)]!.id : scenario,
     mode: surprise ? "surprise" : "chosen",
+    lang,
     createdAt: new Date().toISOString(),
   };
   lastByIp.set(ip, Date.now());
@@ -155,7 +157,7 @@ async function runIncident(job: Job): Promise<void> {
     const agent = agentFor(job);
     try {
       const r = await Promise.race([
-        agent({ alert, tools, think: (text) => emit({ incidentId: job.id, type: "agent.thought", data: { text } }), signal: timeout }),
+        agent({ alert, lang: job.lang, tools, think: (text) => emit({ incidentId: job.id, type: "agent.thought", data: { text } }), signal: timeout }),
         new Promise<never>((_, reject) => timeout.addEventListener("abort", () => reject(new Error(`time limit (${LIMITS.incidentTimeoutSec}s) reached`)))),
       ]);
       outcome = { ...outcome, provider: r.provider, model: r.model, usage: r.usage };

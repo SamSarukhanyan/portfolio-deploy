@@ -148,20 +148,36 @@ cat > /var/www/lab-down/index.html <<'HTML'
   @media (prefers-reduced-motion:reduce) { .orb::after { animation:none } }
 </style></head>
 <body><main>
-  <div class="top"><span class="logo">IL</span>Incident Lab sandbox</div>
+  <div class="top"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span></div>
   <section class="card" aria-live="polite"><div class="orb" aria-hidden="true"></div>
-    <div><div class="state">Down</div><div class="detail" id="detail">The lab server does not answer. Either an incident is in progress or the server is asleep.</div></div></section>
-  <p class="foot">An AI on-call engineer repairs this server. Watch it live on <a href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a>.</p>
+    <div><div class="state" id="state">Down</div><div class="detail" id="detail">The lab server does not answer. Either an incident is in progress or the server is asleep.</div></div></section>
+  <p class="foot"><span id="foot">An AI on-call engineer repairs this server. Watch it live on</span> <a id="watch" href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a></p>
 </main>
 <script>
 (() => {
+  const T = {
+    en: { brand: "Incident Lab sandbox", down: "Down", first: "The lab server does not answer. Either an incident is in progress or the server is asleep.",
+          tick: "The lab server does not answer. Down for at least {n} s. Checking every 2 s.", foot: "An AI on-call engineer repairs this server. Watch it live on" },
+    ru: { brand: "Песочница Incident Lab", down: "Не работает", first: "Сервер лаборатории не отвечает: идёт инцидент или сервер спит.",
+          tick: "Сервер лаборатории не отвечает уже минимум {n} с. Проверяем каждые 2 с.", foot: "Этот сервер чинит дежурный AI-инженер. Смотрите в прямом эфире на" },
+    hy: { brand: "Incident Lab ավազարկղ", down: "Չի աշխատում", first: "Լաբորատոր սերվերը չի պատասխանում․ կամ ընթանում է միջադեպ, կամ սերվերը քնած է։",
+          tick: "Լաբորատոր սերվերը չի պատասխանում առնվազն {n} վ։ Ստուգում ենք ամեն 2 վայրկյանը մեկ։", foot: "Այս սերվերը վերանորոգում է հերթապահ AI ինժեները։ Դիտեք ուղիղ եթերում՝" },
+  };
+  const q = new URLSearchParams(location.search).get("lang");
+  const nav = (navigator.language || "en").toLowerCase();
+  const lang = T[q] ? q : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  const L = T[lang], $ = (id) => document.getElementById(id);
+  document.documentElement.lang = lang;
+  $("brand").textContent = L.brand; $("state").textContent = L.down; $("detail").textContent = L.first; $("foot").textContent = L.foot;
+  $("watch").href = "https://samsarukhanyan.com/lab?lang=" + lang;
+  document.title = "🔴 " + L.brand;
   const started = Date.now();
   setInterval(async () => {
     const secs = Math.round((Date.now() - started) / 1000);
-    document.getElementById("detail").textContent = "The lab server does not answer. Down for at least " + secs + " s. Checking every 2 s.";
+    $("detail").textContent = L.tick.replace("{n}", secs);
     try {
       const r = await fetch("/", { cache: "no-store" });
-      if (r.ok && !(await r.text()).includes('name="lab-down"')) location.replace("/?recovered=" + secs);
+      if (r.ok && !(await r.text()).includes('name="lab-down"')) location.replace("/?recovered=" + secs + "&lang=" + lang);
     } catch {}
   }, 2000);
 })();

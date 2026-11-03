@@ -1,7 +1,7 @@
 // HTTP API from contracts/api.ts. Runs behind nginx, which forwards the client IP.
 
 import express from "express";
-import type { LabStatusResponse } from "../../../contracts/api.js";
+import { LANGS, type Lang, type LabStatusResponse } from "../../../contracts/api.js";
 import type { Metrics } from "../../../contracts/events.js";
 import { SCENARIOS } from "../../../contracts/scenarios.js";
 import { eventsAfter, subscribe } from "./bus.js";
@@ -28,7 +28,8 @@ export function createApp(getMetrics: () => Metrics | null): express.Express {
 
   app.post("/api/incidents", (req, res) => {
     const scenario = typeof req.body?.scenario === "string" ? req.body.scenario : "";
-    const r = createIncident(scenario, req.ip ?? "unknown");
+    const lang: Lang = LANGS.includes(req.body?.lang) ? req.body.lang : "en";
+    const r = createIncident(scenario, req.ip ?? "unknown", lang);
     if ("incidentId" in r) return void res.status(202).json(r);
     if ("retryAfterSec" in r) return void res.status(429).set("Retry-After", String(r.retryAfterSec)).json(r);
     if (r.error === "agent_offline") return void res.status(503).json(r);

@@ -1,6 +1,7 @@
 // The real on-call agent: a model drives the toolbox until it resolves, gives up, or runs out
 // of steps/time. Works with any ModelProvider (contracts/provider.ts).
 
+import type { Lang } from "../../../contracts/api.js";
 import type { Usage } from "../../../contracts/events.js";
 import type { ModelProvider, SessionInput, ToolResult } from "../../../contracts/provider.js";
 import { TOOLS } from "../../../contracts/tools.js";
@@ -22,6 +23,13 @@ How to work:
 - Call resolve only after check_health reports HEALTHY. The summary says the root cause and the fix in one or two sentences.
 - If a tool is refused or fails, read the message and adjust; do not retry the same call unchanged.`;
 
+// Per incident, so it goes into the first message, never the cached system prompt.
+const LANGUAGE_NOTE: Record<Lang, string> = {
+  en: "",
+  ru: "\nThe viewer reads Russian: write every plain-language note and the resolve summary in Russian. Keep tool names, commands, file paths, service names, release ids and log text exactly as they are.",
+  hy: "\nThe viewer reads Armenian: write every plain-language note and the resolve summary in Armenian. Keep tool names, commands, file paths, service names, release ids and log text exactly as they are.",
+};
+
 const add = (a: Usage, b: Usage): Usage => ({
   inputTokens: a.inputTokens + b.inputTokens,
   outputTokens: a.outputTokens + b.outputTokens,
@@ -29,11 +37,11 @@ const add = (a: Usage, b: Usage): Usage => ({
 });
 
 export function llmAgent(provider: ModelProvider): Agent {
-  return async ({ alert, tools, think, signal }) => {
+  return async ({ alert, lang, tools, think, signal }) => {
     let usage: Usage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0 };
     const session = provider.start(SYSTEM_PROMPT, TOOLS);
     // The time goes here, not in the system prompt, so the cached prefix stays identical.
-    let input: SessionInput = { text: `ALERT from monitoring at ${new Date().toISOString()}: ${alert}\nInvestigate and fix it.` };
+    let input: SessionInput = { text: `ALERT from monitoring at ${new Date().toISOString()}: ${alert}\nInvestigate and fix it.${LANGUAGE_NOTE[lang]}` };
     let nudges = 0;
     let healthy = false;     // last check_health said HEALTHY
     let lastThought = "";

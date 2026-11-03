@@ -6,7 +6,7 @@ import type { Agent } from "./types.js";
 const usage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0 };
 
 export function fakeAgent(scenarioId: string): Agent {
-  return async ({ alert, tools, think }) => {
+  return async ({ alert, tools, think }) => { // scripted, English only
     think(`Alert: ${alert}. First, see it the way a visitor does.`);
     await tools.call("check_health", {});
 

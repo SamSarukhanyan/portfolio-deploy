@@ -85,28 +85,9 @@ function pick(d: { durationMs: number; steps: number; provider: string; model: s
   return { durationMs: d.durationMs, steps: d.steps, provider: d.provider, model: d.model, usage: d.usage };
 }
 
-/** Stages shown in the stepper, in order. */
-export const STAGES: { label: string; statuses: IncidentStatus[] }[] = [
-  { label: "Wake", statuses: ["queued", "waking"] },
-  { label: "Break", statuses: ["breaking"] },
-  { label: "Detect", statuses: ["detecting"] },
-  { label: "Investigate", statuses: ["investigating"] },
-  { label: "Fix", statuses: ["fixing"] },
-  { label: "Verify", statuses: ["verifying"] },
-  { label: "Done", statuses: ["resolved", "failed", "resetting"] },
+/** Stepper stages in order; their labels live in i18n.ts (stages). */
+const STAGE_STATUSES: IncidentStatus[][] = [
+  ["queued", "waking"], ["breaking"], ["detecting"], ["investigating"], ["fixing"], ["verifying"], ["resolved", "failed", "resetting"],
 ];
-
-export const stageIndex = (s: IncidentStatus) => STAGES.findIndex((st) => st.statuses.includes(s));
-
-export const STATUS_TEXT: Record<IncidentStatus, string> = {
-  queued: "Waiting in line…",
-  waking: "The lab server is asleep. Waking it up (about a minute)…",
-  breaking: "Breaking the server…",
-  detecting: "Monitoring notices something is wrong…",
-  investigating: "The AI on-call engineer is investigating…",
-  fixing: "Applying a fix…",
-  verifying: "Independent check: is it really fixed?",
-  resolved: "Fixed.",
-  failed: "Not fixed this time.",
-  resetting: "Resetting the lab for the next visitor…",
-};
+export const STAGE_COUNT = STAGE_STATUSES.length;
+export const stageIndex = (s: IncidentStatus) => STAGE_STATUSES.findIndex((st) => st.includes(s));

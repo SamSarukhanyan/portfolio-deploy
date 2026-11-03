@@ -15,7 +15,7 @@ const getJson = async <T,>(url: string): Promise<T> => {
   return res.json() as Promise<T>;
 };
 
-export type BreakResult = { ok: true } | { ok: false; message: string };
+export type BreakResult = { ok: true } | { ok: false; code: string; mins: number };
 
 export function useLab() {
   const [online, setOnline] = useState<boolean | null>(null); // null = still connecting
@@ -81,23 +81,16 @@ export function useLab() {
     };
   }, [refresh]);
 
-  const breakIt = useCallback(async (scenario: string): Promise<BreakResult> => {
+  const breakIt = useCallback(async (scenario: string, lang: string): Promise<BreakResult> => {
     const res = await fetch("/api/incidents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ scenario }),
+      body: JSON.stringify({ scenario, lang }),
     }).catch(() => null);
-    if (!res) return { ok: false, message: "The lab is unreachable right now." };
+    if (!res) return { ok: false, code: "unreachable", mins: 0 };
     if (res.ok) return { ok: true };
     const body = (await res.json().catch(() => ({}))) as { error?: string; retryAfterSec?: number };
-    const mins = Math.max(1, Math.ceil((body.retryAfterSec ?? 60) / 60));
-    const messages: Record<string, string> = {
-      cooldown: `You already broke it recently. Try again in ${mins} min, or watch a replay below.`,
-      queue_full: "Several people are breaking it right now. Try again in a couple of minutes.",
-      daily_limit: "Today's live breaks are used up. Replays below show real past incidents.",
-      agent_offline: "The AI engineer is offline right now. Replays below show real past incidents.",
-    };
-    return { ok: false, message: messages[body.error ?? ""] ?? "Something went wrong. Please try again." };
+    return { ok: false, code: body.error ?? "generic", mins: Math.max(1, Math.ceil((body.retryAfterSec ?? 60) / 60)) };
   }, []);
 
   return { online, status, scenarios, history, metrics, live, breakIt };

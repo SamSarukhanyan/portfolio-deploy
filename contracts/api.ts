@@ -31,8 +31,12 @@ export interface LabStatusResponse {
 }
 
 // POST /api/incidents -> 202 | 400 (unknown scenario) | 429 (limits) | 503 (agent offline)
+export const LANGS = ["en", "ru", "hy"] as const;
+export type Lang = (typeof LANGS)[number];
+
 export interface CreateIncidentRequest {
   scenario: string | "surprise";
+  lang?: Lang; // the agent writes its plain-language notes in this language; default "en"
 }
 export interface CreateIncidentResponse {
   incidentId: string;

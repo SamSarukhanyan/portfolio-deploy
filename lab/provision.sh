@@ -65,32 +65,65 @@ read -r -d '' PAGE <<'HTML' || true
 </head>
 <body data-s="checking">
 <main>
-  <div class="top"><span class="brand"><span class="logo">IL</span>Incident Lab sandbox</span><span id="clock">live · every 2 s</span></div>
+  <div class="top"><span class="brand"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span></span><span id="clock">live · every 2 s</span></div>
   <section class="card" aria-live="polite">
     <div class="hero">
       <div class="orb" aria-hidden="true"></div>
       <div><div class="state" id="state">Checking…</div><div class="detail" id="detail">Running the first health check.</div></div>
     </div>
     <div class="grid">
-      <div class="metric"><span>Response time</span><b id="lat">–</b></div>
-      <div class="metric"><span>Live release</span><b id="rel">–</b></div>
-      <div class="metric"><span>Uptime (this page)</span><b id="up">–</b></div>
+      <div class="metric"><span id="l-lat">Response time</span><b id="lat">–</b></div>
+      <div class="metric"><span id="l-rel">Live release</span><b id="rel">–</b></div>
+      <div class="metric"><span id="l-up">Uptime (this page)</span><b id="up">–</b></div>
     </div>
     <div class="bars" id="bars" aria-label="Last 60 checks"></div>
-    <div class="legend"><span>2 minutes ago</span><span>now</span></div>
+    <div class="legend"><span id="l-ago">2 minutes ago</span><span id="l-now">now</span></div>
   </section>
-  <p class="foot">This server is broken on purpose by visitors and repaired by an AI on-call engineer.
-    Watch it live on <a href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a>.</p>
+  <p class="foot"><span id="foot">This server is broken on purpose by visitors and repaired by an AI on-call engineer. Watch it live on</span>
+    <a id="watch" href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a></p>
 </main>
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
+  // English, Russian, Armenian: ?lang=, else the browser language. Technical ids stay as they are.
+  const T = {
+    en: { brand: "Incident Lab sandbox", every: "live · every 2 s", checked: "live · checked ", checking: "Checking…", first: "Running the first health check.",
+          lat: "Response time", rel: "Live release", up: "Uptime (this page)", ago: "2 minutes ago", now: "now",
+          foot: "This server is broken on purpose by visitors and repaired by an AI on-call engineer. Watch it live on",
+          healthy: "Healthy", degraded: "Degraded", down: "Down", recovered: "Recovered",
+          ok: "All checks pass.", err: "The website answers with error {c}.", none: "The website does not answer at all.",
+          bundle: "The page loads, but its program file is missing (error {c}).", api: "The back end fails: /api/health answers {c}.",
+          slow: "Working, but slow: the back end took {s} s.", trouble: " Trouble for {n} s.", back: "Back to normal after {n} s of trouble.", noans: "no answer" },
+    ru: { brand: "Песочница Incident Lab", every: "в эфире · каждые 2 с", checked: "в эфире · проверено ", checking: "Проверка…", first: "Выполняется первая проверка.",
+          lat: "Время ответа", rel: "Текущая версия", up: "Доступность (на этой странице)", ago: "2 минуты назад", now: "сейчас",
+          foot: "Этот сервер специально ломают посетители, а чинит дежурный AI-инженер. Смотрите в прямом эфире на",
+          healthy: "Исправен", degraded: "Работает медленно", down: "Не работает", recovered: "Восстановлен",
+          ok: "Все проверки пройдены.", err: "Сайт отвечает ошибкой {c}.", none: "Сайт вообще не отвечает.",
+          bundle: "Страница загружается, но файла её программы нет (ошибка {c}).", api: "Серверная часть не работает: /api/health отвечает {c}.",
+          slow: "Работает, но медленно: серверная часть ответила за {s} с.", trouble: " Проблема длится {n} с.", back: "Снова в норме после {n} с проблем.", noans: "нет ответа" },
+    hy: { brand: "Incident Lab ավազարկղ", every: "ուղիղ · ամեն 2 վ", checked: "ուղիղ · ստուգված ", checking: "Ստուգում…", first: "Կատարվում է առաջին ստուգումը։",
+          lat: "Արձագանքման ժամանակ", rel: "Գործող տարբերակ", up: "Հասանելիություն (այս էջում)", ago: "2 րոպե առաջ", now: "հիմա",
+          foot: "Այս սերվերը միտումնավոր կոտրում են այցելուները, իսկ վերանորոգում է հերթապահ AI ինժեները։ Դիտեք ուղիղ եթերում՝",
+          healthy: "Աշխատում է", degraded: "Դանդաղում է", down: "Չի աշխատում", recovered: "Վերականգնված է",
+          ok: "Բոլոր ստուգումներն անցել են։", err: "Կայքը պատասխանում է {c} սխալով։", none: "Կայքն ընդհանրապես չի պատասխանում։",
+          bundle: "Էջը բեռնվում է, բայց դրա ծրագրային ֆայլը բացակայում է ({c} սխալ)։", api: "Սերվերային մասը չի աշխատում․ /api/health-ը պատասխանում է {c}։",
+          slow: "Աշխատում է, բայց դանդաղ․ սերվերային մասը պատասխանեց {s} վայրկյանում։", trouble: " Խնդիրը տևում է {n} վ։", back: "Կրկին նորմալ է {n} վայրկյան տևած խնդրից հետո։", noans: "պատասխան չկա" },
+  };
+  const q = new URLSearchParams(location.search).get("lang");
+  const nav = (navigator.language || "en").toLowerCase();
+  const lang = T[q] ? q : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  const L = T[lang];
+  const f = (s, v) => s.replace(/\{(\w)\}/g, (_, k) => v[k]);
+  document.documentElement.lang = lang;
+  for (const id of ["brand", "lat", "rel", "up", "ago", "now", "foot"]) $(id === "brand" || id === "foot" ? id : "l-" + id).textContent = L[id];
+  $("clock").textContent = L.every; $("state").textContent = L.checking; $("detail").textContent = L.first;
+  $("watch").href = "https://samsarukhanyan.com/lab?lang=" + lang;
   const N = 60, history = [];
   let downSince = null, recoveredAt = null, recoveredAfter = 0, ok = 0, total = 0;
   for (let i = 0; i < N; i++) $("bars").appendChild(document.createElement("i"));
   // Opened while the server was down? The proxy's down page sends us here with ?recovered=<s>.
   const rec = Number(new URLSearchParams(location.search).get("recovered"));
-  if (rec > 0) { recoveredAt = Date.now(); recoveredAfter = rec; window.history.replaceState(null, "", "/"); }
+  if (rec > 0) { recoveredAt = Date.now(); recoveredAfter = rec; window.history.replaceState(null, "", "/?lang=" + lang); }
 
   async function timed(url) {
     const t = performance.now();
@@ -102,37 +135,37 @@ read -r -d '' PAGE <<'HTML' || true
 
   async function check() {
     const home = await timed("/");
-    let state = "healthy", detail = "All checks pass.", ms = null, release = "–";
+    let state = "healthy", detail = L.ok, ms = null, release = "–";
     if (home.status !== 200) {
-      state = "down"; detail = home.status ? "The website answers with error " + home.status + "." : "The website does not answer at all.";
+      state = "down"; detail = home.status ? f(L.err, { c: home.status }) : L.none;
     } else {
       const src = (home.text.match(/src="(\/app\.[^"]+\.js)"/) || [])[1];
       release = src ? src.split(".")[1] : "unknown";
       const [bundle, api] = await Promise.all([src ? timed(src) : Promise.resolve({ status: 0 }), timed("/api/health")]);
       ms = api.ms;
-      if (bundle.status !== 200) { state = "down"; detail = "The page loads, but its program file is missing (error " + (bundle.status || "no answer") + ")."; }
-      else if (api.status !== 200) { state = "down"; detail = "The back end fails: /api/health answers " + (api.status || "nothing") + "."; }
-      else if (api.ms > 1000) { state = "degraded"; detail = "Working, but slow: the back end took " + (api.ms / 1000).toFixed(1) + " s."; }
+      if (bundle.status !== 200) { state = "down"; detail = f(L.bundle, { c: bundle.status || L.noans }); }
+      else if (api.status !== 200) { state = "down"; detail = f(L.api, { c: api.status || L.noans }); }
+      else if (api.ms > 1000) { state = "degraded"; detail = f(L.slow, { s: (api.ms / 1000).toFixed(1) }); }
     }
 
     const now = Date.now();
     if (state === "healthy") {
       if (downSince) { recoveredAfter = Math.round((now - downSince) / 1000); recoveredAt = now; downSince = null; }
-      if (recoveredAt && now - recoveredAt < 30000) { state = "recovered"; detail = "Back to normal after " + recoveredAfter + " s of trouble."; }
+      if (recoveredAt && now - recoveredAt < 30000) { state = "recovered"; detail = f(L.back, { n: recoveredAfter }); }
     } else {
       downSince = downSince || now; recoveredAt = null;
-      detail += " Trouble for " + Math.round((now - downSince) / 1000) + " s.";
+      detail += f(L.trouble, { n: Math.round((now - downSince) / 1000) });
     }
 
     total++; if (state === "healthy" || state === "recovered") ok++;
     document.body.dataset.s = state;
-    $("state").textContent = { healthy: "Healthy", degraded: "Degraded", down: "Down", recovered: "Recovered" }[state];
+    $("state").textContent = L[state];
     $("detail").textContent = detail;
     $("lat").textContent = ms === null ? "–" : ms + " ms";
     $("rel").textContent = release;
     $("up").textContent = Math.round((ok / total) * 100) + "%";
-    $("clock").textContent = "live · checked " + new Date().toLocaleTimeString();
-    document.title = { healthy: "🟢", degraded: "🟡", down: "🔴", recovered: "🟢" }[state] + " Incident Lab sandbox";
+    $("clock").textContent = L.checked + new Date().toLocaleTimeString(lang);
+    document.title = { healthy: "🟢", degraded: "🟡", down: "🔴", recovered: "🟢" }[state] + " " + L.brand;
 
     history.push({ state, ms });
     if (history.length > N) history.shift();

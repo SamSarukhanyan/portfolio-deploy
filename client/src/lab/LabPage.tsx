@@ -169,8 +169,16 @@ function ScenarioList({ t, scenarios, disabled, onPick }: { t: Texts; scenarios:
 function EmptyConsole({ t }: { t: Texts }) {
   return (
     <div className={styles.empty}>
-      <p className={styles.emptyTitle}>{t.emptyTitle}</p>
-      <p>{t.emptyBody}</p>
+      <div>
+        <p className={styles.emptyTitle}>{t.emptyTitle}</p>
+        <p>{t.emptyBody}</p>
+      </div>
+      <div className={styles.how}>
+        <p className={styles.howTitle}>{t.howTitle}</p>
+        <ol>
+          {t.how.map((step) => <li key={step}>{step}</li>)}
+        </ol>
+      </div>
     </div>
   );
 }

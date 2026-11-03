@@ -116,15 +116,18 @@ html {
   padding: 0;
   scroll-behavior: smooth;
   scroll-padding-top: 0;
+  /* clip, not hidden: overflow-x: hidden turns overflow-y into auto, which made html, body and #root
+     three nested scroll containers on iOS Safari (rubber band fighting the page scroll). */
   overflow-x: hidden;
+  overflow-x: clip;
   scrollbar-color: rgba(176, 176, 181, 0.84) rgba(17, 17, 19, 0.96);
   scrollbar-width: thin;
   background: var(--page-gradient);
   background-color: var(--bg-0);
-  /* iOS Safari: 100vh can exclude the visible area; 100dvh tracks the dynamic visual viewport */
+  /* 100dvh tracks the dynamic viewport. -webkit-fill-available used to come last and override it,
+     so the page height jumped while the iOS toolbar collapsed and the scroll position snapped back. */
   min-height: 100vh;
   min-height: 100dvh;
-  min-height: -webkit-fill-available;
 }
 
 *::-webkit-scrollbar {
@@ -164,9 +167,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   min-height: 100dvh;
-  min-height: -webkit-fill-available;
   font-family: var(--font-sans);
   font-optical-sizing: auto;
   font-weight: 400;
@@ -183,9 +186,9 @@ body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   min-height: 100dvh;
-  min-height: -webkit-fill-available;
   position: relative;
   isolation: isolate;
   filter: none;

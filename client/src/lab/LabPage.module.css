@@ -1,5 +1,6 @@
 .page {
-  padding-top: clamp(5.2rem, 9vw, 6.6rem);
+  /* The header is in the flow (not fixed), so only a small gap is needed above the intro. */
+  padding-top: clamp(1rem, 2.6vw, 1.8rem);
   --ok: #5fd38d;
   --bad: #ff6b6b;
   --warn: #f5c542;
@@ -9,8 +10,8 @@
 /* ---------- intro ---------- */
 
 .intro {
-  max-width: 52rem;
-  margin-bottom: 1.4rem;
+  max-width: 56rem;
+  margin-bottom: clamp(1rem, 2.4vw, 1.4rem);
 }
 
 .eyebrow {
@@ -45,17 +46,20 @@
 }
 
 .title {
-  margin: 0 0 0.75rem;
-  font-size: clamp(1.7rem, 4.2vw, 2.7rem);
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  text-wrap: balance;
   line-height: 1.12;
   letter-spacing: -0.02em;
 }
 
 .lead {
   margin: 0;
+  max-width: 48rem;
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: clamp(0.94rem, 1.6vw, 1rem);
   line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .lead a {
@@ -74,14 +78,20 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
-  margin: 0 0 1.2rem;
+  margin: 0 0 clamp(0.9rem, 2vw, 1.2rem);
   overflow: hidden;
   border: 1px solid var(--border-neutral);
   border-radius: var(--radius-md);
   background: var(--border-neutral);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 640px) {
+  .strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1040px) {
   .strip {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -161,17 +171,22 @@
 .layout {
   display: grid;
   gap: 1rem;
-  align-items: start;
 }
 
+/* Desktop: scenarios left, console right, both the same height, no empty band under either. */
 @media (min-width: 960px) {
   .layout {
-    grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+    grid-template-columns: minmax(17rem, 21rem) minmax(0, 1fr);
+    align-items: stretch;
   }
 
-  .controls {
-    position: sticky;
-    top: 5.5rem;
+  .console {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .console > * {
+    flex: 1;
   }
 }
 
@@ -255,7 +270,7 @@
 
 .console {
   min-width: 0;
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 1rem;
 }
 
 .empty,
@@ -268,8 +283,8 @@
 .empty {
   display: grid;
   place-content: center;
-  min-height: 22rem;
-  padding: 2rem;
+  min-height: 12rem;
+  padding: 2rem 1.2rem;
   color: var(--text-secondary);
   text-align: center;
 }
@@ -357,8 +372,9 @@
 
 .feed {
   display: grid;
+  align-content: start;
   gap: 0.55rem;
-  max-height: min(68vh, 44rem);
+  max-height: min(64dvh, 40rem);
   overflow-y: auto;
   padding-right: 0.2rem;
 }
@@ -580,7 +596,7 @@
 /* ---------- history ---------- */
 
 .history {
-  margin-top: 1.8rem;
+  margin-top: clamp(1.4rem, 3vw, 1.8rem);
 }
 
 .history ul {
@@ -689,4 +705,80 @@
   margin: -0.4rem 0 0.8rem;
   color: var(--text-secondary);
   font-size: 0.82rem;
+}
+
+/* ---------- empty console: explain the show instead of an empty box ---------- */
+
+.empty {
+  gap: 1.6rem;
+}
+
+.how {
+  max-width: 30rem;
+  text-align: left;
+}
+
+.howTitle {
+  margin: 0 0 0.6rem;
+  color: var(--accent-main);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.how ol {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: how;
+}
+
+.how li {
+  position: relative;
+  padding-left: 2.1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  counter-increment: how;
+}
+
+.how li::before {
+  content: counter(how);
+  position: absolute;
+  left: 0;
+  top: 0.05rem;
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@media (max-width: 639px) {
+  .strip > div {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .strip dt {
+    font-size: 0.68rem;
+  }
+
+  .strip dd {
+    font-size: 0.86rem;
+  }
+
+  .panel {
+    padding: 0.8rem;
+  }
+
+  .tool {
+    margin-left: 0;
+  }
 }

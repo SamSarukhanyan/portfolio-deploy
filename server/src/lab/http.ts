@@ -56,6 +56,7 @@ export function createApp(getMetrics: () => Metrics | null): express.Express {
       Connection: "keep-alive",
       "X-Accel-Buffering": "no", // nginx: stream, don't buffer
     });
+    res.flushHeaders(); // the browser reports "connected" now, not at the first event or ping
     const send = (e: { seq: number; type: string }) => res.write(`id: ${e.seq}\nevent: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`);
     // Reconnect: resend what was missed. First visit: replay the incident in progress, if any.
     const last = Number(req.get("Last-Event-ID") ?? req.query.after);

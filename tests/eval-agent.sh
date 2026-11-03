@@ -16,7 +16,11 @@ LAB_INSTANCE_ID=$(terraform -chdir="$here/infra" output -raw lab_instance_id) LA
   node "$here/server/dist-lab/server/src/lab/main.js" > "$data/control-plane.log" 2>&1 &
 cp=$!
 trap 'kill $cp 2>/dev/null' EXIT
-until curl -sf "$api/api/lab/status" >/dev/null; do sleep 1; done
+aws sts get-caller-identity >/dev/null || { echo "AWS session expired: run  aws login --profile portfolio"; exit 1; }
+until curl -sf "$api/api/lab/status" >/dev/null; do
+  kill -0 $cp 2>/dev/null || { echo "control plane died:"; tail -5 "$data/control-plane.log"; exit 1; }
+  sleep 1
+done
 
 n=0
 for r in $(seq "$RUNS"); do

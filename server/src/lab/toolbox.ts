@@ -68,8 +68,11 @@ export function createToolbox(incidentId: string, onFix?: () => void): Toolbox {
     async call(name, args) {
       if (closed) throw new Error("incident is closed");
       if (typeof args !== "object" || args === null || Array.isArray(args)) args = {};
-      if (steps >= LIMITS.agentMaxSteps) throw new StepLimitError(`step limit (${LIMITS.agentMaxSteps}) reached`);
-      steps++;
+      // resolve only reports; it never touches the lab, so it is allowed after the last real step.
+      if (name !== "resolve") {
+        if (steps >= LIMITS.agentMaxSteps) throw new StepLimitError(`step limit (${LIMITS.agentMaxSteps}) reached`);
+        steps++;
+      }
       const callId = `${incidentId}-${++callN}`;
       const spec = TOOLS.find((t) => t.name === name);
       emit({ incidentId, type: "agent.tool_call", data: { callId, tool: name, args, explain: spec ? spec.explain(args) : "Trying a tool that does not exist." } });

@@ -122,4 +122,6 @@ systemctl enable -q lab-app nginx
 systemctl restart lab-app
 nginx -t -q
 systemctl restart nginx
+sleep 1
+date +%s > /var/lab/reset-at # read_logs starts here
 echo "golden state: release $current"

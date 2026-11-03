@@ -7,7 +7,7 @@ export const LIMITS = {
   queueMax: 5,                 // POST /incidents -> 429 "queue_full" beyond this
   perIpCooldownSec: 600,       // one break per IP per 10 min -> 429 "cooldown"
   dailyLiveIncidents: 50,      // UTC day -> 429 "daily_limit"; replays stay available
-  agentMaxSteps: 10,           // tool calls per incident, then status "failed"
+  agentMaxSteps: 10,           // tool calls per incident (resolve not counted), then status "failed"
   incidentTimeoutSec: 300,     // from "investigating" to "verifying", then "failed"
 } as const;
 

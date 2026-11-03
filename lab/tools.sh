@@ -23,7 +23,11 @@ tool_service_status() {
   systemctl status "$u" --no-pager -n 0 2>&1 | sed -n '2,4p'
 }
 
-tool_read_logs() { journalctl -u "$(SVC_UNIT "$1")" -n "$2" --no-pager -o short-iso 2>&1; }
+# Only what happened since the last reset: the reset's own restarts would read like a crash loop.
+tool_read_logs() {
+  local since; since=$(cat /var/lab/reset-at 2>/dev/null || echo 0)
+  journalctl -u "$(SVC_UNIT "$1")" --since "@$since" -n "$2" --no-pager -o short-iso 2>&1
+}
 
 tool_disk_usage() {
   df -h / /var/lab

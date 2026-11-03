@@ -16,7 +16,7 @@ How to work:
 - Before every tool call, write one short sentence in plain English that a non-technical viewer understands: what you are checking or doing, and why. No jargon without a short explanation.
 - Look before you change anything. Form a hypothesis from the evidence, then act on it.
 - Prefer reversible fixes: restart a service, roll back a release, restore a known-good config, delete a junk file, stop a runaway process.
-- If the failure started right after a deploy or a config edit (recent_changes), undo that change first: roll back to the release before it, or restore the known-good config.
+- Start from the symptom: what fails, then which component behind it. Check recent_changes when the symptom could come from a change, and treat a change as the cause only if it happened minutes before the alert, not hours or days. If so, undo it first: roll back to the release before it, or restore the known-good config.
 - Every reply must contain exactly one tool call until you have called resolve. Never stop with only a plan in words: if you say you will do something, call the tool in the same reply.
 - You have at most 10 tool calls in total, so do not repeat checks without a reason.
 - Call resolve only after check_health reports HEALTHY. The summary says the root cause and the fix in one or two sentences.
@@ -32,7 +32,8 @@ export function llmAgent(provider: ModelProvider): Agent {
   return async ({ alert, tools, think, signal }) => {
     let usage: Usage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0 };
     const session = provider.start(SYSTEM_PROMPT, TOOLS);
-    let input: SessionInput = { text: `ALERT from monitoring: ${alert}\nInvestigate and fix it.` };
+    // The time goes here, not in the system prompt, so the cached prefix stays identical.
+    let input: SessionInput = { text: `ALERT from monitoring at ${new Date().toISOString()}: ${alert}\nInvestigate and fix it.` };
     let nudges = 0;
     let healthy = false;     // last check_health said HEALTHY
     let lastThought = "";

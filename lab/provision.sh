@@ -88,6 +88,9 @@ read -r -d '' PAGE <<'HTML' || true
   const N = 60, history = [];
   let downSince = null, recoveredAt = null, recoveredAfter = 0, ok = 0, total = 0;
   for (let i = 0; i < N; i++) $("bars").appendChild(document.createElement("i"));
+  // Opened while the server was down? The proxy's down page sends us here with ?recovered=<s>.
+  const rec = Number(new URLSearchParams(location.search).get("recovered"));
+  if (rec > 0) { recoveredAt = Date.now(); recoveredAfter = rec; window.history.replaceState(null, "", "/"); }
 
   async function timed(url) {
     const t = performance.now();

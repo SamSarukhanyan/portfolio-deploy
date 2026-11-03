@@ -18,14 +18,16 @@ server {
         proxy_connect_timeout 3s;
         proxy_read_timeout 10s;
 
-        # Sandbox asleep or broken on purpose: say so instead of a bare 502.
+        # Sandbox asleep or broken on purpose: a live status page instead of a bare 502.
         proxy_intercept_errors off;
-        error_page 502 503 504 = @lab_down;
+        error_page 502 503 504 =503 @lab_down;
     }
 
     location @lab_down {
         default_type text/html;
         add_header Cache-Control "no-store" always;
-        return 503 '<!doctype html><meta charset="utf-8"><title>Incident Lab</title><h1>The lab server is down or asleep</h1><p>That may be the incident in progress. Watch it live on <a href="https://samsarukhanyan.com">samsarukhanyan.com</a>.</p>';
+        # Live status page that polls until the lab is back (written by infra/control-plane.sh.tftpl).
+        root /var/www/lab-down;
+        rewrite ^ /index.html break;
     }
 }

@@ -122,6 +122,62 @@ else
 fi
 echo "nginx: /api -> control plane"
 
+# --- lab.samsarukhanyan.com while the lab is down or asleep: a live status page, not a bare 503 ---
+# It polls / every 2 s and, once the lab answers again, opens it with ?recovered=<seconds>.
+install -d -m 755 /var/www/lab-down
+cat > /var/www/lab-down/index.html <<'HTML'
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="lab-down" content="1"><title>🔴 Incident Lab sandbox</title>
+<style>
+  body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px 16px; box-sizing:border-box;
+         background:radial-gradient(1200px 600px at 50% -10%, #1a1d24 0%, #0a0b0d 60%); color:#eef0f3;
+         font:15px/1.5 Inter,"Segoe UI",Roboto,system-ui,sans-serif; }
+  main { width:min(720px,100%) }
+  .top { display:flex; align-items:center; gap:10px; margin-bottom:18px; font-weight:650 }
+  .logo { width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg,#f5c542,#ff9d3d); display:grid; place-items:center; color:#111; font-weight:800; font-size:13px }
+  .card { background:#13151a; border:1px solid #23262d; border-radius:20px; padding:28px; display:flex; align-items:center; gap:22px; box-shadow:0 30px 60px rgba(0,0,0,.35) }
+  .orb { flex:none; width:84px; height:84px; border-radius:50%; background:#ff5d5d; position:relative }
+  .orb::after { content:""; position:absolute; inset:-10px; border-radius:50%; border:2px solid #ff5d5d; animation:ring 1.8s ease-out infinite }
+  @keyframes ring { from { transform:scale(.85); opacity:.5 } to { transform:scale(1.25); opacity:0 } }
+  .state { font-size:clamp(28px,7vw,44px); font-weight:800; color:#ff5d5d; line-height:1.05 }
+  .detail { margin-top:6px; color:#8b919c }
+  .foot { margin-top:18px; color:#8b919c; font-size:13px; text-align:center }
+  .foot a { color:#f5c542; text-decoration:none }
+  @media (max-width:520px) { .card { flex-direction:column; text-align:center } }
+  @media (prefers-reduced-motion:reduce) { .orb::after { animation:none } }
+</style></head>
+<body><main>
+  <div class="top"><span class="logo">IL</span>Incident Lab sandbox</div>
+  <section class="card" aria-live="polite"><div class="orb" aria-hidden="true"></div>
+    <div><div class="state">Down</div><div class="detail" id="detail">The lab server does not answer. Either an incident is in progress or the server is asleep.</div></div></section>
+  <p class="foot">An AI on-call engineer repairs this server. Watch it live on <a href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a>.</p>
+</main>
+<script>
+(() => {
+  const started = Date.now();
+  setInterval(async () => {
+    const secs = Math.round((Date.now() - started) / 1000);
+    document.getElementById("detail").textContent = "The lab server does not answer. Down for at least " + secs + " s. Checking every 2 s.";
+    try {
+      const r = await fetch("/", { cache: "no-store" });
+      if (r.ok && !(await r.text()).includes('name="lab-down"')) location.replace("/?recovered=" + secs);
+    } catch {}
+  }, 2000);
+})();
+</script>
+</body></html>
+HTML
+LAB_SITE=/etc/nginx/sites-available/lab
+if [ -f "$LAB_SITE" ] && grep -q "return 503 '<!doctype" "$LAB_SITE"; then
+  cp "$LAB_SITE" "$LAB_SITE.before-down-page"
+  # Keep the 503 status (the page polls for it) and serve the file instead of the inline text.
+  sed -i -e 's|error_page 502 503 504 = @lab_down;|error_page 502 503 504 =503 @lab_down;|' \
+         -e "s|^\([[:space:]]*\)return 503 '<!doctype.*';|\1root /var/www/lab-down;\n\1rewrite ^ /index.html break;|" "$LAB_SITE"
+  if nginx -t 2>/dev/null; then systemctl reload nginx; echo "nginx: lab down page installed"
+  else cp "$LAB_SITE.before-down-page" "$LAB_SITE"; systemctl reload nginx; echo "nginx rejected the lab down page; restored" >&2; exit 1; fi
+fi
+
 # Keep the 3 newest releases; never the live one.
 cd "$APP/releases"
 { ls -1t | grep -vx "$RELEASE" || true; } | tail -n +3 | xargs -r rm -rf --

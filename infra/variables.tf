@@ -8,6 +8,12 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
+variable "incident_lab_enabled" {
+  description = "Incident Lab sandbox instance. false = deleted (paused, costs nothing); true = recreated from code."
+  type        = bool
+  default     = false
+}
+
 variable "lab_instance_type" {
   type    = string
   default = "t3.micro"

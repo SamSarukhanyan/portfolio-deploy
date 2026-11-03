@@ -17,12 +17,12 @@ output "artifacts_bucket" {
 }
 
 output "lab_instance_id" {
-  value = aws_instance.lab.id
+  value = try(aws_instance.lab[0].id, null)
 }
 
 output "lab_private_ip" {
   description = "proxy_pass target in the lab.samsarukhanyan.com nginx site on the portfolio server."
-  value       = aws_instance.lab.private_ip
+  value       = local.lab_private_ip
 }
 
 output "shell" {

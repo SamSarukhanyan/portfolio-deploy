@@ -14,12 +14,14 @@
 - на сервере: служба `incident-lab` остановлена и выключена (`systemctl disable --now`);
 - `lab.samsarukhanyan.com` отвечает редиректом 302 на главную (строка с `# incident-lab paused`
   в `/etc/nginx/sites-available/lab`, копия до паузы — `lab.before-pause`);
-- песочница `portfolio-lab` остановлена.
+- песочница `portfolio-lab` удалена (`incident_lab_enabled = false` в `infra/variables.tf`);
+  её файрвол, роль и SSM-документы бесплатны и остались.
 
-Расходы на паузе: Claude API — $0 (никто его не вызывает); песочница — только её диск, ~$0.8/мес из кредитов AWS.
-Полностью до $0: удалить песочницу (`terraform destroy -target=aws_instance.lab`), она пересоздаётся из кода.
+Расходы на паузе: $0 (Claude API никто не вызывает, песочницы нет).
 
 Включить обратно:
+0. `incident_lab_enabled = true` в `infra/variables.tf`, `terraform apply` — песочница создаётся заново
+   (тот же внутренний IP); после запуска службы (шаг 2) первый инцидент сам её подготовит.
 1. `features.incidentLab = true` в `client/src/config/site.ts`, push — вернутся `/lab` и пункт меню.
 2. Вернуть push-триггер в `deploy-control-plane.yml` (он есть в комментарии) и запустить workflow вручную:
    он поставит службу и снова включит её.

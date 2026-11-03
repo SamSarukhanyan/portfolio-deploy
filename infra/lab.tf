@@ -40,15 +40,26 @@ resource "aws_iam_instance_profile" "lab" {
   role = aws_iam_role.lab.name
 }
 
+locals {
+  lab_private_ip = "172.31.24.229" # fixed, so a rebuilt lab keeps the proxy_pass target in docs/nginx-lab.conf.example
+}
+
+# Paused (var.incident_lab_enabled = false): the instance is deleted; everything else here is free and stays.
+moved {
+  from = aws_instance.lab
+  to   = aws_instance.lab[0]
+}
+
 resource "aws_instance" "lab" {
+  count = var.incident_lab_enabled ? 1 : 0
+
   ami                    = aws_instance.portfolio.ami
   instance_type          = var.lab_instance_type
   subnet_id              = data.aws_subnet.default_a.id
   vpc_security_group_ids = [aws_security_group.lab.id]
   iam_instance_profile   = aws_iam_instance_profile.lab.name
 
-  # Fixed, so a rebuilt lab keeps the proxy_pass target in docs/nginx-lab.conf.example.
-  private_ip = "172.31.24.229"
+  private_ip = local.lab_private_ip
 
   # Public IPv4 only for outbound traffic; billed only while running. No key pair: shell is SSM only.
   associate_public_ip_address = true
@@ -96,10 +107,12 @@ resource "aws_instance" "lab" {
 # ---------- What the Control Plane (on the portfolio server) may do to the lab ----------
 
 data "aws_iam_policy_document" "control_plane" {
+  count = var.incident_lab_enabled ? 1 : 0
+
   statement {
     sid       = "WakeAndSleepLab"
     actions   = ["ec2:StartInstances", "ec2:StopInstances"]
-    resources = [aws_instance.lab.arn]
+    resources = [aws_instance.lab[0].arn]
   }
 
   statement {
@@ -113,7 +126,7 @@ data "aws_iam_policy_document" "control_plane" {
     sid     = "RunLabDocuments"
     actions = ["ssm:SendCommand"]
     resources = [
-      aws_instance.lab.arn,
+      aws_instance.lab[0].arn,
       "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:document/lab-*",
     ]
   }
@@ -126,7 +139,8 @@ data "aws_iam_policy_document" "control_plane" {
 }
 
 resource "aws_iam_role_policy" "control_plane" {
+  count  = var.incident_lab_enabled ? 1 : 0
   name   = "incident-lab-control-plane"
   role   = aws_iam_role.server.id
-  policy = data.aws_iam_policy_document.control_plane.json
+  policy = data.aws_iam_policy_document.control_plane[0].json
 }

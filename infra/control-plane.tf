@@ -49,8 +49,8 @@ resource "aws_ssm_document" "control_plane" {
         timeoutSeconds = "600"
         runCommand = [templatefile("${path.module}/control-plane.sh.tftpl", {
           region          = var.region
-          lab_instance_id = aws_instance.lab.id
-          lab_private_ip  = aws_instance.lab.private_ip
+          lab_instance_id = try(aws_instance.lab[0].id, "none")
+          lab_private_ip  = local.lab_private_ip
           api_key_param   = local.api_key_param
         })]
       }

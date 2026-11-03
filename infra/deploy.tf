@@ -86,6 +86,7 @@ data "aws_iam_policy_document" "github_deploy" {
     resources = [
       aws_instance.portfolio.arn,
       aws_ssm_document.deploy.arn,
+      aws_ssm_document.control_plane.arn,
     ]
   }
 

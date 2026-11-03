@@ -1,12 +1,23 @@
 // Incident Lab Control Plane: HTTP/SSE API, live metrics while the lab is awake, idle sleeper.
 
+import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
 import type { Metrics } from "../../../contracts/events.js";
-import { labState, runDoc } from "./aws.js";
-import { emit } from "./bus.js";
-import { config } from "./config.js";
-import { createApp } from "./http.js";
-import { labStatus, startIdleSleeper } from "./incidents.js";
-import { probe, toMetrics } from "./prober.js";
+
+// In production the Claude API key is a SecureString in SSM Parameter Store, never a file on disk.
+// Load it before the modules that build the model client.
+const keyParam = process.env.ANTHROPIC_API_KEY_PARAM;
+if (keyParam && !process.env.ANTHROPIC_API_KEY) {
+  const out = await new SSMClient({}).send(new GetParameterCommand({ Name: keyParam, WithDecryption: true }));
+  if (!out.Parameter?.Value) throw new Error(`${keyParam} is empty`);
+  process.env.ANTHROPIC_API_KEY = out.Parameter.Value;
+}
+
+const { labState, runDoc } = await import("./aws.js");
+const { emit } = await import("./bus.js");
+const { config } = await import("./config.js");
+const { createApp } = await import("./http.js");
+const { labStatus, startIdleSleeper } = await import("./incidents.js");
+const { probe, toMetrics } = await import("./prober.js");
 
 let metrics: Metrics | null = null;
 let usage = { cpuPct: 0, diskPct: 0 };

@@ -11,6 +11,7 @@ on:
     branches: [main]
     paths:
       - "client/**"
+      - "contracts/**" # the /lab page imports the shared contracts
       - ".github/workflows/deploy-portfolio.yml"
   workflow_dispatch:
     inputs:

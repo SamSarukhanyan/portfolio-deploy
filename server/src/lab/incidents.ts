@@ -27,7 +27,7 @@ const queue: Job[] = [];
 let current: Job | null = null;
 let status: IncidentStatus | "idle" = "idle";
 let lastActivity = Date.now();
-let labDirty = false; // last reset failed: rebuild before the next incident
+let labDirty = true; // rebuild before the next incident: at start (a restart may have cut one short) or after a failed reset
 const lastByIp = new Map<string, number>();
 const noUsage: Usage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0 };
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));

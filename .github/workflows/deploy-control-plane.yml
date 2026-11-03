@@ -1,0 +1,93 @@
+# Incident Lab Control Plane: build on a GitHub-hosted runner, ship to the portfolio server the
+# same way as the site (OIDC → S3 tarball → SSM document portfolio-control-plane), then smoke test
+# https://samsarukhanyan.com/api/lab/status. The document also wires nginx /api on first run.
+# AWS side: infra/control-plane.tf.
+
+name: Deploy control plane
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "server/src/lab/**"
+      - "server/src/agent/**"
+      - "server/package.json"
+      - "server/package-lock.json"
+      - "server/tsconfig*.json"
+      - "contracts/**"
+      - ".github/workflows/deploy-control-plane.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: control-plane-deploy
+  cancel-in-progress: false
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: eu-central-1
+  AWS_ROLE: arn:aws:iam::358871394134:role/portfolio-github-deploy
+  ARTIFACTS_BUCKET: samsarukhanyan-artifacts-358871394134
+  INSTANCE_ID: i-0d3df0c9c0dbc8e1c
+  RELEASE: ${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22" # same major as the server's Ubuntu nodejs package
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Build
+        working-directory: server
+        run: |
+          npm ci
+          npm run lab:build
+          npm prune --omit=dev
+          test -f dist-lab/server/src/lab/main.js
+          tar -czf "$RUNNER_TEMP/control-plane.tgz" -C .. server/package.json server/node_modules server/dist-lab
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: ${{ env.AWS_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          key="control-plane/$RELEASE.tgz"
+          aws s3 cp --only-show-errors "$RUNNER_TEMP/control-plane.tgz" "s3://$ARTIFACTS_BUCKET/$key"
+          url=$(aws s3 presign "s3://$ARTIFACTS_BUCKET/$key" --expires-in 900)
+          echo "::add-mask::$url"
+          echo "ARTIFACT_URL=$url" >> "$GITHUB_ENV"
+
+      - name: Install on the server
+        run: |
+          params=$(jq -nc --arg r "$RELEASE" --arg u "$ARTIFACT_URL" '{Release: [$r], ArtifactUrl: [$u]}')
+          id=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name portfolio-control-plane \
+            --comment "control plane ${RELEASE:0:7} (run $GITHUB_RUN_ID)" \
+            --parameters "$params" \
+            --query Command.CommandId --output text)
+          aws ssm wait command-executed --command-id "$id" --instance-id "$INSTANCE_ID" || true
+          aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE_ID" \
+            --query '[Status, StandardOutputContent, StandardErrorContent]' --output text
+          status=$(aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE_ID" --query Status --output text)
+          [ "$status" = Success ] || { echo "::error::control plane install $status"; exit 1; }
+
+      - name: Smoke test
+        run: |
+          for i in 1 2 3 4 5; do
+            body=$(curl -fsS --max-time 10 https://samsarukhanyan.com/api/lab/status) \
+              && echo "$body" | jq -e '.agentOnline == true' >/dev/null && { echo "OK $body"; exit 0; }
+            sleep 3
+          done
+          echo "::error::/api/lab/status is not answering or the agent is offline"; exit 1

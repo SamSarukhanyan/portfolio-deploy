@@ -1,0 +1,127 @@
+#!/bin/bash
+# Install or update the Incident Lab Control Plane on the portfolio server (idempotent).
+# Layout: /opt/incident-lab/releases/<sha>/server/{package.json,node_modules,dist-lab}
+#         current -> releases/<sha>; data in /var/lib/incident-lab; systemd unit incident-lab.
+set -euo pipefail
+
+RELEASE='{{ Release }}'
+URL='{{ ArtifactUrl }}'
+APP=/opt/incident-lab
+DATA=/var/lib/incident-lab
+DIR="$APP/releases/$RELEASE"
+
+# --- one-time setup ---
+command -v node >/dev/null || { apt-get update -q; DEBIAN_FRONTEND=noninteractive apt-get install -y -q nodejs; }
+id incidentlab >/dev/null 2>&1 || useradd --system --home-dir "$DATA" --shell /usr/sbin/nologin incidentlab
+install -d -o incidentlab -g incidentlab -m 750 "$DATA"
+install -d -m 755 "$APP/releases"
+# 1 GB RAM is tight for nginx + Node + the SSM agent; swap absorbs spikes instead of the OOM killer.
+if [ ! -f /swapfile ]; then
+  fallocate -l 1G /swapfile && chmod 600 /swapfile && mkswap -q /swapfile && swapon /swapfile
+  grep -q '^/swapfile ' /etc/fstab || echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+# --- release ---
+if [ ! -f "$DIR/server/dist-lab/server/src/lab/main.js" ]; then
+  tmp=$(mktemp -d "$APP/releases/.incoming.XXXXXX")
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsS --retry 3 --max-time 180 "$URL" | tar -xz -C "$tmp"
+  test -f "$tmp/server/dist-lab/server/src/lab/main.js" || { echo "artifact has no main.js" >&2; exit 1; }
+  chmod -R go-w "$tmp" && chmod 755 "$tmp"
+  rm -rf "$DIR"
+  mv "$tmp" "$DIR"
+  trap - EXIT
+fi
+previous=$(readlink "$APP/current" 2>/dev/null || true)
+ln -sfn "releases/$RELEASE" "$APP/current.next" && mv -T "$APP/current.next" "$APP/current"
+
+cat > /etc/systemd/system/incident-lab.service <<'UNIT'
+[Unit]
+Description=Incident Lab Control Plane
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=incidentlab
+WorkingDirectory=/opt/incident-lab/current/server
+ExecStart=/usr/bin/node dist-lab/server/src/lab/main.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=AWS_REGION=${region}
+Environment=LAB_INSTANCE_ID=${lab_instance_id}
+Environment=LAB_URL=http://${lab_private_ip}
+Environment=LAB_DATA_DIR=/var/lib/incident-lab
+Environment=AGENT=claude
+Environment=ANTHROPIC_API_KEY_PARAM=${api_key_param}
+# Least privilege for a process that talks to the internet.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/incident-lab
+MemoryMax=300M
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+systemctl daemon-reload
+systemctl enable -q incident-lab
+systemctl restart incident-lab
+
+ok=""
+for _ in $(seq 30); do
+  curl -fsS --max-time 2 http://127.0.0.1:3100/api/lab/status >/dev/null 2>&1 && { ok=1; break; }
+  sleep 1
+done
+if [ -z "$ok" ]; then
+  journalctl -u incident-lab -n 30 --no-pager -o cat >&2
+  if [ -n "$previous" ]; then
+    ln -sfn "$previous" "$APP/current.next" && mv -T "$APP/current.next" "$APP/current"
+    systemctl restart incident-lab
+    echo "new release failed to start; rolled back to $previous" >&2
+  fi
+  exit 1
+fi
+echo "control plane live: $RELEASE"
+
+# --- nginx: /api -> 127.0.0.1:3100 (docs/nginx-api.conf.example) ---
+cat > /etc/nginx/snippets/incident-lab-api.conf <<'NGINX'
+location /api/ {
+    proxy_pass http://127.0.0.1:3100;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;  # overwrite: per-IP limits trust it
+    proxy_set_header Connection "";
+    client_max_body_size 4k;
+}
+location = /api/events {
+    proxy_pass http://127.0.0.1:3100;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Connection "";
+    proxy_buffering off;
+    proxy_read_timeout 1h;
+}
+NGINX
+SITE=/etc/nginx/sites-available/portfolio
+if ! grep -q 'snippets/incident-lab-api.conf' "$SITE"; then
+  cp "$SITE" "$SITE.before-incident-lab"
+  # Into the HTTPS server block only: right before its first "location / {".
+  awk '!done && /^[[:space:]]*location \/ \{/ { print "    include snippets/incident-lab-api.conf;\n"; done=1 } { print }' \
+    "$SITE.before-incident-lab" > "$SITE"
+fi
+if nginx -t 2>/dev/null; then
+  systemctl reload nginx
+else
+  nginx -t >&2 || true
+  [ -f "$SITE.before-incident-lab" ] && cp "$SITE.before-incident-lab" "$SITE" && systemctl reload nginx
+  echo "nginx rejected the /api include; restored the previous config" >&2
+  exit 1
+fi
+echo "nginx: /api -> control plane"
+
+# Keep the 3 newest releases; never the live one.
+cd "$APP/releases"
+{ ls -1t | grep -vx "$RELEASE" || true; } | tail -n +3 | xargs -r rm -rf --

@@ -39,6 +39,7 @@ read -r -d '' PAGE <<'HTML' || true
          color:var(--text); font:15px/1.5 Inter,"Segoe UI",Roboto,system-ui,sans-serif; display:grid; place-items:center; padding:24px 16px; }
   main { width:min(720px,100%) }
   .top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; color:var(--muted); font-size:13px }
+  .right { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:flex-end }
   .brand { display:flex; align-items:center; gap:10px; color:var(--text); font-weight:650; letter-spacing:.01em }
   .logo { width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg,#f5c542,#ff9d3d); display:grid; place-items:center; color:#111; font-weight:800; font-size:13px }
   .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:28px; box-shadow:0 30px 60px rgba(0,0,0,.35) }
@@ -55,6 +56,10 @@ read -r -d '' PAGE <<'HTML' || true
   .bars { display:flex; gap:3px; height:34px; align-items:flex-end }
   .bars i { flex:1; border-radius:3px; background:var(--line); min-height:6px; transition:height .3s }
   .legend { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin-top:6px }
+  .langs { display:inline-flex; padding:3px; border:1px solid #23262d; border-radius:999px; background:#13151a }
+  .langs button { min-width:38px; padding:4px 9px; border:0; border-radius:999px; background:transparent; color:#8b919c; font:600 12px/1 Inter,"Segoe UI",Roboto,system-ui,sans-serif; letter-spacing:.04em; cursor:pointer }
+  .langs button:hover { color:#eef0f3 } .langs button:focus-visible { outline:2px solid #f5c542; outline-offset:2px }
+  .langs button[aria-pressed=true] { background:#f5c542; color:#141414 }
   .foot { margin-top:18px; color:var(--muted); font-size:13px; text-align:center }
   .foot a { color:#f5c542; text-decoration:none } .foot a:hover { text-decoration:underline }
   body[data-s=healthy] { --c:var(--ok) } body[data-s=degraded] { --c:var(--warn) }
@@ -65,7 +70,7 @@ read -r -d '' PAGE <<'HTML' || true
 </head>
 <body data-s="checking">
 <main>
-  <div class="top"><span class="brand"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span></span><span id="clock">live · every 2 s</span></div>
+  <div class="top"><span class="brand"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span></span><span class="right"><span id="clock">live · every 2 s</span><span class="langs" id="langs" role="group" aria-label="Language"></span></span></div>
   <section class="card" aria-live="polite">
     <div class="hero">
       <div class="orb" aria-hidden="true"></div>
@@ -109,9 +114,17 @@ read -r -d '' PAGE <<'HTML' || true
           bundle: "Էջը բեռնվում է, բայց դրա ծրագրային ֆայլը բացակայում է ({c} սխալ)։", api: "Սերվերային մասը չի աշխատում․ /api/health-ը պատասխանում է {c}։",
           slow: "Աշխատում է, բայց դանդաղ․ սերվերային մասը պատասխանեց {s} վայրկյանում։", trouble: " Խնդիրը տևում է {n} վ։", back: "Կրկին նորմալ է {n} վայրկյան տևած խնդրից հետո։", noans: "պատասխան չկա" },
   };
+  // ?lang=, else the saved choice (shared with the down page: same origin), else the browser language.
+  let saved = null; try { saved = localStorage.getItem("lab-lang"); } catch {}
   const q = new URLSearchParams(location.search).get("lang");
   const nav = (navigator.language || "en").toLowerCase();
-  const lang = T[q] ? q : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  const lang = T[q] ? q : T[saved] ? saved : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  for (const [id, label] of [["en", "EN"], ["ru", "RU"], ["hy", "ՀՅ"]]) {
+    const b = document.createElement("button");
+    b.type = "button"; b.lang = id; b.textContent = label; b.setAttribute("aria-pressed", String(id === lang));
+    b.onclick = () => { try { localStorage.setItem("lab-lang", id); } catch {} location.replace("/?lang=" + id); };
+    document.getElementById("langs").appendChild(b);
+  }
   const L = T[lang];
   const f = (s, v) => s.replace(/\{(\w)\}/g, (_, k) => v[k]);
   document.documentElement.lang = lang;

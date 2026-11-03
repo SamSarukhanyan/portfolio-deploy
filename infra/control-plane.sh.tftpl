@@ -135,6 +135,12 @@ cat > /var/www/lab-down/index.html <<'HTML'
          font:15px/1.5 Inter,"Segoe UI",Roboto,system-ui,sans-serif; }
   main { width:min(720px,100%) }
   .top { display:flex; align-items:center; gap:10px; margin-bottom:18px; font-weight:650 }
+  .top .langs { margin-left:auto }
+  .langs { display:inline-flex; padding:3px; border:1px solid #23262d; border-radius:999px; background:#13151a }
+  .langs button { min-width:38px; padding:4px 9px; border:0; border-radius:999px; background:transparent; color:#8b919c; font:600 12px/1 Inter,"Segoe UI",Roboto,system-ui,sans-serif; letter-spacing:.04em; cursor:pointer }
+  .langs button:hover { color:#eef0f3 } .langs button:focus-visible { outline:2px solid #f5c542; outline-offset:2px }
+  .langs button[aria-pressed=true] { background:#f5c542; color:#141414 }
+
   .logo { width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg,#f5c542,#ff9d3d); display:grid; place-items:center; color:#111; font-weight:800; font-size:13px }
   .card { background:#13151a; border:1px solid #23262d; border-radius:20px; padding:28px; display:flex; align-items:center; gap:22px; box-shadow:0 30px 60px rgba(0,0,0,.35) }
   .orb { flex:none; width:84px; height:84px; border-radius:50%; background:#ff5d5d; position:relative }
@@ -148,7 +154,7 @@ cat > /var/www/lab-down/index.html <<'HTML'
   @media (prefers-reduced-motion:reduce) { .orb::after { animation:none } }
 </style></head>
 <body><main>
-  <div class="top"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span></div>
+  <div class="top"><span class="logo">IL</span><span id="brand">Incident Lab sandbox</span><span class="langs" id="langs" role="group" aria-label="Language"></span></div>
   <section class="card" aria-live="polite"><div class="orb" aria-hidden="true"></div>
     <div><div class="state" id="state">Down</div><div class="detail" id="detail">The lab server does not answer. Either an incident is in progress or the server is asleep.</div></div></section>
   <p class="foot"><span id="foot">An AI on-call engineer repairs this server. Watch it live on</span> <a id="watch" href="https://samsarukhanyan.com/lab">samsarukhanyan.com/lab</a></p>
@@ -163,9 +169,17 @@ cat > /var/www/lab-down/index.html <<'HTML'
     hy: { brand: "Incident Lab ավազարկղ", down: "Չի աշխատում", first: "Լաբորատոր սերվերը չի պատասխանում․ կամ ընթանում է միջադեպ, կամ սերվերը քնած է։",
           tick: "Լաբորատոր սերվերը չի պատասխանում առնվազն {n} վ։ Ստուգում ենք ամեն 2 վայրկյանը մեկ։", foot: "Այս սերվերը վերանորոգում է հերթապահ AI ինժեները։ Դիտեք ուղիղ եթերում՝" },
   };
+  // ?lang=, else the saved choice (shared with the down page: same origin), else the browser language.
+  let saved = null; try { saved = localStorage.getItem("lab-lang"); } catch {}
   const q = new URLSearchParams(location.search).get("lang");
   const nav = (navigator.language || "en").toLowerCase();
-  const lang = T[q] ? q : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  const lang = T[q] ? q : T[saved] ? saved : nav.startsWith("hy") ? "hy" : nav.startsWith("ru") ? "ru" : "en";
+  for (const [id, label] of [["en", "EN"], ["ru", "RU"], ["hy", "ՀՅ"]]) {
+    const b = document.createElement("button");
+    b.type = "button"; b.lang = id; b.textContent = label; b.setAttribute("aria-pressed", String(id === lang));
+    b.onclick = () => { try { localStorage.setItem("lab-lang", id); } catch {} location.replace("/?lang=" + id); };
+    document.getElementById("langs").appendChild(b);
+  }
   const L = T[lang], $ = (id) => document.getElementById(id);
   document.documentElement.lang = lang;
   $("brand").textContent = L.brand; $("state").textContent = L.down; $("detail").textContent = L.first; $("foot").textContent = L.foot;

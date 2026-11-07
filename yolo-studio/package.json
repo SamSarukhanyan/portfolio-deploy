@@ -1,0 +1,16 @@
+{
+  "name": "yolo-studio",
+  "private": true,
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "dev": "concurrently -k -n vision,api,web -c magenta,cyan,green \"npm:dev:vision\" \"npm:dev:api\" \"npm:dev:web\"",
+    "phone": "concurrently -k -n vision,api,web -c magenta,cyan,green \"npm:dev:vision\" \"npm:dev:api\" \"npm:dev:web-lan\"",
+    "dev:web-lan": "STUDIO_LAN=1 npm --prefix web run dev",
+    "dev:vision": "cd vision && .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload --reload-dir app",
+    "dev:api": "npm --prefix api run dev",
+    "dev:web": "npm --prefix web run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}

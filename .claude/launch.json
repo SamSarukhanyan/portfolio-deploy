@@ -4,8 +4,38 @@
     {
       "name": "client",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd client && BROWSER=none npx vite --port 5173 --strictPort"],
+      "runtimeArgs": [
+        "-c",
+        "cd client && BROWSER=none npx vite --port 5173 --strictPort"
+      ],
       "port": 5173
+    },
+    {
+      "name": "yolo-studio",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd yolo-studio && npm run dev"
+      ],
+      "port": 5180
+    },
+    {
+      "name": "voice-hy",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /data/projects/voice-hy && HF_HOME=/data/cache/huggingface /data/ml/venvs/voice/bin/python app.py"
+      ],
+      "port": 7860
+    },
+    {
+      "name": "hay-ai",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /data/projects/hay-ai && HF_HOME=/data/cache/huggingface /data/ml/venvs/ai/bin/uvicorn app.server:app --host 127.0.0.1 --port 7870"
+      ],
+      "port": 7870
     }
   ]
 }

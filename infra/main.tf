@@ -65,6 +65,9 @@ resource "aws_instance" "portfolio" {
   key_name               = aws_key_pair.portfolio.key_name
   iam_instance_profile   = aws_iam_instance_profile.server.name
 
+  # Termination protection: a stray `terminate-instances` or console click cannot delete the server.
+  disable_api_termination = true
+
   # "standard" = never pay for CPU bursts beyond the t3 baseline.
   credit_specification {
     cpu_credits = "standard"
@@ -103,4 +106,16 @@ resource "aws_eip" "portfolio" {
 resource "aws_eip_association" "portfolio" {
   allocation_id = aws_eip.portfolio.id
   instance_id   = aws_instance.portfolio.id
+}
+
+# Account-level hardening (eu-central-1). Both are free.
+# New EBS volumes and snapshot copies are encrypted with the AWS-managed key.
+# The existing root volume stays unencrypted until the server is rebuilt.
+resource "aws_ebs_encryption_by_default" "this" {
+  enabled = true
+}
+
+# No snapshot can be shared publicly, even by mistake.
+resource "aws_ebs_snapshot_block_public_access" "this" {
+  state = "block-all-sharing"
 }
